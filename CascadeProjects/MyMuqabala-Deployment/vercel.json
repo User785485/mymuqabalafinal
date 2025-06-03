@@ -1,7 +1,52 @@
 {
+  "name": "my-muqabala",
   "version": 2,
   "buildCommand": null,
+  "installCommand": null,
   "outputDirectory": "output/site-final",
   "public": true,
-  "cleanUrls": true
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "framework": null,
+  "routes": [
+    {
+      "src": "/compte-rendu/([^/]+)/?$",
+      "dest": "/compte-rendu/$1/index.html"
+    },
+    {
+      "src": "/compte-rendu/([^/]+)/content\\.html$",
+      "dest": "/compte-rendu/$1/content.html"
+    },
+    {
+      "src": "/compte-rendu/([^/]+)/(.+)",
+      "dest": "/compte-rendu/$1/$2"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/compte-rendu/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
 }
