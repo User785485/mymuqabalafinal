@@ -220,6 +220,54 @@ color %CYAN%
 echo ----------------------------------------------
 color %NORMAL%
 
+:: Deploiement automatique sur Vercel si le processus s'est termine avec succes
+if %ERROR_CODE% EQU 0 (
+    color %YELLOW%
+    echo.
+    echo ==============================================
+    echo          DEPLOIEMENT VERCEL AUTOMATIQUE
+    echo ==============================================
+    echo.
+    color %NORMAL%
+    
+    :: Verifier que Vercel CLI est installe
+    where vercel >nul 2>nul
+    if %errorlevel% NEQ 0 (
+        color %RED%
+        echo ERREUR: Vercel CLI n'est pas installe ou n'est pas dans le PATH
+        echo Pour installer, executez: npm install -g vercel
+        color %NORMAL%
+    ) else (
+        :: Aller dans le dossier du site final
+        if exist "output\site-final" (
+            cd output\site-final
+            
+            :: Lancer le deploiement Vercel
+            echo Lancement du deploiement Vercel...
+            vercel --prod --yes
+            set VERCEL_CODE=%errorlevel%
+            
+            :: Revenir au repertoire principal
+            cd ..\..
+            
+            if %VERCEL_CODE% EQU 0 (
+                color %GREEN%
+                echo.
+                echo Deploiement Vercel termine avec succes!
+            ) else (
+                color %RED%
+                echo.
+                echo Erreur lors du deploiement Vercel (code %VERCEL_CODE%)
+            )
+            color %NORMAL%
+        ) else (
+            color %RED%
+            echo ERREUR: Le dossier output\site-final n'existe pas
+            color %NORMAL%
+        )
+    )
+)
+
 echo.
 color %YELLOW%
 echo ACTIONS DISPONIBLES :
@@ -231,8 +279,9 @@ echo   [2] Ouvrir le fichier CSV
 echo   [3] Ouvrir le rapport de generation
 echo   [4] Ouvrir les logs detailles
 echo   [5] Voir la base de donnees (JSON)
-echo   [6] Relancer le processus
-echo   [7] Quitter
+echo   [6] Deployer sur Vercel
+echo   [7] Relancer le processus
+echo   [8] Quitter
 
 echo.
 color %CYAN%
@@ -241,7 +290,7 @@ color %NORMAL%
 
 :MENU_LOOP
 color %WHITE%
-set /p MENU_CHOICE=Votre choix (1-7) : 
+set /p MENU_CHOICE=Votre choix (1-8) : 
 color %NORMAL%
 
 if "%MENU_CHOICE%"=="1" (
@@ -300,11 +349,44 @@ if "%MENU_CHOICE%"=="5" (
 )
 
 if "%MENU_CHOICE%"=="6" (
+    color %YELLOW%
+    echo.
+    echo Deploiement du site sur Vercel...
+    echo.
+    color %NORMAL%
+    
+    :: Verifier que Vercel CLI est installe
+    where vercel >nul 2>nul
+    if %errorlevel% NEQ 0 (
+        color %RED%
+        echo ERREUR: Vercel CLI n'est pas installe ou n'est pas dans le PATH
+        echo Pour installer, executez: npm install -g vercel
+        color %NORMAL%
+    ) else (
+        :: Aller dans le dossier du site final
+        cd output\site-final
+        
+        :: Lancer le deploiement Vercel
+        echo Lancement du deploiement Vercel...
+        vercel --prod --yes
+        
+        :: Revenir au repertoire principal
+        cd ..\..
+        
+        color %GREEN%
+        echo.
+        echo Deploiement termine!
+        color %NORMAL%
+    )
+    goto MENU_LOOP
+)
+
+if "%MENU_CHOICE%"=="7" (
     cls
     goto START_PROCESS
 )
 
-if "%MENU_CHOICE%"=="7" (
+if "%MENU_CHOICE%"=="8" (
     echo.
     color %GREEN%
     echo Merci d'avoir utilise My Muqabala Processeur. Au revoir !
@@ -314,6 +396,6 @@ if "%MENU_CHOICE%"=="7" (
 )
 
 color %RED%
-echo Choix invalide. Veuillez entrer un nombre entre 1 et 7.
+echo Choix invalide. Veuillez entrer un nombre entre 1 et 8.
 color %NORMAL%
 goto MENU_LOOP
