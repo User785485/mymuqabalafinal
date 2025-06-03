@@ -1,0 +1,215 @@
+@echo off
+setlocal enabledelayedexpansion
+chcp 65001 > nul
+title My Muqabala - Processeur Automatique
+
+:: Definition des codes couleur
+set GREEN=[92m
+set RED=[91m
+set YELLOW=[93m
+set BLUE=[94m
+set MAGENTA=[95m
+set CYAN=[96m
+set WHITE=[97m
+set RESET=[0m
+
+cls
+
+echo %CYAN%==============================================%RESET%
+echo %CYAN%         MY MUQABALA PROCESSOR             %RESET%
+echo %CYAN%==============================================%RESET%
+echo.
+echo %YELLOW%Bienvenue dans le processeur de My Muqabala.%RESET%
+echo %YELLOW%Ce script va generer les fichiers necessaires.%RESET%
+echo.
+
+:: Verifier qu'on se trouve bien dans le bon repertoire
+if not exist "sources\processeur-global.py" (
+    if exist "..\sources\processeur-global.py" (
+        echo %YELLOW%Changement vers le repertoire principal...%RESET%
+        cd ..
+    ) else (
+        echo %RED%ERREUR: Impossible de trouver le repertoire sources avec processeur-global.py%RESET%
+        echo %RED%Veuillez executer ce script depuis le repertoire racine du projet.%RESET%
+        pause
+        exit /b 1
+    )
+)
+
+:: Confirmation avant de lancer
+echo %YELLOW%Pret a lancer le processus de generation.%RESET%
+echo.
+set /p CONFIRM=%WHITE%Voulez-vous continuer ? (O/N) : %RESET%
+
+if /i "%CONFIRM%" NEQ "O" (
+    echo.
+    echo %YELLOW%Processus annule.%RESET%
+    pause
+    exit /b 0
+)
+
+:START_PROCESS
+:: Lancer le processus
+echo.
+echo %CYAN%==============================================%RESET%
+echo %GREEN%LANCEMENT DU PROCESSUS...%RESET%
+echo %CYAN%==============================================%RESET%
+echo.
+
+:: Enregistrer l'heure de debut
+set START_TIME=%time%
+
+:: Lancer Python directement avec affichage en temps reel
+echo.
+echo %CYAN%Lancement du script Python...%RESET%
+echo %CYAN%Tous les messages vont s'afficher ci-dessous :%RESET%
+echo %CYAN%==============================================%RESET%
+echo.
+
+:: Aller dans le repertoire sources pour executer le script Python
+cd sources
+
+:: Executer le script Python avec l'option -u pour un affichage non bufferise
+python -u processeur-global.py 2>&1
+set ERROR_CODE=%errorlevel%
+
+:: Revenir au repertoire principal
+cd ..
+
+:: Calculer le temps ecoule
+set END_TIME=%time%
+
+echo.
+echo %CYAN%==============================================%RESET%
+
+:: Afficher les resultats detailles
+echo.
+echo %CYAN%==============================================%RESET%
+echo %CYAN%              RESUME D'EXECUTION            %RESET%
+echo %CYAN%==============================================%RESET%
+echo.
+
+if %ERROR_CODE% EQU 0 (
+    echo %GREEN%==============================================%RESET%
+    echo %GREEN%     PROCESSUS TERMINE AVEC SUCCES !        %RESET%
+    echo %GREEN%==============================================%RESET%
+) else (
+    echo %RED%==============================================%RESET%
+    echo %RED%        ERREUR LORS DU PROCESSUS !           %RESET%
+    echo %RED%        Code erreur : %ERROR_CODE%             %RESET%
+    echo %RED%==============================================%RESET%
+)
+
+echo.
+echo %WHITE%EMPLACEMENTS DES FICHIERS :%RESET%
+echo %CYAN%----------------------------------------------%RESET%
+
+:: Verifier l'existence de chaque dossier/fichier
+if exist "sources\output\site-final" (
+    echo %GREEN%[OK]%RESET% Site genere     : sources\output\site-final\
+) else (
+    echo %RED%[MANQUANT]%RESET% Site genere     : sources\output\site-final\ %RED%(NON TROUVE)%RESET%
+)
+
+if exist "sources\exports" (
+    echo %GREEN%[OK]%RESET% Fichiers CSV    : sources\exports\
+) else (
+    echo %RED%[MANQUANT]%RESET% Fichiers CSV    : sources\exports\ %RED%(NON TROUVE)%RESET%
+)
+
+if exist "sources\logs" (
+    echo %GREEN%[OK]%RESET% Logs detailles  : sources\logs\
+) else (
+    echo %RED%[MANQUANT]%RESET% Logs detailles  : sources\logs\ %RED%(NON TROUVE)%RESET%
+)
+
+if exist "sources\rapport-generation.txt" (
+    echo %GREEN%[OK]%RESET% Rapport final   : sources\rapport-generation.txt
+) else (
+    echo %RED%[MANQUANT]%RESET% Rapport final   : sources\rapport-generation.txt %RED%(NON TROUVE)%RESET%
+)
+
+if exist "sources\database\codes-generes.json" (
+    echo %GREEN%[OK]%RESET% Base de donnees : sources\database\codes-generes.json
+) else (
+    echo %RED%[MANQUANT]%RESET% Base de donnees : sources\database\codes-generes.json %RED%(NON TROUVE)%RESET%
+)
+
+echo %CYAN%----------------------------------------------%RESET%
+
+echo.
+echo %YELLOW%ACTIONS DISPONIBLES :%RESET%
+echo %CYAN%----------------------------------------------%RESET%
+echo   [1] Ouvrir le dossier du site genere
+echo   [2] Ouvrir le fichier CSV
+echo   [3] Ouvrir le rapport de generation
+echo   [4] Ouvrir les logs detailles
+echo   [5] Voir la base de donnees (JSON)
+echo   [6] Relancer le processus
+echo   [7] Quitter
+
+echo.
+echo %CYAN%----------------------------------------------%RESET%
+
+:MENU_LOOP
+set /p MENU_CHOICE=%WHITE%Votre choix (1-7) : %RESET%
+
+if "%MENU_CHOICE%"=="1" (
+    if exist "sources\output\site-final" (
+        start explorer "sources\output\site-final"
+    ) else (
+        echo %RED%[ERREUR] Le dossier n'existe pas encore.%RESET%
+    )
+    goto MENU_LOOP
+)
+
+if "%MENU_CHOICE%"=="2" (
+    if exist "sources\exports" (
+        start explorer "sources\exports"
+    ) else (
+        echo %RED%[ERREUR] Le dossier n'existe pas encore.%RESET%
+    )
+    goto MENU_LOOP
+)
+
+if "%MENU_CHOICE%"=="3" (
+    if exist "sources\rapport-generation.txt" (
+        start notepad "sources\rapport-generation.txt"
+    ) else (
+        echo %RED%[ERREUR] Le fichier n'existe pas encore.%RESET%
+    )
+    goto MENU_LOOP
+)
+
+if "%MENU_CHOICE%"=="4" (
+    if exist "sources\logs" (
+        start explorer "sources\logs"
+    ) else (
+        echo %RED%[ERREUR] Le dossier n'existe pas encore.%RESET%
+    )
+    goto MENU_LOOP
+)
+
+if "%MENU_CHOICE%"=="5" (
+    if exist "sources\database\codes-generes.json" (
+        start notepad "sources\database\codes-generes.json"
+    ) else (
+        echo %RED%[ERREUR] Le fichier n'existe pas encore.%RESET%
+    )
+    goto MENU_LOOP
+)
+
+if "%MENU_CHOICE%"=="6" (
+    cls
+    goto START_PROCESS
+)
+
+if "%MENU_CHOICE%"=="7" (
+    echo.
+    echo %GREEN%Merci d'avoir utilise My Muqabala Processeur. Au revoir !%RESET%
+    pause
+    exit /b 0
+)
+
+echo %RED%Choix invalide. Veuillez entrer un nombre entre 1 et 7.%RESET%
+goto MENU_LOOP

@@ -1,0 +1,22 @@
+  Page de login (login-elegent.html) 
+  ------------------------------------------ 
+PROBLÈME IDENTIFIÉ - VALIDATION DU CODE À 6 CHIFFRES: 
+ 
+1. HTML - Input (lignes 503-510): 
+   - Modifié pour accepter 6 chiffres: 
+   - placeholder="••••••" 
+   - maxlength="6" 
+   - pattern="[0-9]{6}" 
+ 
+2. JavaScript - Validation (ligne 556): 
+   - DOIT ÊTRE MODIFIÉ: 
+   - Actuel: const expectedCode = doc ? doc.match(/\d{4,6}/)?.[0]?.slice(-4) : ''; 
+   - À modifier: const expectedCode = doc ? doc.match(/\d{6}/)?.[0] : ''; 
+   - Problème: Le .slice(-4) prend seulement les 4 derniers chiffres 
+ 
+3. Easter Egg - Konami Code (lignes ~590): 
+   - DOIT ÊTRE MODIFIÉ (même problème) 
+ 
+Action requise: 
+- Modifier toutes les instances de .slice(-4) pour supporter les codes à 6 chiffres 
+ 
