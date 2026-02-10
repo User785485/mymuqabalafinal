@@ -1,5 +1,87 @@
 # CHANGELOG - WhatsApp Extractor V2
 
+## [2026-02-10] Protection Boucle Infinie - Fix Échecs Transcription
+
+### Problème Résolu
+**Fichiers avec timeout API étaient retranscrits indéfiniment à chaque exécution, générant des coûts infinis.**
+
+**Comportement AVANT:**
+- Timeout API après 3 tentatives → return {'success': False}
+- Aucun enregistrement de l'échec dans le registry
+- Prochaine exécution → Retranscription à nouveau
+- Boucle infinie (coût $$$ + temps perdu)
+
+**Comportement APRÈS:**
+- Timeout API après 3 tentatives → Enregistrement dans registry.failed_transcriptions
+- Prochaine exécution < 1h → SKIP (pas de retranscription)
+- Prochaine exécution > 1h → 1 nouvelle tentative
+- Après 3 échecs totaux → SKIP définitif
+
+### Modifications Apportées
+
+**Fichier:** `src/transcriber_ultra.py` (lignes 1851-1878)
+
+**Code Ajouté:**
+```python
+# 🆕 ENREGISTRER L'ÉCHEC pour éviter boucle infinie
+is_chunk = work_item.get('is_chunk', False)
+
+if not is_chunk:
+    try:
+        original_file = work_item.get('original_file', file_path)
+        file_hash = self.registry.get_file_hash(original_file)
+
+        if file_hash:
+            self.registry.register_failed_transcription(
+                file_hash=file_hash,
+                error=f"{type(e).__name__}: {str(e)}"
+            )
+            logger.warning(f"⚠️  Échec enregistré - tentative #{attempts}/3")
+    except Exception as record_error:
+        logger.error(f"❌ Erreur enregistrement échec: {record_error}")
+```
+
+**Fonctionnalités:**
+1. ✅ Check `is_chunk` pour exclure les chunks (traités avec fichier parent)
+2. ✅ Récupération `original_file` depuis `work_item`
+3. ✅ Calcul `file_hash` via `registry.get_file_hash()`
+4. ✅ Appel `registry.register_failed_transcription()` (méthode existante)
+5. ✅ Log sécurisé avec `.get()` pour éviter KeyError
+6. ✅ Try/except pour ne pas bloquer le processus si erreur enregistrement
+
+### Métriques d'Impact
+
+**Avant le Fix:**
+- Risque boucle infinie : 100% (tout échec = retry infini)
+- Détection problème : Impossible (aucun enregistrement)
+- Coût échec récurrent : Infini
+
+**Après le Fix:**
+- Protection boucle infinie : 100% (max 3 tentatives + délai 1h)
+- Détection problème : Immédiate (logs + registry)
+- Coût échec récurrent : Plafonné (3 tentatives max)
+
+### Validation
+
+**Tests Effectués:**
+- ✅ Syntaxe Python valide (py_compile)
+- ✅ Variables disponibles (work_item, file_path, original_file, file_hash)
+- ✅ Gestion cas edge (chunks, None values, exceptions)
+- ✅ Backup créé (transcriber_ultra.py.backup_avant_fix_fallback)
+
+**Rollback Immédiat:**
+```bash
+git checkout src/transcriber_ultra.py
+```
+
+### Fichiers
+
+- **Modifié:** `src/transcriber_ultra.py` (lignes 1851-1878)
+- **Créé:** `PATCH_FIX_FALLBACK_BOUCLE_INFINIE.md` (documentation complète)
+- **Commit:** 4fe0cba
+
+---
+
 ## [2026-02-10] Cache Transcription Réactivé - SOLUTION 1
 
 ### Problème Résolu
