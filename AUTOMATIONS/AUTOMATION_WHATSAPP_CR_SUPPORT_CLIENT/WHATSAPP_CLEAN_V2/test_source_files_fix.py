@@ -10,10 +10,16 @@ Teste :
 """
 
 import os
+import sys
 import json
 import shutil
 from pathlib import Path
 from datetime import datetime
+
+# Fix encoding pour Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 def test_correction_1():
     """Test CORRECTION 1: Vérifier injection source_files_details dans route API"""
@@ -97,8 +103,19 @@ def analyze_all_segments():
     print("ANALYSE GLOBALE: Tous les segments.json")
     print("=" * 80)
 
-    segments_files = list(Path("DATA/OUTPUT").rglob("*.segments.json"))
+    # Chercher dans ../DATA/OUTPUT (chemin relatif depuis WHATSAPP_CLEAN_V2)
+    data_path = Path("../DATA/OUTPUT")
+    if not data_path.exists():
+        data_path = Path("DATA/OUTPUT")
+
+    segments_files = list(data_path.rglob("*.segments.json"))
     print(f"\n📊 Total fichiers trouvés: {len(segments_files)}")
+    print(f"📁 Chemin recherche: {data_path.absolute()}")
+
+    if len(segments_files) == 0:
+        print("\n⚠️  Aucun fichier segments.json trouvé!")
+        print("Vérifier que les transcriptions ont été effectuées.")
+        return False
 
     with_source = 0
     without_source = 0
