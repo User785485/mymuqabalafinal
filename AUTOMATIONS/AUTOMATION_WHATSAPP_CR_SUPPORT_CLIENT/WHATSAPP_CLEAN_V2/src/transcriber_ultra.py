@@ -958,6 +958,39 @@ class TranscriberUltra:
                 logger.debug("🗃️ [REGISTRY HIT] Transcription trouvée dans le registry")
                 self.cache.put(file_hash, registry_transcription)
                 self.stats['files_cached'] += 1
+
+                # ✅ NOUVEAU : Créer les fichiers .txt et .segments.json si absents
+                sf_path = work_item['path']
+                txt_file = sf_path + '.txt'
+                segments_file = sf_path + '.segments.json'
+
+                # Créer .txt si absent
+                if not os.path.exists(txt_file):
+                    with open(txt_file, 'w', encoding='utf-8') as f:
+                        f.write(registry_transcription)
+                    logger.debug(f"📝 [REGISTRY] Fichier .txt recréé depuis registry")
+
+                # Créer segments.json si absent
+                if not os.path.exists(segments_file):
+                    source_details = self._get_superfile_source_info(sf_path)
+                    segments_data = {
+                        'file': os.path.basename(sf_path),
+                        'total_duration': 0,
+                        'segments_count': 0,
+                        'segments': [],
+                        'from_registry_cache': True
+                    }
+
+                    if source_details:
+                        segments_data['source_files_details'] = source_details
+                        total_dur = sum(s.get('duration', 0) for s in source_details)
+                        segments_data['total_duration'] = total_dur
+                        logger.debug(f"📊 [REGISTRY] segments.json recréé avec {len(source_details)} sources")
+
+                    with open(segments_file, 'w', encoding='utf-8') as f:
+                        import json
+                        json.dump(segments_data, f, ensure_ascii=False, indent=2)
+
                 continue
 
             # Vérifier si échec précédent
@@ -1417,6 +1450,31 @@ class TranscriberUltra:
 
             logger.debug(f"[DEDUP] Sauvegardé: {os.path.basename(txt_file)}")
 
+            # ✅ NOUVEAU : Créer aussi un segments.json minimal avec source_files_details
+            segments_file = sf_path + '.segments.json'
+            source_details = self._get_superfile_source_info(sf_path)
+
+            segments_data = {
+                'file': os.path.basename(sf_path),
+                'total_duration': 0,  # Non calculé pour assemblé
+                'segments_count': 0,  # Pas de segments Whisper (assemblé)
+                'segments': [],  # Vide car assemblé depuis chunks
+                'assembled_from_cache': True  # Flag pour identifier source
+            }
+
+            if source_details:
+                segments_data['source_files_details'] = source_details
+                # Calculer total_duration depuis source_details
+                total_dur = sum(s.get('duration', 0) for s in source_details)
+                segments_data['total_duration'] = total_dur
+                logger.debug(f"✅ [ASSEMBLED] segments.json créé avec {len(source_details)} sources")
+            else:
+                logger.warning(f"⚠️ [ASSEMBLED] Aucun source_details pour {os.path.basename(sf_path)}")
+
+            with open(segments_file, 'w', encoding='utf-8') as f:
+                import json
+                json.dump(segments_data, f, ensure_ascii=False, indent=2)
+
             self.stats['files_assembled_from_cache'] += 1
             return True
 
@@ -1774,14 +1832,28 @@ class TranscriberUltra:
                             # 🆕 Sauvegarder les segments avec timestamps dans un fichier JSON
                             if segments:
                                 segments_file = original_file + '.segments.json'
+
+                                # ✅ NOUVEAU : Récupérer source_files_details depuis registry
+                                source_details = self._get_superfile_source_info(original_file)
+
+                                segments_data = {
+                                    'file': os.path.basename(original_file),
+                                    'total_duration': segments[-1]['end'] if segments else 0,
+                                    'segments_count': len(segments),
+                                    'segments': segments
+                                }
+
+                                # ✅ NOUVEAU : Injecter source_files_details si disponible
+                                if source_details:
+                                    segments_data['source_files_details'] = source_details
+                                    logger.debug(f"✅ [SOURCE FILES] {len(source_details)} fichiers sources ajoutés au segments.json")
+                                else:
+                                    logger.warning(f"⚠️ [SOURCE FILES] Aucun détail de source trouvé pour {os.path.basename(original_file)}")
+
                                 with open(segments_file, 'w', encoding='utf-8') as f:
                                     import json
-                                    json.dump({
-                                        'file': os.path.basename(original_file),
-                                        'total_duration': segments[-1]['end'] if segments else 0,
-                                        'segments_count': len(segments),
-                                        'segments': segments
-                                    }, f, ensure_ascii=False, indent=2)
+                                    json.dump(segments_data, f, ensure_ascii=False, indent=2)
+
                                 logger.info(f"📊 Fichier segments créé: {os.path.basename(segments_file)} ({len(segments)} segments)")
 
                             # Ajouter au cache
