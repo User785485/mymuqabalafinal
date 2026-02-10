@@ -1,5 +1,156 @@
 # CHANGELOG - WhatsApp Extractor V2
 
+## [2026-02-10] Fix CRITIQUE - Injection source_files_details dans segments.json
+
+### Problème Résolu
+**853 audios (46.7%) recevaient la transcription COMPLÈTE du SuperFile au lieu de leur transcription segmentée.**
+
+**Symptôme:**
+- Audio de 3 minutes → Affiche transcription de 40 minutes (tous les audios du mois)
+- Exports CSV gigantesques avec duplications massives
+- Impossible d'identifier quel audio contient quelle information
+- Impact utilisateur : confusion totale dans analyse conversations
+
+**Cause Racine:**
+- Le fichier `.segments.json` était créé **SANS le champ `source_files_details`**
+- Ce champ est CRITIQUE pour mapper chaque audio individuel à sa portion de transcription
+- Sans lui → FALLBACK automatique vers transcription complète du SuperFile dans `exporters.py`
+
+**Analyse Atomique:**
+- 366 fichiers segments.json analysés
+- ✅ 354 fichiers AVEC source_files_details (96.7%) - période 2026-01
+- ❌ 12 fichiers SANS source_files_details (3.3%) - période 2026-02
+- Régression détectée : Code récent ne générait PLUS le champ
+
+### Corrections Implémentées
+
+#### CORRECTION 1: Route API Whisper (ligne 1774-1798)
+**Fichier:** `src/transcriber_ultra.py`
+
+**Problème:** segments.json créé sans source_files_details lors de nouvelle transcription API.
+
+**Solution:**
+```python
+# Récupérer source_files_details depuis registry
+source_details = self._get_superfile_source_info(original_file)
+
+segments_data = {
+    'file': os.path.basename(original_file),
+    'total_duration': segments[-1]['end'] if segments else 0,
+    'segments_count': len(segments),
+    'segments': segments
+}
+
+# Injecter source_files_details si disponible
+if source_details:
+    segments_data['source_files_details'] = source_details
+    logger.debug(f"✅ [SOURCE FILES] {len(source_details)} fichiers sources ajoutés")
+else:
+    logger.warning(f"⚠️ [SOURCE FILES] Aucun détail trouvé")
+```
+
+#### CORRECTION 2: Route Assemblé Cache (ligne 1413-1442)
+**Problème:** SuperFiles assemblés depuis cache ne créaient QUE le .txt (pas de segments.json).
+
+**Solution:** Création segments.json minimal avec:
+- `segments: []` (vide car assemblé, pas de segments Whisper)
+- `source_files_details` récupéré du registry
+- `assembled_from_cache: true` (flag traçabilité)
+- `total_duration` calculé depuis source_details
+
+#### CORRECTION 3: Route Registry Cache (ligne 956-993)
+**Problème:** SuperFiles trouvés en registry faisaient `continue` (skip complet, aucun fichier créé).
+
+**Solution:** Recréation fichiers si absents:
+- .txt recréé depuis registry_transcription
+- segments.json recréé avec source_files_details
+- `from_registry_cache: true` (flag traçabilité)
+
+### Fichiers Modifiés
+
+1. **src/transcriber_ultra.py**
+   - 3 corrections atomiques dans flux transcription
+   - Injection source_files_details dans 3 routes différentes
+   - Logs warnings pour monitoring
+
+2. **test_source_files_fix.py** (NOUVEAU)
+   - Script validation avec 3 options:
+     - Option 1: Préparer test (supprimer fichier)
+     - Option 2: Vérifier correction
+     - Option 3: Analyse globale inventaire
+   - Fix encoding Windows pour emojis
+
+3. **regenerate_12_broken_files.py** (NOUVEAU)
+   - Automatise suppression 12 fichiers défectueux
+   - Backup automatique avant suppression
+   - Instructions step-by-step régénération
+
+4. **RAPPORT_FIX_SOURCE_FILES_DETAILS.md** (NOUVEAU)
+   - Documentation complète du problème
+   - Résumé exécutif des corrections
+   - Plan de validation et rollback
+
+### Validation
+
+**Syntaxe:**
+- ✅ `python -m py_compile src/transcriber_ultra.py` → SUCCÈS
+
+**Backup:**
+- ✅ `src/transcriber_ultra.py.backup_20260210_fix_source_files`
+
+**Analyse Actuelle:**
+```
+📊 366 fichiers segments.json
+✅ 354 AVEC source_files_details (96.7%)
+❌ 12 SANS source_files_details (3.3%)
+
+Pattern: Tous fichiers février 2026
+```
+
+### Résultats Attendus
+
+| Métrique | Avant | Après | Objectif |
+|----------|-------|-------|----------|
+| **FALLBACK rate** | 46.7% | < 5% | < 10% |
+| **segments.json avec source_files_details** | 96.7% | 100% | > 95% |
+| **Fichiers défectueux** | 12 | 0 | 0 |
+| **Transcriptions correctes** | 53.3% | > 95% | > 90% |
+
+### Prochaines Étapes
+
+1. **Régénération fichiers défectueux:**
+   ```bash
+   python regenerate_12_broken_files.py
+   python main_fixed_v2.py --config config_with_sent.ini --full
+   ```
+
+2. **Validation:**
+   ```bash
+   python test_source_files_fix.py  # Option 3
+   python check_fallback_status.py
+   ```
+
+3. **Résultat attendu:**
+   - 366/366 (100%) avec source_files_details ✅
+   - FALLBACK < 5% ✅
+
+### Rollback
+
+**Si problème détecté:**
+```bash
+# Option 1: Git
+git checkout db8a748~1 -- src/transcriber_ultra.py
+
+# Option 2: Backup
+cp src/transcriber_ultra.py.backup_20260210_fix_source_files src/transcriber_ultra.py
+```
+
+**Commits:**
+- `db8a748` - Fix CRITIQUE: Injection source_files_details
+- `870af75` - Documentation et scripts validation
+
+---
+
 ## [2026-02-10] Protection Boucle Infinie - Fix Échecs Transcription
 
 ### Problème Résolu
