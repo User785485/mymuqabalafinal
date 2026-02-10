@@ -1847,6 +1847,36 @@ class TranscriberUltra:
 
                 if attempt == max_retries - 1:
                     logger.error(f"   ❌ ÉCHEC DÉFINITIF après {max_retries} tentatives")
+
+                    # 🆕 ENREGISTRER L'ÉCHEC pour éviter boucle infinie
+                    # MAIS seulement pour les fichiers complets, pas les chunks
+                    is_chunk = work_item.get('is_chunk', False)
+
+                    if not is_chunk:
+                        try:
+                            # Récupérer le fichier original et calculer son hash
+                            original_file = work_item.get('original_file', file_path)
+                            file_hash = self.registry.get_file_hash(original_file)
+
+                            if file_hash:
+                                # Utiliser la méthode EXISTANTE du registry
+                                self.registry.register_failed_transcription(
+                                    file_hash=file_hash,
+                                    error=f"{type(e).__name__}: {str(e)}"
+                                )
+                                # Log sécurisé - vérifier que l'entrée existe
+                                attempts_count = self.registry.data.get('failed_transcriptions', {}).get(file_hash, {}).get('attempts', '?')
+                                logger.warning(f"⚠️  Échec enregistré pour {os.path.basename(original_file)} - tentative #{attempts_count}/3")
+                            else:
+                                logger.warning(f"⚠️  Hash impossible pour {os.path.basename(original_file)} - échec non enregistré")
+
+                        except Exception as record_error:
+                            logger.error(f"❌ Erreur enregistrement échec: {record_error}")
+                            import traceback
+                            logger.debug(traceback.format_exc())
+                    else:
+                        logger.debug(f"⏭️  Chunk échec - pas d'enregistrement (sera regroupé avec fichier parent)")
+
                     # Cleanup fichier compressé
                     if compressed_file and os.path.exists(compressed_file):
                         os.remove(compressed_file)
