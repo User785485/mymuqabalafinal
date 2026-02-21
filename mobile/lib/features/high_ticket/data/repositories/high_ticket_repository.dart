@@ -24,9 +24,9 @@ class HighTicketRepository {
       final response = await _client
           .from('section_content')
           .select()
-          .eq('client_code', userId)
-          .eq('section', section)
-          .order('content_key');
+          .eq('client_id', userId)
+          .eq('section_key', section)
+          .order('created_at');
 
       return (response as List)
           .map((row) =>

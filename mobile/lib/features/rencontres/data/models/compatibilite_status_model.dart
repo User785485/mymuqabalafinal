@@ -76,7 +76,9 @@ class CompatibiliteStatusModel {
       return CompatibiliteStatusModel(status: CompatibiliteStatus.pending);
     }
 
-    final content = json['content'] as Map<String, dynamic>? ?? json;
+    // content_value is a JSONB column returned as Map by PostgREST
+    final raw = json['content_value'] ?? json['content'];
+    final content = raw is Map<String, dynamic> ? raw : json;
     return CompatibiliteStatusModel(
       status: CompatibiliteStatus.fromString(content['status'] as String?),
       formUrl: content['form_url'] as String?,

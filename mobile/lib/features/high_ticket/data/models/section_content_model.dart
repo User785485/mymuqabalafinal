@@ -32,9 +32,9 @@ class SectionContentModel {
   factory SectionContentModel.fromJson(Map<String, dynamic> json) {
     return SectionContentModel(
       id: json['id'] as String? ?? '',
-      clientCode: json['client_code'] as String? ?? '',
-      section: json['section'] as String? ?? '',
-      contentKey: json['content_key'] as String? ?? '',
+      clientCode: json['client_id'] as String? ?? '',
+      section: json['section_key'] as String? ?? '',
+      contentKey: json['section_key'] as String? ?? '',
       titre: json['titre'] as String?,
       contenuHtml: json['contenu_html'] as String?,
       url: json['url'] as String?,
@@ -49,9 +49,9 @@ class SectionContentModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'client_code': clientCode,
-      'section': section,
-      'content_key': contentKey,
+      'client_id': clientCode,
+      'section_key': section,
+      'content_key': section,
       'titre': titre,
       'contenu_html': contenuHtml,
       'url': url,

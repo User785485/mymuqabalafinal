@@ -112,7 +112,7 @@ class RencontresRepository {
           .from('section_content')
           .select()
           .eq('client_id', userId)
-          .eq('cle', 'compatibilite_form_status')
+          .eq('section_key', 'compatibilite_form_status')
           .maybeSingle();
 
       return CompatibiliteStatusModel.fromJson(response);
