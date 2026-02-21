@@ -86,12 +86,12 @@ class HomeRepository {
     try {
       final now = DateTime.now().toUtc().toIso8601String();
 
+      // Use !inner join so the filter on events.date_evenement works
       final response = await _supabase
           .from('event_participants')
-          .select('event_id, events(id, titre, description, date_evenement, type)')
+          .select('event_id, events!inner(id, titre, description, date_evenement, type)')
           .eq('user_id', userId)
           .gte('events.date_evenement', now)
-          .order('events.date_evenement', ascending: true)
           .limit(1)
           .maybeSingle();
 
