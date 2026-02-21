@@ -1154,6 +1154,25 @@ const AdminApp = {
         if (archiveStatuts.includes(statut)) return 'archive';
         if (pauseStatuts.includes(statut)) return 'pause';
         return 'actif';
+    },
+
+    /* ─── OPEN CHAT FOR SELECTED CLIENT ─── */
+    async openChatForClient() {
+        const uuid = this.selectedClient;
+        if (!uuid) { this.toast('Sélectionnez un client d\'abord', 'error'); return; }
+        const c = this.selectedClientData?.client;
+        const name = c ? ((c.prenom || '') + ' ' + (c.nom || '')).trim() : '';
+
+        this.toast('Création du canal de discussion...', 'info');
+        const channel = await AdminChatManager.createChannelForClient(uuid, name);
+        if (channel) {
+            this.toast('Chat ouvert !', 'success');
+            // Switch to mahram section and select the channel
+            this.showSection('mahram');
+            setTimeout(() => { MahramManager.selectChannel(channel.id); }, 500);
+        } else {
+            this.toast('Erreur lors de la création du chat', 'error');
+        }
     }
 };
 

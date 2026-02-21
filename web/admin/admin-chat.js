@@ -12,6 +12,8 @@ const AdminChatManager = (() => {
     let client = null;
     let currentChannel = null;
     let messageListener = null;
+    let typingListener = null;
+    let reconnectTimer = null;
 
     // ── DOM references ────────────────────────────────────────────────────
     const getMessagesContainer = () => document.getElementById('mahram-messages');
@@ -70,6 +72,8 @@ const AdminChatManager = (() => {
 
             console.log('[AdminChat] Connected successfully');
             _setupSendButton();
+            _setupReconnection();
+            _setupUnreadListener();
             return true;
         } catch (err) {
             console.error('[AdminChat] Initialize failed:', err);
@@ -109,6 +113,21 @@ const AdminChatManager = (() => {
             // Listen for new messages in real-time
             messageListener = channel.on('message.new', () => {
                 _renderMessages(channel);
+            });
+
+            // Listen for typing events
+            if (typingListener && currentChannel) {
+                currentChannel.off(typingListener);
+            }
+            typingListener = channel.on('typing.start', (event) => {
+                if (event.user.id !== client.userID) {
+                    _showTypingIndicator(event.user.name || 'Client');
+                }
+            });
+            channel.on('typing.stop', (event) => {
+                if (event.user.id !== client.userID) {
+                    _hideTypingIndicator();
+                }
             });
 
             // Show input area
@@ -194,6 +213,8 @@ const AdminChatManager = (() => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
+                } else if (currentChannel) {
+                    currentChannel.keystroke();
                 }
             });
         }
@@ -219,8 +240,109 @@ const AdminChatManager = (() => {
         return div.innerHTML;
     }
 
+    // ── Typing indicator UI ─────────────────────────────────────────────
+    function _showTypingIndicator(name) {
+        const inputArea = document.getElementById('admin-chat-input-area');
+        if (!inputArea) return;
+        let el = document.getElementById('admin-chat-typing');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'admin-chat-typing';
+            el.style.cssText = 'font-size:0.78rem;color:var(--ink-muted,#6b6b6b);font-style:italic;padding:0 0.5rem 0.35rem';
+            inputArea.parentNode.insertBefore(el, inputArea);
+        }
+        el.textContent = _escapeHtml(name) + ' écrit...';
+    }
+
+    function _hideTypingIndicator() {
+        const el = document.getElementById('admin-chat-typing');
+        if (el) el.textContent = '';
+    }
+
+    // ── Reconnection ────────────────────────────────────────────────────
+    function _setupReconnection() {
+        if (!client) return;
+        client.on('connection.changed', (event) => {
+            if (!event.online) {
+                console.warn('[AdminChat] Disconnected, will retry in 3s');
+                clearTimeout(reconnectTimer);
+                reconnectTimer = setTimeout(async () => {
+                    try {
+                        if (client && !client.wsConnection?.isHealthy) {
+                            const supabase = sb;
+                            const { data: session } = await supabase.auth.getSession();
+                            if (session?.session) {
+                                const { data: tokenData } = await supabase.functions.invoke(
+                                    'generate-stream-token',
+                                    { body: { userId: session.session.user.id } }
+                                );
+                                if (tokenData?.stream_token) {
+                                    await client.connectUser(
+                                        { id: session.session.user.id, name: 'Coach', role: 'admin' },
+                                        tokenData.stream_token
+                                    );
+                                    console.log('[AdminChat] Reconnected');
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        console.error('[AdminChat] Reconnect failed:', err);
+                    }
+                }, 3000);
+            }
+        });
+    }
+
+    // ── Unread count listener ───────────────────────────────────────────
+    function _setupUnreadListener() {
+        if (!client) return;
+        client.on('notification.message_new', () => {
+            // Update mahram badge if the nav element exists
+            const badge = document.querySelector('[data-nav="mahram"] .admin-badge, #mahram-unread-badge');
+            if (badge) {
+                const current = parseInt(badge.textContent) || 0;
+                badge.textContent = current + 1;
+                badge.style.display = 'inline-flex';
+            }
+        });
+    }
+
+    // ── Create channel for a new client ─────────────────────────────────
+    async function createChannelForClient(clientId, clientName) {
+        if (!client) {
+            const ok = await initialize();
+            if (!ok) return null;
+        }
+
+        try {
+            const channel = client.channel('messaging', `coaching-${clientId}`, {
+                name: `Coaching - ${clientName || clientId}`,
+                members: [client.userID, clientId],
+            });
+            await channel.create();
+            await channel.sendMessage({ text: 'Bienvenue dans votre espace de discussion.' });
+            console.log('[AdminChat] Channel created for', clientId);
+            return channel;
+        } catch (err) {
+            console.error('[AdminChat] Create channel failed:', err);
+            return null;
+        }
+    }
+
+    // ── Accessors for MahramManager ─────────────────────────────────────
+    function _getClient() { return client; }
+
+    function _setCurrentChannel(ch) {
+        if (messageListener && currentChannel) {
+            currentChannel.off(messageListener);
+            messageListener = null;
+        }
+        currentChannel = ch;
+    }
+
     // ── Disconnect ────────────────────────────────────────────────────────
     async function disconnect() {
+        clearTimeout(reconnectTimer);
         if (messageListener && currentChannel) {
             currentChannel.off(messageListener);
         }
@@ -236,7 +358,10 @@ const AdminChatManager = (() => {
     return {
         initialize,
         openChannelForClient,
+        createChannelForClient,
         sendMessage,
         disconnect,
+        _getClient,
+        _setCurrentChannel,
     };
 })();

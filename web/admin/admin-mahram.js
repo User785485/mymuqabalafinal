@@ -4,19 +4,42 @@
 ═══════════════════════════════════════ */
 
 const MahramManager = {
-    channels: [],
-    selectedChannel: null,
-    messages: [],
+    channels: [],          // Stream Channel objects
+    selectedChannel: null, // Stream Channel
 
-    async init() { await this.loadChannels(); },
+    async init() {
+        // Wait for AdminChatManager to be ready
+        if (!AdminChatManager._getClient()) {
+            await AdminChatManager.initialize();
+        }
+        await this.loadChannels();
+    },
 
     async loadChannels() {
-        var { data, error } = await sb.from('chat_channels')
-            .select('*, client:profiles!chat_channels_client_id_fkey(prenom, nom)')
-            .order('last_message_at', { ascending: false });
-        if (error) { AdminApp.toast('Erreur chargement channels', 'error'); this.channels = []; }
-        else { this.channels = data || []; }
+        var client = AdminChatManager._getClient();
+        if (!client) {
+            this.renderEmptyState();
+            return;
+        }
+
+        try {
+            var filter = { type: 'messaging', id: { $autocomplete: 'coaching-' } };
+            var sort = { last_message_at: -1 };
+            this.channels = await client.queryChannels(filter, sort, { limit: 30, watch: true });
+        } catch (err) {
+            console.error('[Mahram] loadChannels error:', err);
+            this.channels = [];
+        }
         this.renderChannels();
+    },
+
+    renderEmptyState() {
+        var container = document.getElementById('mahram-channels');
+        if (container) {
+            container.innerHTML = '<div class="admin-list-empty" style="padding:2rem">Chat non connecté. Vérifiez la configuration Stream.</div>';
+        }
+        var countEl = document.getElementById('channel-count');
+        if (countEl) countEl.textContent = '0';
     },
 
     renderChannels() {
@@ -27,66 +50,86 @@ const MahramManager = {
         if (countEl) countEl.textContent = this.channels.length;
 
         if (this.channels.length === 0) {
-            container.innerHTML = '<div class="admin-list-empty" style="padding:2rem">Aucune conversation trouvee.</div>';
+            container.innerHTML = '<div class="admin-list-empty" style="padding:2rem">Aucune conversation trouvée.</div>';
             return;
         }
 
         var self = this;
+        var client = AdminChatManager._getClient();
+
         container.innerHTML = this.channels.map(function(ch) {
-            var clientName = ch.client ? (ch.client.prenom + ' ' + (ch.client.nom || '')) : 'Client';
-            var lastDate = ch.last_message_at ? new Date(ch.last_message_at).toLocaleDateString('fr-FR') : '';
-            var active = self.selectedChannel === ch.id ? ' style="background:rgba(124,58,237,0.06)"' : '';
+            // Find the client member (not the coach)
+            var members = Object.values(ch.state.members || {});
+            var clientMember = members.find(function(m) { return client && m.user_id !== client.userID; });
+            var clientName = clientMember && clientMember.user ? clientMember.user.name : (ch.data.name || 'Client');
+            var initial = clientName.charAt(0).toUpperCase();
+
+            var lastMsg = ch.state.messages && ch.state.messages.length > 0
+                ? ch.state.messages[ch.state.messages.length - 1] : null;
+            var lastDate = lastMsg && lastMsg.created_at
+                ? new Date(lastMsg.created_at).toLocaleDateString('fr-FR') : '';
+            var unread = ch.countUnread ? ch.countUnread() : 0;
+
+            var active = self.selectedChannel && self.selectedChannel.id === ch.id
+                ? ' style="background:rgba(124,58,237,0.06)"' : '';
+
             return '<div class="admin-item-card"' + active + ' onclick="MahramManager.selectChannel(\'' + ch.id + '\')" style="cursor:pointer">' +
-                '<div class="admin-list-avatar">' + (ch.client ? ch.client.prenom.charAt(0).toUpperCase() : '?') + '</div>' +
+                '<div class="admin-list-avatar">' + AdminApp._esc(initial) + '</div>' +
                 '<div class="admin-item-info">' +
                 '<div class="admin-item-title">' + AdminApp._esc(clientName) + '</div>' +
-                '<div class="admin-item-sub">' + (ch.channel_type || 'coach') + ' — ' + lastDate + '</div>' +
+                '<div class="admin-item-sub">' + lastDate + '</div>' +
                 '</div>' +
-                '<span class="admin-item-badge">' + (ch.message_count || 0) + ' msg</span>' +
+                (unread > 0 ? '<span class="admin-item-badge actif">' + unread + ' new</span>' : '<span class="admin-item-badge">' + (ch.state.messages ? ch.state.messages.length : 0) + ' msg</span>') +
                 '</div>';
         }).join('');
     },
 
-    async selectChannel(channelId) {
-        this.selectedChannel = channelId;
+    selectChannel(channelId) {
+        var channel = this.channels.find(function(ch) { return ch.id === channelId; });
+        if (!channel) return;
+
+        this.selectedChannel = channel;
         this.renderChannels();
-
-        var { data, error } = await sb.from('chat_messages')
-            .select('*')
-            .eq('channel_id', channelId)
-            .order('created_at', { ascending: true })
-            .limit(100);
-
-        if (error) { AdminApp.toast('Erreur chargement messages', 'error'); return; }
-        this.messages = data || [];
         this.renderMessages();
 
-        // Open real-time Stream Chat channel for bidirectional messaging
-        var channel = this.channels.find(function(ch) { return ch.id === channelId; });
-        if (channel && typeof AdminChatManager !== 'undefined') {
-            var clientId = channel.client_id;
-            var clientName = channel.client ? (channel.client.prenom + ' ' + (channel.client.nom || '')).trim() : '';
-            AdminChatManager.openChannelForClient(clientId, clientName);
-        }
+        // Wire up AdminChatManager for sending
+        AdminChatManager._setCurrentChannel(channel);
+        var inputArea = document.getElementById('admin-chat-input-area');
+        if (inputArea) inputArea.style.display = 'flex';
+
+        // Mark as read
+        channel.markRead();
+
+        // Listen for new messages on this channel
+        channel.on('message.new', function() {
+            MahramManager.renderMessages();
+        });
     },
 
     renderMessages() {
         var container = document.getElementById('mahram-messages');
-        if (!container) return;
+        if (!container || !this.selectedChannel) return;
 
-        if (this.messages.length === 0) {
+        var messages = this.selectedChannel.state.messages || [];
+        var client = AdminChatManager._getClient();
+
+        if (messages.length === 0) {
             container.innerHTML = '<div class="admin-list-empty" style="padding:2rem">Aucun message dans cette conversation.</div>';
             return;
         }
 
-        container.innerHTML = this.messages.map(function(msg) {
-            var isCoach = msg.sender_type === 'coach' || msg.sender_type === 'admin';
-            var time = new Date(msg.created_at).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        container.innerHTML = messages.map(function(msg) {
+            var isCoach = client && msg.user && msg.user.id === client.userID;
+            var time = msg.created_at ? new Date(msg.created_at).toLocaleString('fr-FR', {
+                day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+            }) : '';
+            var userName = msg.user ? (msg.user.name || msg.user.id) : 'Inconnu';
             var align = isCoach ? 'margin-left:auto;background:rgba(124,58,237,0.08)' : 'margin-right:auto;background:var(--paper-warm,#faf6f1)';
+
             return '<div style="max-width:75%;padding:0.75rem 1rem;border-radius:12px;margin-bottom:0.5rem;font-size:0.85rem;line-height:1.5;' + align + '">' +
-                '<div style="font-weight:600;font-size:0.72rem;color:var(--ink-muted);margin-bottom:0.25rem">' + (isCoach ? 'Coach' : 'Client') + ' — ' + time + '</div>' +
-                '<div style="color:var(--ink-soft)">' + AdminApp._esc(msg.content || '') + '</div>' +
-                (msg.type === 'audio' ? '<div style="margin-top:0.35rem;font-size:0.75rem;color:var(--purple)">Enregistrement audio (' + (msg.duration || '?') + 's)</div>' : '') +
+                '<div style="font-weight:600;font-size:0.72rem;color:var(--ink-muted);margin-bottom:0.25rem">' +
+                (isCoach ? 'Vous' : AdminApp._esc(userName)) + ' — ' + time + '</div>' +
+                '<div style="color:var(--ink-soft)">' + AdminApp._esc(msg.text || '') + '</div>' +
                 '</div>';
         }).join('');
 
