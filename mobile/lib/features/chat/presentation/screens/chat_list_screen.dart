@@ -22,8 +22,10 @@ import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
 import 'package:my_muqabala/core/router/route_names.dart';
 import 'package:my_muqabala/core/utils/logger.dart';
+import 'package:my_muqabala/core/network/supabase_client.dart';
 import 'package:my_muqabala/core/widgets/empty_state.dart';
 import 'package:my_muqabala/core/widgets/loading_skeleton.dart';
+import 'package:my_muqabala/features/chat/data/repositories/chat_repository.dart';
 import 'package:my_muqabala/features/chat/presentation/widgets/channel_tile_widget.dart';
 
 /// Main chat list screen displayed as the "Chat" tab.
@@ -208,12 +210,14 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
         itemCount: 5,
         itemHeight: 72,
       ),
-      emptyBuilder: (context) => const EmptyState(
+      emptyBuilder: (context) => EmptyState(
         icon: Icons.chat_bubble_outline_rounded,
         title: 'Aucune conversation',
         subtitle:
-            'Vos conversations apparaîtront ici dès qu\'un échange '
-            'sera initié avec votre coach ou votre partenaire.',
+            'Cliquez ci-dessous pour démarrer une conversation '
+            'avec votre coach.',
+        actionLabel: 'Contacter mon coach',
+        onAction: () => _startCoachConversation(client, currentUser),
       ),
       errorBuilder: (context, error) => EmptyState(
         icon: Icons.error_outline_rounded,
@@ -249,6 +253,50 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
       channelStateSort: const [SortOption('last_message_at')],
       limit: 20,
     );
+  }
+
+  // ── Start coach conversation ───────────────────────────────────────────────
+
+  bool _creatingChannel = false;
+
+  Future<void> _startCoachConversation(
+    StreamChatClient client,
+    User currentUser,
+  ) async {
+    if (_creatingChannel) return;
+    setState(() => _creatingChannel = true);
+
+    try {
+      final repo = ChatRepository(SupabaseClientManager.client);
+      final channelId = await repo.createCoachingChannel(
+        client,
+        currentUser.id,
+      );
+
+      if (channelId != null && mounted) {
+        // Refresh the channel list
+        _channelListController?.refresh();
+        // Navigate to the new channel
+        context.pushNamed(
+          RouteNames.chatDetail,
+          pathParameters: {'channelId': channelId},
+        );
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Impossible de contacter le coach pour le moment.'),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erreur lors de la création du chat.')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _creatingChannel = false);
+    }
   }
 
   // ── Navigation ─────────────────────────────────────────────────────────────

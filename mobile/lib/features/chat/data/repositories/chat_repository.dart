@@ -172,6 +172,75 @@ class ChatRepository {
     }
   }
 
+  // ── Create coaching channel ─────────────────────────────────────────────
+
+  /// Creates a coaching channel between the client and their coach/admin.
+  ///
+  /// Looks up a coach or admin in the profiles table, then creates a
+  /// Stream Chat channel `coaching-{clientId}` with both as members.
+  /// Returns the channel ID, or null if no coach was found.
+  Future<String?> createCoachingChannel(
+    StreamChatClient client,
+    String clientId,
+  ) async {
+    try {
+      // Find a coach or admin in profiles
+      final coachResponse = await _supabase
+          .from('profiles')
+          .select('id, prenom')
+          .inFilter('role', ['coach', 'admin'])
+          .limit(1)
+          .maybeSingle();
+
+      if (coachResponse == null) {
+        AppLogger.warning(
+          'No coach/admin found in profiles',
+          tag: 'ChatRepository',
+        );
+        return null;
+      }
+
+      final coachId = coachResponse['id'] as String;
+      final coachName = coachResponse['prenom'] as String? ?? 'Coach';
+
+      // Get client display name
+      final clientName = await getUserDisplayName(clientId);
+
+      // Create the channel
+      final channelId = 'coaching-$clientId';
+      final channel = client.channel(
+        'messaging',
+        id: channelId,
+        extraData: {
+          'name': 'Coaching - $clientName',
+          'members': [clientId, coachId],
+        },
+      );
+
+      await channel.watch();
+
+      // Send welcome message
+      await channel.sendMessage(
+        Message(text: 'Assalamou alaykoum, je souhaite échanger avec mon coach.'),
+      );
+
+      AppLogger.info(
+        'Created coaching channel $channelId with coach $coachId',
+        tag: 'ChatRepository',
+      );
+
+      return channelId;
+    } on Exception catch (e, st) {
+      AppLogger.error(
+        'Failed to create coaching channel',
+        tag: 'ChatRepository',
+        error: e,
+        stackTrace: st,
+      );
+      return null;
+    }
+  }
+
   // ── Helper: fetch display name from Supabase profile ─────────────────────
 
   /// Returns the user's first name from the `profiles` table.
