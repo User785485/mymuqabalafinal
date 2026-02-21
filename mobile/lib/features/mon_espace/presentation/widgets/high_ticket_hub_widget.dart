@@ -1,4 +1,4 @@
-/// High-ticket hub widget — 2x2 grid of the 4 premium sections.
+/// High-ticket hub widget — grid of the 6 premium sections.
 ///
 /// Shown in the "Espace Premium" tab when the user has
 /// `is_high_ticket = true` on their profile.
@@ -85,6 +85,13 @@ class HighTicketHubWidget extends ConsumerWidget {
                 progressProvider: sectionProgressProvider('documents'),
                 onTap: () => context.pushNamed(RouteNames.documentViewer,
                     pathParameters: {'documentId': 'list'}),
+              ),
+              SectionCardWidget(
+                icon: Icons.chat_bubble_outline_rounded,
+                title: 'Assistante Amoureuse',
+                color: AppColors.rose,
+                progressProvider: sectionProgressProvider('assistante'),
+                onTap: () => context.pushNamed(RouteNames.chat),
               ),
             ],
           ),

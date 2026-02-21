@@ -140,7 +140,7 @@ class _MatchRevealScreenState extends ConsumerState<MatchRevealScreen>
       'Navigating to documents from match reveal',
       tag: 'MatchReveal',
     );
-    context.goNamed(RouteNames.monEspace);
+    context.goNamed(RouteNames.rencontresHub);
   }
 
   // ── Build ────────────────────────────────────────────────────────────────

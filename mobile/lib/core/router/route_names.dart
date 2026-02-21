@@ -16,7 +16,6 @@ abstract final class RouteNames {
   // ── Main tabs ─────────────────────────────────────────────────────────
   static const home = 'home';
   static const chat = 'chat';
-  static const events = 'events';
   static const profile = 'profile';
   static const accesPremium = 'accesPremium';
 
@@ -27,8 +26,12 @@ abstract final class RouteNames {
   static const editProfile = 'edit-profile';
   static const notifications = 'notifications';
 
-  // ── Mon Espace ──────────────────────────────────────────────────────
-  static const monEspace = 'monEspace';
+  // ── Rencontres Hub ────────────────────────────────────────────────────
+  static const rencontresHub = 'rencontresHub';
+  static const eventsListing = 'eventsListing';
+  static const compatibilite = 'compatibilite';
+  static const rencontresEnCours = 'rencontresEnCours';
+  static const historiqueRencontres = 'historiqueRencontres';
 
   // ── High-Ticket ────────────────────────────────────────────────────
   static const formulaires = 'formulaires';

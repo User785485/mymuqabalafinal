@@ -32,7 +32,8 @@ class _MonEspaceScreenState extends ConsumerState<MonEspaceScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final profileAsync = ref.watch(currentProfileProvider);
+    // Use profileStreamProvider for real-time updates (e.g. admin toggles premium)
+    final profileAsync = ref.watch(profileStreamProvider);
     final isHighTicket = profileAsync.when(
       data: (profile) => profile?.isHighTicket ?? false,
       loading: () => false,

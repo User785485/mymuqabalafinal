@@ -1,7 +1,7 @@
 /// Application router built with go_router + Riverpod.
 ///
 /// Features:
-///   - StatefulShellRoute with 4 tab branches (preserves state per tab)
+///   - StatefulShellRoute with 3 tab branches (preserves state per tab)
 ///   - Chat as floating action button (push full-screen, no tab)
 ///   - Profile in AppBar (push full-screen, no tab)
 ///   - Glassmorphism floating bottom navigation bar
@@ -37,8 +37,11 @@ import 'package:my_muqabala/features/chat/presentation/screens/chat_detail_scree
 import 'package:my_muqabala/features/events/presentation/screens/events_screen.dart';
 import 'package:my_muqabala/features/events/presentation/screens/event_detail_screen.dart';
 import 'package:my_muqabala/features/documents/presentation/screens/document_viewer_screen.dart';
-import 'package:my_muqabala/features/mon_espace/presentation/screens/mon_espace_common_screen.dart';
 import 'package:my_muqabala/features/mon_espace/presentation/screens/acces_premium_screen.dart';
+import 'package:my_muqabala/features/rencontres/presentation/screens/rencontres_hub_screen.dart';
+import 'package:my_muqabala/features/rencontres/presentation/screens/compatibilite_screen.dart';
+import 'package:my_muqabala/features/rencontres/presentation/screens/rencontres_en_cours_screen.dart';
+import 'package:my_muqabala/features/rencontres/presentation/screens/historique_rencontres_screen.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/screens/formulaires_screen.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/screens/formulaire_viewer_screen.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/screens/cartographie_screen.dart';
@@ -61,9 +64,8 @@ import 'package:my_muqabala/features/feedback/presentation/screens/feedback_scre
 // ── Navigator keys (one per branch to preserve state) ───────────────────────
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-final _eventsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'events');
-final _monEspaceNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'mon-espace');
+final _rencontresNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'rencontres');
 final _accesPremiumNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'acces-premium');
 
@@ -362,7 +364,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // ── Main app: 4-tab StatefulShellRoute ────────────────────────────
+      // ── Main app: 3-tab StatefulShellRoute ────────────────────────────
       StatefulShellRoute.indexedStack(
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state, navigationShell) {
@@ -384,51 +386,79 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // ── Tab 1: Rencontres (was Événements) ────────────────────
+          // ── Tab 1: Rencontres Hub ──────────────────────────────────
           StatefulShellBranch(
-            navigatorKey: _eventsNavigatorKey,
+            navigatorKey: _rencontresNavigatorKey,
             routes: [
               GoRoute(
-                path: '/events',
-                name: RouteNames.events,
+                path: '/rencontres',
+                name: RouteNames.rencontresHub,
                 pageBuilder: (context, state) => _fadeTransitionPage(
                   key: state.pageKey,
-                  child: const EventsScreen(),
+                  child: const RencontresHubScreen(),
                 ),
                 routes: [
+                  // Events listing (full list with tabs)
                   GoRoute(
-                    path: ':eventId',
-                    name: RouteNames.eventDetail,
-                    pageBuilder: (context, state) {
-                      final eventId =
-                          state.pathParameters['eventId'] ?? '';
-                      return _slideTransitionPage(
-                        key: state.pageKey,
-                        child: EventDetailScreen(eventId: eventId),
-                      );
-                    },
+                    path: 'events',
+                    name: RouteNames.eventsListing,
+                    pageBuilder: (context, state) =>
+                        _slideTransitionPage(
+                      key: state.pageKey,
+                      child: const EventsScreen(),
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: ':eventId',
+                        name: RouteNames.eventDetail,
+                        pageBuilder: (context, state) {
+                          final eventId =
+                              state.pathParameters['eventId'] ?? '';
+                          return _slideTransitionPage(
+                            key: state.pageKey,
+                            child:
+                                EventDetailScreen(eventId: eventId),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  // Compatibilité
+                  GoRoute(
+                    path: 'compatibilite',
+                    name: RouteNames.compatibilite,
+                    pageBuilder: (context, state) =>
+                        _slideTransitionPage(
+                      key: state.pageKey,
+                      child: const CompatibiliteScreen(),
+                    ),
+                  ),
+                  // Rencontres en cours (suivi hebdo)
+                  GoRoute(
+                    path: 'en-cours',
+                    name: RouteNames.rencontresEnCours,
+                    pageBuilder: (context, state) =>
+                        _slideTransitionPage(
+                      key: state.pageKey,
+                      child: const RencontresEnCoursScreen(),
+                    ),
+                  ),
+                  // Historique rencontres
+                  GoRoute(
+                    path: 'historique',
+                    name: RouteNames.historiqueRencontres,
+                    pageBuilder: (context, state) =>
+                        _slideTransitionPage(
+                      key: state.pageKey,
+                      child: const HistoriqueRencontresScreen(),
+                    ),
                   ),
                 ],
               ),
             ],
           ),
 
-          // ── Tab 2: Mon Espace (common, all clients) ───────────────
-          StatefulShellBranch(
-            navigatorKey: _monEspaceNavigatorKey,
-            routes: [
-              GoRoute(
-                path: '/mon-espace',
-                name: RouteNames.monEspace,
-                pageBuilder: (context, state) => _fadeTransitionPage(
-                  key: state.pageKey,
-                  child: const MonEspaceCommonScreen(),
-                ),
-              ),
-            ],
-          ),
-
-          // ── Tab 3: Accès Premium ──────────────────────────────────
+          // ── Tab 2: Accès Premium ──────────────────────────────────
           StatefulShellBranch(
             navigatorKey: _accesPremiumNavigatorKey,
             routes: [
@@ -734,19 +764,11 @@ class _FloatingNavBar extends StatelessWidget {
                   isDark: isDark,
                 ),
                 _NavItem(
-                  icon: Icons.person_outline_rounded,
-                  selectedIcon: Icons.person_rounded,
-                  label: 'Mon Espace',
-                  isSelected: currentIndex == 2,
-                  onTap: () => onTap(2),
-                  isDark: isDark,
-                ),
-                _NavItem(
                   icon: Icons.diamond_outlined,
                   selectedIcon: Icons.diamond_rounded,
                   label: 'Premium',
-                  isSelected: currentIndex == 3,
-                  onTap: () => onTap(3),
+                  isSelected: currentIndex == 2,
+                  onTap: () => onTap(2),
                   isDark: isDark,
                   useGoldGradient: true,
                 ),

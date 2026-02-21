@@ -1,0 +1,64 @@
+# =============================================================================
+# .gitattributes — Security-oriented settings
+# Marks sensitive files as binary: prevents git diff/log -p/patch from
+# leaking secrets in plaintext diffs. Also prevents merge conflicts from
+# exposing secret values in conflict markers.
+# =============================================================================
+
+# --- Credential and secret files: treated as binary (no diff, no patch) ---
+.env            binary
+.env.*          binary
+*.pem           binary
+*.key           binary
+*.p12           binary
+*.pfx           binary
+*.jks           binary
+*.keystore      binary
+id_rsa          binary
+id_rsa.pub      binary
+id_ed25519      binary
+id_ed25519.pub  binary
+*.cer           binary
+*.crt           binary
+
+# --- Secrets/config files often containing tokens ---
+service-account.json    binary
+credentials.json        binary
+google-credentials.json binary
+firebase-adminsdk*.json binary
+*secrets*.json          binary
+*secret*.env            binary
+
+# --- Supabase local dev config (may contain service role key) ---
+supabase/.temp/**       binary
+supabase/config.toml    binary
+
+# --- Flutter/Dart: google-services.json contains Firebase API keys ---
+mobile/android/app/google-services.json    binary
+mobile/ios/Runner/GoogleService-Info.plist binary
+
+# --- Prevent line ending normalization from corrupting binary content ---
+*.pem  -text
+*.key  -text
+*.p12  -text
+
+# =============================================================================
+# Merge strategy: always use "ours" for lock files — prevents merge-time
+# diff output from including secrets embedded in package manifests.
+# =============================================================================
+mobile/pubspec.lock merge=ours
+package-lock.json   merge=ours
+yarn.lock           merge=ours
+
+# =============================================================================
+# Export-ignore: git archive / GitHub download ZIP will EXCLUDE these files.
+# This is a safety net — even if someone downloads a .zip from GitHub,
+# these files won't be included.
+# =============================================================================
+.env            export-ignore
+.env.*          export-ignore
+*.pem           export-ignore
+*.key           export-ignore
+credentials.json  export-ignore
+CREDENTIALS.md    export-ignore
+service-account.json export-ignore

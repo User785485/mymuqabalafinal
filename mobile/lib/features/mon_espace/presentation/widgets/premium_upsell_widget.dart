@@ -104,6 +104,13 @@ class PremiumUpsellWidget extends StatelessWidget {
                   subtitle: 'Objectifs et bilans mensuels',
                   isDark: isDark,
                 ),
+                AppSpacing.gapMd,
+                _FeatureRow(
+                  icon: Icons.chat_bubble_outlined,
+                  title: 'Assistante Amoureuse',
+                  subtitle: 'Accompagnement personnalis\u00e9 par chat',
+                  isDark: isDark,
+                ),
                 AppSpacing.gapXl,
                 // CTA
                 SizedBox(

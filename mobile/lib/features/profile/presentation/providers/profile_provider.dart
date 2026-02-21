@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,16 +47,50 @@ final currentProfileProvider = FutureProvider<ProfileModel?>((ref) async {
 
 // ── Realtime profile stream ─────────────────────────────────────────────
 
-/// Streams the current user's profile via Supabase Realtime.
+/// Streams the current user's profile with hybrid approach:
+/// 1. Immediate fetch on creation
+/// 2. Supabase Realtime subscription (instant when publication is enabled)
+/// 3. Periodic polling every 8s as fallback (guarantees freshness)
 ///
-/// Use this when you need live updates (e.g. when a coach modifies
-/// the user's `statut_parcours`).
+/// This ensures that changes made by the admin (e.g. toggling premium)
+/// are reflected on the client within seconds, even without Realtime
+/// publication configured.
 final profileStreamProvider = StreamProvider<ProfileModel?>((ref) {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return const Stream.empty();
 
   final repository = ref.watch(profileRepositoryProvider);
-  return repository.watchProfile(userId);
+  final controller = StreamController<ProfileModel?>();
+
+  // 1. Immediate fetch
+  repository.getProfile(userId).then((profile) {
+    if (!controller.isClosed) controller.add(profile);
+  });
+
+  // 2. Supabase Realtime stream (instant when table is in publication)
+  final realtimeSub = repository.watchProfile(userId).listen(
+    (data) {
+      if (!controller.isClosed) controller.add(data);
+    },
+    onError: (_) {},
+  );
+
+  // 3. Periodic polling fallback (every 8 seconds)
+  final timer = Timer.periodic(const Duration(seconds: 8), (_) async {
+    try {
+      final profile = await repository.getProfile(userId);
+      if (!controller.isClosed) controller.add(profile);
+    } catch (_) {}
+  });
+
+  // Cleanup on provider dispose
+  ref.onDispose(() {
+    realtimeSub.cancel();
+    timer.cancel();
+    controller.close();
+  });
+
+  return controller.stream.distinct();
 });
 
 // ── Update profile mutation ─────────────────────────────────────────────

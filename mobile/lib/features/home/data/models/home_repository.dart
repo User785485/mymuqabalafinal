@@ -233,13 +233,13 @@ class HomeRepository {
     final actions = <PendingAction>[];
 
     try {
-      // Check incomplete questionnaire (less than 147 answers)
+      // Check incomplete questionnaire (20 attachment questions)
       final questionCount = await _supabase
           .from('questionnaire_responses')
           .select('id')
           .eq('user_id', userId);
 
-      if ((questionCount as List).length < 147) {
+      if ((questionCount as List).length < 20) {
         actions.add(
           PendingAction(
             id: 'questionnaire',

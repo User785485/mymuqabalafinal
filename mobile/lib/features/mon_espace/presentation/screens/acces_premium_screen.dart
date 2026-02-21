@@ -14,14 +14,15 @@ import 'package:my_muqabala/features/mon_espace/presentation/widgets/high_ticket
 import 'package:my_muqabala/features/mon_espace/presentation/widgets/premium_upsell_widget.dart';
 import 'package:my_muqabala/features/profile/presentation/providers/profile_provider.dart';
 
-/// The "Acc\u00e8s Premium" screen shown in tab index 3 of the bottom navigation.
+/// The "Acc\u00e8s Premium" screen shown in tab index 2 of the bottom navigation.
 class AccesPremiumScreen extends ConsumerWidget {
   const AccesPremiumScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final profileAsync = ref.watch(currentProfileProvider);
+    // Use profileStreamProvider for real-time updates (e.g. admin toggles premium)
+    final profileAsync = ref.watch(profileStreamProvider);
     final isHighTicket = profileAsync.when(
       data: (profile) => profile?.isHighTicket ?? false,
       loading: () => false,
