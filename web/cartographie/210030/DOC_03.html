@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOC 3 - Roadmap & Organisation | Rislène</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    /* ==========================================
+       MY MUQABALA - CSS DE BASE COMPLET
+       DOC 3 : Roadmap & Organisation
+       Version 1.0 - 22/12/2024
+    ========================================== */
+
+    /* ==================== VARIABLES CSS ==================== */
+    :root {
+        --primary: #D4569C;
+        --primary-deep: #B33D7E;
+        --primary-light: #F5D6E8;
+        --purple: #6B5A9C;
+        --purple-deep: #4A3B6E;
+        --purple-light: #B8AECC;
+        --success: #2C7A7B;
+        --success-light: #E6F7F7;
+        --danger: #D4569C;
+        --danger-light: #F5D6E8;
+        --accent: #D4A373;
+        --accent-deep: #B8895E;
+        --accent-light: #F0E5D8;
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-1: #FDFBF7;
+        --gray-2: #F5F1E8;
+        --gray-3: #E8E2D5;
+        --text: #1A1A1A;
+        --text-soft: #4A3B6E;
+        --text-muted: #6B6B6B;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --shadow-sm: 0 3px 12px rgba(107, 90, 156, 0.12);
+        --shadow-md: 0 6px 24px rgba(107, 90, 156, 0.18);
+        --shadow-lg: 0 12px 48px rgba(107, 90, 156, 0.25);
+    }
+
+    /* ==================== RESET & BASE ==================== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { overflow-x: hidden !important; max-width: 100vw; width: 100%; }
+    body {
+        font-family: var(--font-body);
+        color: var(--text);
+        line-height: 1.7;
+        background: linear-gradient(135deg, #FDFBF7 0%, #F8F4ED 50%, #F5F1E8 100%);
+        -webkit-font-smoothing: antialiased;
+        font-weight: 400;
+        overflow-x: hidden !important;
+        overflow-y: auto;
+    }
+
+    /* ==================== TYPOGRAPHY ==================== */
+    h1, h2, h3, h4 { font-weight: 700; line-height: 1.2; color: var(--text); margin-bottom: var(--space-md); }
+    h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); font-family: var(--font-display); }
+    h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-family: var(--font-display); }
+    h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+    h4 { font-size: 1.15rem; }
+    p { margin-bottom: var(--space-md); line-height: 1.8; }
+    strong { font-weight: 700; color: var(--primary-deep); }
+    ul, ol { margin-left: var(--space-lg); margin-bottom: var(--space-md); }
+    li { margin-bottom: var(--space-sm); }
+
+    /* ==================== LAYOUT ==================== */
+    .container { max-width: 800px; margin: 0 auto; padding: 0 var(--space-lg); }
+    section {
+        padding: var(--space-2xl) 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+    }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* ==================== HERO ==================== */
+    .hero {
+        text-align: center;
+        padding: var(--space-xl) 0;
+        position: relative;
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(212, 86, 156, 0.12) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(20px, 20px) rotate(180deg); }
+    }
+    .hero-title {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        font-family: var(--font-display);
+    }
+    .hero-subtitle { font-size: 1.2rem; color: var(--text-soft); margin-bottom: var(--space-xl); }
+
+    /* ==================== CARDS ==================== */
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin-bottom: var(--space-lg);
+        border: 1px solid rgba(107, 90, 156, 0.08);
+    }
+
+    /* ==================== UTILITIES ==================== */
+    .text-center { text-align: center; }
+    .text-soft { color: var(--text-soft); }
+    .mb-lg { margin-bottom: var(--space-lg); }
+    .mt-lg { margin-top: var(--space-lg); }
+    .note { background: var(--cream-dark); padding: var(--space-md); border-radius: 0.5rem; font-size: 0.9rem; }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+        color: white;
+        margin-top: var(--space-2xl);
+    }
+    footer p { margin-bottom: var(--space-sm); opacity: 0.9; }
+
+    /* ==================== DOC 3 - CSS SPÉCIFIQUE ==================== */
+
+    /* Warning box */
+    .warning-box {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border: 2px solid var(--danger);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-lg) 0;
+    }
+    .warning-box h2 { color: var(--danger); }
+
+    /* Sécurité table */
+    .securite-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: var(--space-lg) 0;
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+    }
+    .securite-table th, .securite-table td {
+        padding: var(--space-md);
+        text-align: left;
+        border-bottom: 1px solid var(--gray-3);
+    }
+    .securite-table th { background: var(--purple-deep); color: white; font-weight: 600; }
+    .securite-table .niveau-1 { background: var(--success-light); }
+    .securite-table .niveau-2 { background: var(--accent-light); }
+    .securite-table .niveau-3 { background: var(--danger-light); }
+
+    /* Parcours liste */
+    .parcours-liste {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin: var(--space-lg) 0;
+    }
+    .parcours-liste .doc {
+        padding: var(--space-sm) var(--space-md);
+        margin: var(--space-xs) 0;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+    }
+    .parcours-liste .fait { color: var(--success); background: var(--success-light); }
+    .parcours-liste .actuel {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border: 2px solid var(--primary);
+        font-weight: 600;
+    }
+    .parcours-liste .avenir { color: var(--text-muted); background: var(--gray-2); }
+    .parcours-liste .badge { font-size: 0.75rem; background: var(--primary); color: white; padding: 0.2rem 0.5rem; border-radius: 1rem; margin-left: var(--space-sm); }
+
+    /* Phase cards */
+    .phase {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-lg) 0;
+        box-shadow: var(--shadow-md);
+    }
+    .phase-1 { border-left: 5px solid var(--purple); }
+    .phase-2 { border-left: 5px solid var(--primary); }
+    .phase-3 { border-left: 5px solid var(--success); }
+
+    /* Routine grid */
+    .routine-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--space-lg);
+        margin: var(--space-lg) 0;
+    }
+    .routine-option {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+    }
+    .routine-option h4 { color: var(--purple-deep); margin-bottom: var(--space-md); }
+    .routine-option ul { list-style: none; padding: 0; }
+    .routine-option li { padding: var(--space-sm) 0; border-bottom: 1px solid var(--gray-3); }
+
+    /* Alternative box */
+    .alternative-box {
+        background: linear-gradient(135deg, rgba(212, 163, 115, 0.1) 0%, white 100%);
+        border: 2px dashed var(--accent);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-lg) 0;
+    }
+
+    /* Conseils liste */
+    .conseils-liste {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+    }
+    .conseils-liste li { padding: var(--space-md) 0; border-bottom: 1px solid var(--gray-3); }
+    .conseils-liste li:last-child { border-bottom: none; }
+
+    /* Kit régulation */
+    .kit-badge {
+        display: inline-block;
+        background: var(--danger);
+        color: white;
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 2rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: var(--space-lg);
+    }
+    .technique {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-lg) 0;
+        box-shadow: var(--shadow-md);
+        border-left: 5px solid var(--purple);
+    }
+    .technique h3 { color: var(--purple-deep); margin-bottom: var(--space-md); }
+    .technique .pourquoi {
+        background: var(--cream-dark);
+        padding: var(--space-md);
+        border-radius: 0.5rem;
+        margin-top: var(--space-md);
+        font-size: 0.9rem;
+    }
+    .technique-perso {
+        border-left-color: var(--primary);
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+    }
+    .phrase-ancrage-box {
+        background: white;
+        border: 3px solid var(--primary);
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin: var(--space-lg) 0;
+    }
+    .phrase-ancrage {
+        font-family: var(--font-display);
+        font-size: 1.35rem;
+        color: var(--purple-deep);
+        font-style: italic;
+        margin: 0;
+    }
+    .rappel-box {
+        background: var(--cream-dark);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin-top: var(--space-xl);
+    }
+
+    /* Transition box */
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin-top: var(--space-2xl);
+    }
+    .transition-box p { color: white; margin: 0; }
+    .transition-box em { color: rgba(255,255,255,0.9); }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        :root { --space-xl: 1.5rem; --space-2xl: 2rem; }
+        .container { padding: 0 var(--space-md); }
+        .hero-title { font-size: 2rem; }
+        .routine-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ==================== PRINT ==================== */
+    @media print {
+        body { background: white; }
+        section { page-break-inside: avoid; animation: none; opacity: 1; transform: none; }
+        .hero::before { display: none; }
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1 class="hero-title">Ta Roadmap & Organisation</h1>
+        <p class="hero-subtitle">+ Ton Kit de Régulation d'Urgence</p>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section id="intro">
+        <div class="card">
+            Rislène, tu comprends maintenant les mécanismes de ton monde intérieur - comment ton esprit, ton corps et ton cœur fonctionnent ensemble, comment les pensées automatiques se créent, comment le système nerveux réagit. C'est une base précieuse. Maintenant, avant de plonger dans les parties plus profondes de ta cartographie personnelle, je veux te donner deux choses essentielles.<br><br>D'abord, une vision claire de comment t'organiser pour la suite. Un plan de route, pas pour te presser, mais pour que tu saches où tu vas. Et surtout, ta trousse de secours - les outils de régulation dont tu auras besoin quand certaines lectures vont réveiller des émotions. Pourquoi est-ce que j'insiste là-dessus ? Parce qu'on n'ouvre pas le ventre du patient avant d'avoir préparé l'anesthésie. Ce que tu vas explorer dans les documents suivants va probablement remuer des choses que tu as enfouies depuis longtemps. Ces schémas qui se répètent, ces questions sans réponse, ces blessures que tu as appris à contourner... tout cela va remonter. Et c'est normal. C'est même le signe que le travail se fait. Mais tu dois avoir les outils pour te réguler AVANT d'ouvrir ces portes.<br><br>Ce parcours est le tien, Rislène. Tu avances à ton rythme, selon ta disponibilité et ton énergie. Il n'y a pas de course, pas de deadline. Juste toi, et ce chemin de compréhension que tu cherches depuis si longtemps.
+        </div>
+    </section>
+
+    <!-- SECTION A : DISCLAIMER -->
+    <section id="disclaimer">
+        <div class="warning-box">
+            <h2>⚠️ Avant de continuer : ce parcours peut être intense</h2>
+
+            <p>Ce que tu t'apprêtes à explorer n'est pas anodin. Tu vas plonger dans des zones de toi-même que tu as peut-être évitées, consciemment ou non, pendant des années. Des souvenirs vont remonter, des émotions vont surgir, des prises de conscience vont te secouer. Si tu ressens une forme d'appréhension en lisant ces lignes, c'est parfaitement normal. Ça montre que tu mesures l'importance de ce travail. Cette appréhension n'est pas de la faiblesse - c'est de l'intelligence émotionnelle.</p>
+
+            Il est possible que pendant ce parcours, tu ressentes :<br><br>- <strong>Des émotions intenses qui remontent</strong> : tristesse, colère, peur, honte, culpabilité
+- <strong>De la fatigue après certaines lectures</strong> : ton cerveau et ton corps travaillent en profondeur, ça consomme beaucoup d'énergie
+- <strong>L'envie d'éviter certains documents</strong> : surtout ceux qui touchent à des zones sensibles que tu préfères ne pas regarder
+- <strong>Des rêves plus présents ou plus intenses</strong> : ton inconscient digère ce que tu explores consciemment
+- <strong>Des moments où tu penses "c'est trop, j'arrête"</strong> : le système nerveux peut se mettre en mode protection
+- <strong>Des réactions corporelles</strong> : tensions, maux de ventre, gorge serrée, cœur qui s'accélère<br><br>Tout cela est NORMAL. Ce ne sont pas des signes que tu fais quelque chose de mal. Ce sont des signes que le travail se fait en profondeur, que des couches anciennes se dénouent. Ce n'est pas agréable, mais c'est nécessaire pour avancer.
+
+            <p>Tu as le droit - et même le devoir envers toi-même - de respecter ton rythme. Si c'est trop intense aujourd'hui, fais une pause. Si un document te semble trop lourd, reviens-y demain ou dans quelques jours. Si une section te bloque complètement, saute-la pour l'instant et reviens plus tard quand tu te sentiras plus solide. Ce n'est pas un examen. Il n'y a pas de bonne ou de mauvaise façon de faire ce parcours. C'est un voyage intérieur, et tu en es la seule capitaine.</p>
+
+            <p>Ce programme est un accompagnement psychologique approfondi, mais ce n'est pas une thérapie clinique. Si à un moment tu sens que c'est vraiment trop intense, si des pensées sombres émergent, si tu te sens submergée de façon prolongée au point que ça affecte ton quotidien - c'est important de le reconnaître et de demander un soutien adapté. Je suis là pour t'accompagner dans ce parcours, mais un professionnel de santé mentale (psychologue, psychiatre) peut être nécessaire en complément si des traumatismes profonds se réveillent. Ce n'est pas un échec de demander de l'aide - c'est un acte de responsabilité envers toi-même.</p>
+
+            html
+<table class="securite-table">
+    <thead>
+        <tr>
+            <th>Situation</th>
+            <th>Signes</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="niveau-1">
+            <td><strong>🟢 Ralentir</strong></td>
+            <td>Fatigue émotionnelle, besoin de digérer, légère surcharge, envie de pause</td>
+            <td>Arrête la lecture, fais une pause de quelques heures ou quelques jours, respire, reviens quand tu es prête</td>
+        </tr>
+        <tr class="niveau-2">
+            <td><strong>🟡 Demander du soutien</strong></td>
+            <td>Anxiété persistante depuis plusieurs jours, blocage prolongé, émotions intenses répétées, difficulté à réguler seule</td>
+            <td>Me contacter pour en parler, échanger avec une personne de confiance, ne pas rester seule avec ça</td>
+        </tr>
+        <tr class="niveau-3">
+            <td><strong>🔴 Consulter un professionnel</strong></td>
+            <td>Idées noires, pensées suicidaires, dissociation intense, trauma réactivé fortement, incapacité à fonctionner dans ton quotidien</td>
+            <td>Consulter immédiatement un professionnel de santé mentale (psychologue, psychiatre). En cas d'urgence : 3114 (numéro national de prévention du suicide)</td>
+        </tr>
+    </tbody>
+</table>
+        </div>
+    </section>
+
+    <!-- SECTION B : VUE D'ENSEMBLE -->
+    <section id="vue-ensemble">
+        <h2>📋 Vue d'ensemble de ton parcours</h2>
+
+        html
+<div class="parcours-liste">
+    <div class="doc fait">✓ DOC 1 : Accueil & Intention</div>
+    <div class="doc fait">✓ DOC 2 : Comprendre ton monde intérieur</div>
+    <div class="doc actuel">→ DOC 3 : Roadmap & Organisation <span class="badge">Tu es ici</span></div>
+    <div class="doc avenir">○ DOC 4 : Tu es une histoire qui se raconte</div>
+    <div class="doc avenir">○ DOC 5 : Ton Récit de Vie</div>
+    <div class="doc avenir">○ DOC 6 : Comprendre les schémas</div>
+    <div class="doc avenir">○ DOC 7 : Ta Table de Navigation</div>
+    <div class="doc avenir">○ DOC 8 : Tes 4 Documents Schémas</div>
+    <div class="doc avenir">○ DOC 9 : Comprendre l'attachement</div>
+    <div class="doc avenir">○ DOC 10 : Ta Fiche Passage à l'Action</div>
+    <div class="doc avenir">○ DOC 11 : Tes Exercices personnalisés</div>
+    <div class="doc avenir">○ DOC 12 : Tes Indicateurs de Transformation</div>
+    <div class="doc avenir">○ DOC 13 : La transformation est un chemin</div>
+    <div class="doc avenir">○ DOC 14 : Synthèse & Fil Rouge</div>
+</div>
+
+        <p class="text-center mt-lg">Temps estimé pour l'ensemble : <strong>8 à 12 semaines</strong> (à ton rythme)</p>
+    </section>
+
+    <!-- SECTION C : LES 3 PHASES -->
+    <section id="trois-phases">
+        <h2>🔄 Les 3 phases de ta transformation</h2>
+
+        <div class="phase phase-1">
+            <h3>Phase 1 : CONSCIENCE (Mois 1-2)</h3>
+            <p><strong>Focus :</strong> Explorer, comprendre, mettre des mots</p>
+            <p><strong>Documents :</strong> DOC 4 à 8</p>
+            <p>Durant cette phase, tu vas notamment mettre des mots sur ce schéma d'abandon et de promesses non tenues qui te suit depuis si longtemps. Tu vas comprendre d'où il vient - probablement de très loin, peut-être de l'enfance - comment il se manifeste dans ta vie aujourd'hui, et pourquoi il a eu du sens à un moment de ton histoire. Ce n'est pas un défaut de fabrication. C'est une adaptation intelligente à un contexte difficile. Mais aujourd'hui, cette adaptation coûte plus cher qu'elle ne protège.</p>
+            <p><strong>Ce que tu vas vivre :</strong> Des prises de conscience, peut-être des émotions qui remontent, des "c'est donc ça !" libérateurs.</p>
+        </div>
+
+        <div class="phase phase-2">
+            <h3>Phase 2 : TRANSFORMATION (Mois 3-4)</h3>
+            <p><strong>Focus :</strong> Apprendre de nouvelles réponses, pratiquer les protocoles</p>
+            <p><strong>Documents :</strong> DOC 9 à 11</p>
+            <p>C'est dans cette phase que tu recevras ta cartographie complète. Tu découvriras en détail comment le schéma d'abandon, combiné à tes autres schémas (imperfection, méfiance, carence affective), interagit et crée ces patterns que tu as décrits : cette tendance à donner trop vite, cette hypervigilance quand les actes ne suivent pas les paroles, cette difficulté à te sentir en sécurité même quand tout va bien. Tu auras tes premiers protocoles de transformation - pas des solutions magiques, mais des outils concrets pour commencer à desserrer l'emprise de ces automatismes.</p>
+            <p><strong>Ce que tu vas vivre :</strong> De la pratique, des essais-erreurs, des moments où ça marche et d'autres où tu retombes dans l'ancien. C'est normal.</p>
+        </div>
+
+        <div class="phase phase-3">
+            <h3>Phase 3 : INTÉGRATION (Mois 5-6)</h3>
+            <p><strong>Focus :</strong> Ancrer, stabiliser, passer à l'action dans le réel</p>
+            <p><strong>Documents :</strong> DOC 12 à 14</p>
+            <p>Tu commenceras à appliquer concrètement ce que tu as appris. Face aux situations qui auparavant déclenchaient le schéma d'abandon - une promesse non tenue, un acte qui ne suit pas les paroles, un silence qui s'installe - tu auras de nouvelles réponses disponibles. Pas parfaites dès le début. Avec des rechutes. Mais progressivement, quelque chose va changer : tu vas pouvoir observer le schéma se déclencher, le reconnaître, et choisir une autre réponse. C'est là que la transformation devient réelle.</p>
+            <p><strong>Ce que tu vas vivre :</strong> Une nouvelle façon d'être en relation qui devient naturelle, pas forcée.</p>
+        </div>
+    </section>
+
+    <!-- SECTION D : ROUTINE -->
+    <section id="routine">
+        <h2>⏰ Routine quotidienne suggérée (15 min)</h2>
+
+        <p>Tu as une vie bien remplie, et je le vois dans ce que tu as partagé. L'idée n'est pas de rajouter une charge mentale ou une liste de devoirs. Ce serait contre-productif. Ce qui va suivre, ce sont des suggestions - pas des obligations. L'objectif est de trouver 15 minutes dans ta journée qui nourrissent plutôt qu'elles n'épuisent. 15 minutes où tu te reconnectes avec toi-même, où tu régules ton système nerveux, où tu ancres les prises de conscience que tu fais en lisant ta cartographie.</p>
+
+        <div class="routine-grid">
+            <div class="routine-option">
+                <h4>Option MATIN ☀️</h4>
+                <ul>
+                    <li><strong>5 min - Corps :</strong> Respiration 4-7-8 ou cohérence cardiaque</li>
+                    <li><strong>5 min - Esprit :</strong> Lire une affirmation ou visualiser</li>
+                    <li><strong>5 min - Cœur :</strong> Dhikr ou du'a personnalisée</li>
+                </ul>
+            </div>
+
+            <div class="routine-option">
+                <h4>Option SOIR 🌙</h4>
+                <ul>
+                    <li><strong>5 min - Corps :</strong> Scan corporel, relâcher les tensions</li>
+                    <li><strong>5 min - Esprit :</strong> Journaling - qu'ai-je observé aujourd'hui ?</li>
+                    <li><strong>5 min - Cœur :</strong> Gratitude + dhikr avant de dormir</li>
+                </ul>
+            </div>
+        </div>
+
+        <p class="note">💡 Tu n'es pas obligée de faire les deux. Choisis ce qui te convient. L'important, c'est la régularité, pas la quantité.</p>
+
+        html
+<div class="alternative-box">
+    <h4>💫 Et si ça ne marche pas ?</h4>
+    <p>La vie n'est pas toujours régulière. Certains jours, 15 minutes te sembleront impossibles. Et c'est normal. Voici des alternatives :</p>
+    <ul>
+        <li><strong>Version mini (2 min)</strong> : 3 respirations profondes en conscience + ta phrase d'ancrage. C'est déjà énorme.</li>
+        <li><strong>Version express (5 min)</strong> : Juste le dhikr en marchant, en conduisant, ou en faisant une tâche quotidienne. Ça compte.</li>
+        <li><strong>Version "jour difficile"</strong> : Simplement poser la main sur ton cœur et dire : "Je suis là pour moi. Aujourd'hui je fais ce que je peux, et c'est suffisant."</li>
+        <li><strong>Version "j'ai complètement oublié"</strong> : Le soir avant de dormir, 30 secondes de gratitude. Une seule chose pour laquelle tu es reconnaissante aujourd'hui. Même toute petite.</li>
+    </ul>
+    <p>L'important n'est pas la perfection. C'est de ne jamais couper totalement le lien avec toi-même. Même les jours où tu ne fais "que" 30 secondes, tu maintiens ce fil. Et ce fil, sur le long terme, c'est lui qui tisse la transformation.
+</p>
+</div>
+    </section>
+
+    <!-- SECTION E : CONSEILS -->
+    <section id="conseils">
+        <h2>💡 Conseils pour bien démarrer</h2>
+
+        html
+<ol class="conseils-liste">
+    <li><strong>Choisis le bon moment</strong> : Lis les documents quand tu es dans un état relativement calme, pas après une journée épuisante ou une dispute. Idéalement quand tu as au moins 30-45 minutes devant toi sans interruption.</li>
+    <li><strong>Crée un espace sécurisant</strong> : Un endroit où tu peux être seule, tranquille, sans interruption. Ton petit cocon de lecture. Ça peut être ta chambre, un coin du salon quand personne n'est là, même ta voiture garée quelque part si c'est le seul endroit où tu trouves le calme.</li>
+    <li><strong>Aie ton kit de régulation à portée</strong> : Avant de lire un document intense (notamment les DOC 8 sur les schémas), relis les techniques de régulation. Sache que tu les as. Si ton cœur s'accélère en lisant, arrête-toi, régule, puis continue.</li>
+    <li><strong>Tiens un journal</strong> : Note ce qui te touche, ce qui te questionne, ce qui résiste, ce qui te met en colère. Ces notes seront précieuses pour la suite du parcours et pour mesurer ton évolution. Ça peut être un cahier, une note sur ton téléphone, ce qui te convient.</li>
+    <li><strong>Préviens quelqu'un de confiance</strong> : Dis à une amie proche ou à une sœur que tu fais ce travail sur toi-même. Avoir quelqu'un qui sait, même si tu ne lui racontes pas tout, ça aide à ne pas te sentir seule dans ce processus.</li>
+    <li><strong>Connecte-toi spirituellement</strong> : Avant chaque session de lecture, fais une petite invocation. Demande à Allah de t'éclairer, de te faciliter ce chemin, de te donner la force de regarder en face ce qui doit être vu. Cette dimension spirituelle n'est pas accessoire - elle est centrale.</li>
+    <li><strong>Résiste à l'envie de tout analyser d'un coup</strong> : Tu as une tendance naturelle à vouloir tout comprendre immédiatement - je le vois dans la profondeur de tes réponses au formulaire. Mais certaines compréhensions prennent du temps à décanter. Laisse-toi le droit de ne pas tout saisir tout de suite. Reviens sur un document plusieurs fois si nécessaire. Les couches de compréhension se révèlent progressivement.</li>
+</ol>
+    </section>
+
+    <!-- SECTION F : KIT DE RÉGULATION -->
+    <section id="kit-regulation">
+        <h2>🆘 Ton Kit de Régulation d'Urgence</h2>
+        <p class="kit-badge">À GARDER SOUS LA MAIN - IMPRIMER SI BESOIN</p>
+
+        Ce kit est ta trousse de secours émotionnelle. Garde-le à portée de main - tu peux même imprimer cette page ou la sauvegarder sur ton téléphone. Pourquoi est-il si important ? Parce qu'on n'ouvre pas le ventre du patient avant d'avoir préparé l'anesthésie. Ce que tu vas lire dans les documents suivants - notamment quand tu vas plonger dans l'analyse de tes schémas - va réveiller des émotions intenses. Ce n'est pas un bug, c'est le processus normal de transformation. Mais tu dois savoir comment te réguler quand ça arrive.<br><br>Utilise ces techniques dès que tu sens ton corps réagir : cœur qui s'accélère, gorge serrée, boule au ventre, mains moites, envie de fuir la lecture, sensation de dissociation. Ces signaux indiquent que ton système nerveux bascule en mode stress ou figement. STOP. Régule d'abord avec une de ces techniques. Continue ensuite seulement quand tu sens que tu es revenue en zone de sécurité. Ce n'est pas une perte de temps - c'est la condition pour que le travail se fasse en profondeur sans te submerger.
+
+        <div class="technique">
+            <h3>1. Respiration 4-7-8</h3>
+            <p><strong>Quand :</strong> Anxiété, cœur qui s'accélère, pensées qui s'emballent</p>
+            <ol>
+                <li>Inspire par le nez pendant <strong>4 secondes</strong></li>
+                <li>Retiens ton souffle pendant <strong>7 secondes</strong></li>
+                <li>Expire lentement par la bouche pendant <strong>8 secondes</strong></li>
+                <li>Répète <strong>3-4 fois</strong></li>
+            </ol>
+            <p class="pourquoi">💡 Pourquoi ça marche : L'expiration longue active le système parasympathique et envoie un signal de sécurité à ton cerveau.</p>
+        </div>
+
+        <div class="technique">
+            <h3>2. Grounding 5-4-3-2-1</h3>
+            <p><strong>Quand :</strong> Tu te sens déconnectée, dissociée, "ailleurs"</p>
+            <p>Nomme :</p>
+            <ul>
+                <li><strong>5</strong> choses que tu <strong>VOIS</strong></li>
+                <li><strong>4</strong> choses que tu <strong>TOUCHES</strong></li>
+                <li><strong>3</strong> choses que tu <strong>ENTENDS</strong></li>
+                <li><strong>2</strong> choses que tu <strong>SENS</strong></li>
+                <li><strong>1</strong> chose que tu <strong>GOÛTES</strong></li>
+            </ul>
+            <p class="pourquoi">💡 Pourquoi ça marche : Ça ramène ton attention dans le présent et dans ton corps.</p>
+        </div>
+
+        <div class="technique">
+            <h3>3. Main sur le cœur</h3>
+            <p><strong>Quand :</strong> Tu te sens submergée émotionnellement</p>
+            <ol>
+                <li>Pose ta main sur ton cœur</li>
+                <li>Sens la chaleur de ta main</li>
+                <li>Respire lentement</li>
+                <li>Dis-toi : "Je suis en sécurité. C'est du passé qui remonte. Je suis ici, maintenant."</li>
+            </ol>
+            <p class="pourquoi">💡 Pourquoi ça marche : Le toucher libère de l'ocytocine et active un sentiment de réconfort.</p>
+        </div>
+
+        <div class="technique">
+            <h3>4. Orienting</h3>
+            <p><strong>Quand :</strong> Tu te sens figée, paralysée</p>
+            <ol>
+                <li>Tourne lentement la tête et regarde autour de toi</li>
+                <li>Nomme ce que tu vois : "Je vois une fenêtre, je vois une plante..."</li>
+                <li>Rappelle-toi où tu es : "Je suis dans ma chambre, il est 15h, je suis en sécurité."</li>
+            </ol>
+            <p class="pourquoi">💡 Pourquoi ça marche : Ça aide ton système nerveux à se rendre compte qu'il n'y a pas de danger réel.</p>
+        </div>
+
+        <div class="technique technique-perso">
+            <h3>5. Ta phrase d'ancrage personnalisée</h3>
+            <p><strong>Quand :</strong> Tu as besoin de te reconnecter à quelque chose de plus grand</p>
+            <div class="phrase-ancrage-box">
+                <p class="phrase-ancrage">"Inna ma'al 'usri yusra - Avec chaque difficulté vient une facilité. Je traverse ceci, et Allah est avec moi."</p>
+            </div>
+            <p>Répète cette phrase lentement, en respirant. Laisse-la infuser.</p>
+        </div>
+
+        <div class="rappel-box">
+            <p><strong>📌 Rappel important :</strong> Ces techniques sont un aperçu. Tu trouveras des versions plus détaillées et d'autres exercices dans le DOC 11 (Exercices personnalisés).</p>
+        </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section id="conclusion">
+        <div class="card">
+            Tu as maintenant tout ce qu'il te faut pour aborder la suite sereinement, Rislène. Une vision claire de ton parcours - 14 documents qui vont progressivement dévoiler ta cartographie intérieure. Un rythme qui t'appartient - 8 à 12 semaines si tu suis le fil naturellement, mais tu peux prendre plus de temps si tu en as besoin. Et surtout ta trousse de secours - ces cinq techniques de régulation qui seront tes alliées quand des émotions intenses vont remonter.<br><br>Tu es prête. Dans le prochain document, on va voir ensemble que tu es une histoire qui se raconte... et que cette histoire peut se réécrire. C'est une des sections les plus libératrices du parcours, parce qu'elle va te montrer que rien n'est figé. Que les schémas qui te semblent gravés dans le marbre sont en réalité des patterns appris - et ce qui a été appris peut être désappris. À tout de suite.
+        </div>
+
+        <div class="transition-box">
+            <p>→ <em>Prochain document : "Tu es une histoire qui se raconte" - une des sections les plus libératrices du parcours.</em></p>
+        </div>
+    </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p><strong>My Muqabala</strong></p>
+    <p>Ta cartographie émotionnelle personnalisée</p>
+    <p style="opacity: 0.7; font-size: 0.85rem;">Document confidentiel - Rislène</p>
+</footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOC 1 - Accueil & Intention | Rislène</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    /* ==========================================
+       MY MUQABALA - CSS DE BASE COMPLET
+       DOC 1 : Accueil & Intention
+       Version 1.0 - 22/12/2024
+    ========================================== */
+
+    /* ==================== VARIABLES CSS ==================== */
+    :root {
+        --primary: #D4569C;
+        --primary-deep: #B33D7E;
+        --primary-light: #F5D6E8;
+        --purple: #6B5A9C;
+        --purple-deep: #4A3B6E;
+        --purple-light: #B8AECC;
+        --success: #2C7A7B;
+        --success-light: #E6F7F7;
+        --danger: #D4569C;
+        --danger-light: #F5D6E8;
+        --accent: #D4A373;
+        --accent-deep: #B8895E;
+        --accent-light: #F0E5D8;
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-1: #FDFBF7;
+        --gray-2: #F5F1E8;
+        --gray-3: #E8E2D5;
+        --text: #1A1A1A;
+        --text-soft: #4A3B6E;
+        --text-muted: #6B6B6B;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --shadow-sm: 0 3px 12px rgba(107, 90, 156, 0.12);
+        --shadow-md: 0 6px 24px rgba(107, 90, 156, 0.18);
+        --shadow-lg: 0 12px 48px rgba(107, 90, 156, 0.25);
+        --shadow-accent: 0 16px 64px rgba(212, 163, 115, 0.35);
+    }
+
+    /* ==================== RESET & BASE ==================== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        overflow-x: hidden !important;
+        max-width: 100vw;
+        width: 100%;
+        position: relative;
+    }
+
+    body {
+        font-family: var(--font-body);
+        color: var(--text);
+        line-height: 1.7;
+        background: linear-gradient(135deg, #FDFBF7 0%, #F8F4ED 50%, #F5F1E8 100%);
+        -webkit-font-smoothing: antialiased;
+        font-weight: 400;
+        overflow-x: hidden !important;
+        overflow-y: auto;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    /* ==================== TYPOGRAPHY ==================== */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-body);
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text);
+        margin-bottom: var(--space-md);
+        letter-spacing: -0.02em;
+    }
+
+    h1 {
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        font-family: var(--font-display);
+    }
+    h2 {
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        font-weight: 700;
+        font-family: var(--font-display);
+    }
+    h3 {
+        font-size: clamp(1.5rem, 3vw, 2.25rem);
+        font-weight: 700;
+    }
+    h4 {
+        font-size: 1.35rem;
+        font-weight: 700;
+    }
+
+    p {
+        margin-bottom: var(--space-md);
+        line-height: 1.8;
+        font-weight: 400;
+    }
+
+    strong {
+        font-weight: 700;
+        color: var(--primary-deep);
+    }
+
+    .italic { font-style: italic; }
+
+    /* ==================== LAYOUT ==================== */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 var(--space-lg);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    section {
+        padding: var(--space-2xl) 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+        pointer-events: auto !important;
+    }
+
+    section a {
+        pointer-events: auto !important;
+    }
+
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+        text-align: center;
+        padding: var(--space-xl) 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(212, 86, 156, 0.12) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(20px, 20px) rotate(180deg); }
+    }
+
+    .hero-title {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.75rem, 6vw, 4.5rem);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        line-height: 1.1;
+        font-family: var(--font-display);
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-soft);
+        margin-bottom: var(--space-xl);
+    }
+
+    /* ==================== BADGES ==================== */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 2rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: var(--font-body);
+    }
+
+    .badge-date {
+        background: rgba(253, 251, 247, 0.95);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(212, 86, 156, 0.25);
+        color: var(--text-soft);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .badge-trust {
+        background: linear-gradient(135deg, var(--primary-light) 0%, rgba(253, 251, 247, 0.9) 100%);
+        border: 2px solid var(--primary);
+        color: var(--purple-deep);
+        padding: var(--space-md) var(--space-xl);
+        font-size: 1.1rem;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+    }
+
+    .badge-danger {
+        background: linear-gradient(135deg, var(--danger) 0%, var(--primary-deep) 100%);
+        color: white;
+        border: none;
+        animation: pulse 2s ease-in-out infinite;
+        box-shadow: var(--shadow-lg);
+        font-weight: 700;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); box-shadow: var(--shadow-lg); }
+        50% { transform: scale(1.05); box-shadow: 0 16px 48px rgba(212, 86, 156, 0.4); }
+    }
+
+    .badge-accent {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+        color: white;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+    }
+
+    .badge-purple {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 100%);
+        color: white;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+    }
+
+    .badge-success {
+        background: linear-gradient(135deg, var(--success) 0%, #1d5a5a 100%);
+        color: white;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+    }
+
+    .badge-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+        color: white;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+    }
+
+    .glass {
+        background: rgba(253, 251, 247, 0.9);
+        backdrop-filter: blur(12px);
+        border: 2px solid rgba(245, 241, 232, 0.6);
+    }
+
+    /* ==================== CARDS ==================== */
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin-bottom: var(--space-lg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(107, 90, 156, 0.08);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .card-featured {
+        border: 3px solid var(--primary);
+        box-shadow: 0 12px 48px rgba(212, 86, 156, 0.3);
+        position: relative;
+        margin-top: 2rem;
+        padding-top: calc(var(--space-xl) + 0.5rem);
+        overflow: visible;
+    }
+
+    .card-featured::before {
+        content: 'RECOMMANDE';
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+        color: white;
+        padding: 0.4rem 1.2rem;
+        border-radius: 2rem;
+        font-weight: 800;
+        font-size: 0.75rem;
+        box-shadow: 0 6px 20px rgba(212, 163, 115, 0.5);
+        font-family: var(--font-body);
+        white-space: nowrap;
+        z-index: 10;
+        max-width: 90%;
+        text-align: center;
+    }
+
+    .card-testimonial {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border-left: 5px solid var(--primary);
+    }
+
+    .letter-card {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border: 2px solid var(--cream-dark);
+    }
+
+    .border-danger { border-top: 5px solid var(--danger); }
+    .border-2-success { border: 3px solid var(--success); }
+    .border-2-primary { border: 3px solid var(--primary); }
+    .border-2-purple { border: 3px solid var(--purple); }
+
+    /* ==================== SECTION STYLES ==================== */
+    .section {
+        padding: var(--space-2xl) 0;
+        margin-bottom: var(--space-xl);
+    }
+
+    .section-title {
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        font-weight: 700;
+        margin-bottom: var(--space-md);
+        font-family: var(--font-display);
+    }
+
+    .content-block {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: var(--space-lg);
+    }
+
+    /* ==================== MESSAGES ==================== */
+    .message {
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-lg) 0;
+    }
+
+    .message-validation {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-left: 5px solid var(--success);
+    }
+
+    .message-insight {
+        background: linear-gradient(135deg, rgba(107, 90, 156, 0.12) 0%, white 100%);
+        border-left: 5px solid var(--purple);
+    }
+
+    .message-warning {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border-left: 5px solid var(--danger);
+    }
+
+    .bg-success-light {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+    }
+
+    .bg-primary-light {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+    }
+
+    /* ==================== LISTS ==================== */
+    .emotional-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .emotional-list li {
+        padding: var(--space-md);
+        margin-bottom: var(--space-sm);
+        border-radius: 0.75rem;
+        background: var(--gray-1);
+        opacity: 0;
+        transform: translateX(-20px);
+        animation: slideIn 0.5s ease forwards;
+        border-left: 3px solid var(--primary);
+    }
+
+    .emotional-list li:nth-child(1) { animation-delay: 0.1s; }
+    .emotional-list li:nth-child(2) { animation-delay: 0.2s; }
+    .emotional-list li:nth-child(3) { animation-delay: 0.3s; }
+    .emotional-list li:nth-child(4) { animation-delay: 0.4s; }
+    .emotional-list li:nth-child(5) { animation-delay: 0.5s; }
+    .emotional-list li:nth-child(6) { animation-delay: 0.6s; }
+    .emotional-list li:nth-child(7) { animation-delay: 0.7s; }
+
+    @keyframes slideIn {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .simple-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .simple-list li {
+        padding: var(--space-sm) 0;
+        color: var(--text-soft);
+        font-weight: 500;
+    }
+
+    .compact-list {
+        list-style: none;
+        padding: 0;
+        margin: var(--space-md) 0;
+    }
+
+    .compact-list li {
+        padding: var(--space-sm) 0 var(--space-sm) var(--space-lg);
+        color: var(--text);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        position: relative;
+    }
+
+    .compact-list li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--success);
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    /* ==================== BUTTONS ==================== */
+    .btn {
+        display: inline-block;
+        padding: var(--space-md) var(--space-xl);
+        border-radius: 3rem;
+        font-weight: 800;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border: none;
+        font-size: 1rem;
+        font-family: var(--font-body);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+        color: white;
+        box-shadow: 0 10px 30px rgba(212, 86, 156, 0.4);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 48px rgba(212, 86, 156, 0.5);
+    }
+
+    .btn-full {
+        display: block;
+        width: 100%;
+    }
+
+    /* ==================== GRID ==================== */
+    .grid {
+        display: grid;
+        gap: var(--space-lg);
+    }
+
+    .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-auto {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .grid-auto-lg {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    /* ==================== TABLES ==================== */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: var(--space-lg) 0;
+    }
+
+    th, td {
+        padding: var(--space-md);
+        text-align: left;
+        border-bottom: 1px solid var(--gray-3);
+    }
+
+    th {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 100%);
+        color: white;
+        font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+        background: var(--gray-1);
+    }
+
+    tr:hover {
+        background: var(--primary-light);
+    }
+
+    /* ==================== UTILITIES ==================== */
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-soft { color: var(--text-soft); }
+    .text-muted { color: var(--text-muted); }
+    .text-primary { color: var(--primary); }
+    .text-primary-deep { color: var(--primary-deep); }
+    .text-purple { color: var(--purple); }
+    .text-success { color: var(--success); }
+    .text-danger { color: var(--danger); }
+    .text-white { color: white; }
+
+    .gradient-text {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .fw-600 { font-weight: 600; }
+    .fw-700 { font-weight: 700; }
+    .fw-800 { font-weight: 800; }
+
+    .fs-small { font-size: 0.875rem; }
+    .fs-body { font-size: 1rem; }
+    .fs-subtitle { font-size: 1.5rem; }
+    .fs-title { font-size: 2rem; }
+    .fs-heading { font-size: 1.25rem; }
+
+    .mb-0 { margin-bottom: 0; }
+    .mb-xs { margin-bottom: var(--space-xs); }
+    .mb-sm { margin-bottom: var(--space-sm); }
+    .mb-md { margin-bottom: var(--space-md); }
+    .mb-lg { margin-bottom: var(--space-lg); }
+    .mb-xl { margin-bottom: var(--space-xl); }
+    .mb-2xl { margin-bottom: var(--space-2xl); }
+
+    .mt-sm { margin-top: var(--space-sm); }
+    .mt-md { margin-top: var(--space-md); }
+    .mt-lg { margin-top: var(--space-lg); }
+    .mt-xl { margin-top: var(--space-xl); }
+    .mt-2xl { margin-top: var(--space-2xl); }
+
+    .p-md { padding: var(--space-md); }
+    .p-lg { padding: var(--space-lg); }
+    .p-xl { padding: var(--space-xl); }
+    .px-xl { padding-left: var(--space-xl); padding-right: var(--space-xl); }
+
+    .block { display: block; }
+    .inline-block { display: inline-block; }
+    .inline-flex { display: inline-flex; }
+
+    .rounded-lg { border-radius: 1rem; }
+    .rounded-full { border-radius: 9999px; }
+
+    .shadow-accent { box-shadow: var(--shadow-accent); }
+
+    .gap-md { gap: var(--space-md); }
+    .gap-lg { gap: var(--space-lg); }
+
+    .icon-lg { font-size: 1.5rem; }
+    .icon-xl { font-size: 2rem; }
+    .icon-2xl { font-size: 3rem; }
+
+    .icon-bounce {
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.05); }
+        50% { transform: scale(1); }
+        75% { transform: scale(1.05); }
+    }
+
+    @keyframes float-gentle {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    .relative { position: relative; }
+    .z-1 { z-index: 1; }
+
+    .line-height-lg { line-height: 2; }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+        color: white;
+        margin-top: var(--space-2xl);
+    }
+
+    footer p {
+        margin-bottom: var(--space-sm);
+        opacity: 0.9;
+    }
+
+    /* ==================== DOC 1 - CSS SPÉCIFIQUE ==================== */
+
+    /* Cards spécifiques DOC 1 */
+    .card-accueil {
+        background: linear-gradient(135deg, white 0%, var(--primary-light) 100%);
+        border-left: 5px solid var(--primary);
+    }
+
+    .card-audio {
+        background: linear-gradient(135deg, var(--accent-light) 0%, white 100%);
+        border: 2px dashed var(--accent);
+        text-align: center;
+        padding: var(--space-xl);
+        border-radius: 1rem;
+        margin: var(--space-lg) 0;
+    }
+
+    .card-audio .icon {
+        font-size: 2.5rem;
+        margin-bottom: var(--space-md);
+    }
+
+    /* Glossaire */
+    .glossaire-grid {
+        display: grid;
+        gap: var(--space-lg);
+        margin-top: var(--space-xl);
+    }
+
+    .terme {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        box-shadow: var(--shadow-sm);
+        border-left: 4px solid var(--purple);
+        transition: all 0.3s ease;
+    }
+
+    .terme:hover {
+        transform: translateX(8px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .terme h4 {
+        color: var(--purple-deep);
+        margin-bottom: var(--space-sm);
+        font-size: 1.1rem;
+    }
+
+    .terme p {
+        font-size: 0.95rem;
+        margin-bottom: var(--space-sm);
+        color: var(--text);
+    }
+
+    .terme ul {
+        margin-left: var(--space-lg);
+        margin-top: var(--space-sm);
+    }
+
+    .terme li {
+        margin-bottom: var(--space-xs);
+        font-size: 0.9rem;
+    }
+
+    /* Message de résonance */
+    .message-resonance {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border: 2px solid var(--primary);
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-xl) 0;
+    }
+
+    /* Transition box */
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin-top: var(--space-2xl);
+    }
+
+    .transition-box p {
+        color: white;
+        margin: 0;
+    }
+
+    .transition-box em {
+        color: rgba(255,255,255,0.9);
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        :root {
+            --space-xl: 1.5rem;
+            --space-2xl: 2rem;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+            width: 100%;
+        }
+
+        .container {
+            padding: 0 var(--space-md);
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        section {
+            padding: var(--space-xl) 0;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .card {
+            padding: var(--space-lg);
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .grid-auto, .grid-auto-lg {
+            grid-template-columns: 1fr;
+        }
+
+        .grid-2, .grid-3 {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-title {
+            font-size: 2.25rem;
+        }
+
+        .card-featured {
+            margin-top: 1.5rem;
+            overflow: visible;
+        }
+
+        .card-featured::before {
+            font-size: 0.65rem;
+            padding: 0.35rem 0.8rem;
+            top: -10px;
+            max-width: 85%;
+        }
+
+        * {
+            max-width: 100vw;
+        }
+
+        .btn-full {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .badge {
+            font-size: 0.85rem;
+            padding: var(--space-xs) var(--space-md);
+        }
+
+        .card-featured::before {
+            font-size: 0.6rem;
+            padding: 0.3rem 0.7rem;
+        }
+    }
+
+    /* ==================== PRINT ==================== */
+    @media print {
+        body {
+            background: white;
+        }
+
+        section {
+            page-break-inside: avoid;
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+
+        .btn {
+            display: none;
+        }
+
+        .hero::before {
+            display: none;
+        }
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="badge badge-date mb-lg">
+            <span>📅</span>
+            <span>Document préparé le 23 décembre 2024</span>
+        </div>
+
+        <h1 class="hero-title">Bienvenue Rislène</h1>
+        <p class="hero-subtitle">Ta Cartographie Émotionnelle Personnalisée</p>
+
+        <div class="badge badge-primary">
+            <span>✨</span>
+            <span>Ce guide t'est <strong>100% personnalisé</strong></span>
+        </div>
+    </section>
+
+    <!-- SECTION A : MESSAGE D'ACCUEIL -->
+    <section id="accueil">
+        <h2>💌 Un mot pour toi</h2>
+
+        <div class="card card-accueil">
+            <p>Rislène, je tiens d'abord à te dire quelque chose d'important : merci. Merci pour ta confiance. Ce que tu viens de faire en remplissant tous ces formulaires, en répondant à des questions parfois très intimes, en revisitant certains moments de ton parcours... ce n'est vraiment pas anodin. C'est un acte de courage rare. Si à certains moments tu as ressenti une vague d'émotions remonter, une certaine vulnérabilité, ou même une fatigue émotionnelle, sache que c'est non seulement normal, mais c'est le signe que tu as fait ce travail avec authenticité. Tu t'es livrée. Et ça, Rislène, ça demande une force que peu de personnes osent mobiliser.</p>
+
+            <p>Ce que tu viens d'accomplir - prendre ce temps pour t'explorer en profondeur, te questionner sans détour, chercher à comprendre tes mécanismes - est un acte de maturité profonde. En Islam, cette quête de connaissance de soi fait partie intégrante du cheminement spirituel. Il y a une sagesse qui dit : "Celui qui se connaît lui-même connaît son Seigneur." Là où beaucoup préfèrent éviter ce travail intérieur, parfois par peur de ce qu'elles pourraient découvrir, toi tu as choisi de regarder en face. Tu as osé lever le voile sur certaines zones d'ombre. C'est une démarche que je respecte infiniment, et c'est déjà, en soi, une forme de guérison qui commence.</p>
+
+            <p>Ce que tu vas découvrir dans les pages qui suivent, c'est ta cartographie émotionnelle personnalisée. Je veux être clair dès maintenant : ce n'est pas un diagnostic figé, ni une vérité absolue gravée dans le marbre sur qui tu es. C'est un éclairage, une grille de lecture construite à partir de ce que tu m'as confié et de plus de 10 ans d'expérience dans l'accompagnement des âmes en quête de clarté. Certaines observations vont probablement te toucher profondément, te faire dire "oui, c'est exactement ça". D'autres résonneront peut-être moins aujourd'hui, et c'est tout à fait normal. Chacune de nous porte des nuances que même les mots les plus justes ne peuvent capturer entièrement. Je t'invite à aborder ce document avec curiosité et bienveillance envers toi-même, comme tu explorerais la carte d'un territoire que tu découvres pour la première fois - ton propre monde intérieur.</p>
+
+            <p>Prends tout le temps dont tu as besoin pour parcourir ce document, Rislène. Il n'y a pas de chrono, pas de "bonne" façon de le lire. Certaines personnes le lisent d'une traite, d'autres préfèrent y revenir en plusieurs fois, laisser infuser certaines observations. Écoute-toi. Et si des questions émergent, si quelque chose n'est pas clair, ou si tu ressens simplement le besoin d'en parler pour approfondir, je reste disponible. Tu n'es pas seule dans ce chemin. Qu'Allah te facilite cette exploration et t'accorde la clarté et l'apaisement que ton cœur recherche depuis si longtemps.</p>
+        </div>
+
+        <!-- Encart Audio -->
+        <div class="card card-audio">
+            <h3>🎧 Un message audio t'attend</h3>
+            <p>J'ai enregistré un message vocal personnalisé pour toi, Rislène.</p>
+            <p>Tu peux l'écouter maintenant ou après avoir lu ce document.</p>
+            <p style="margin-top: var(--space-md); color: var(--accent-deep);">
+                <strong>▶️ [Lien vers l'audio personnalisé]</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION B : GLOSSAIRE -->
+    <section id="glossaire">
+        <h2>📖 Les mots clés de ta cartographie</h2>
+
+        <p>Avant de plonger dans ta cartographie, voici quelques termes que tu vas retrouver régulièrement dans les documents qui suivent. Prends un moment pour les parcourir - certains vont particulièrement résonner avec ce que tu as partagé dans tes réponses, notamment autour de ces schémas qui se répètent et de cette quête de compréhension profonde.</p>
+
+        <div class="glossaire-grid">
+
+            <div class="terme">
+                <h4>🔄 Schéma</h4>
+                <p>Un schéma est un <strong>pattern émotionnel et comportemental</strong> qui s'est formé dans l'enfance comme mécanisme de protection. Il se réactive automatiquement dans certaines situations, souvent à notre insu.</p>
+                <p>Ce n'est pas une "faiblesse" mais une adaptation qui a eu son utilité... et qui peut maintenant évoluer.</p>
+            </div>
+
+            <div class="terme">
+                <h4>⚡ Déclencheur</h4>
+                <p>Un déclencheur est un événement, une parole, un comportement ou même une sensation qui "réveille" un schéma.</p>
+                <p>C'est comme appuyer sur un bouton : la réaction est souvent automatique et disproportionnée par rapport à la situation présente, car elle est liée au passé.</p>
+            </div>
+
+            <div class="terme">
+                <h4>🌙 Les 3 états de l'âme (Nafs)</h4>
+                <p><strong>Nafs al-ammara</strong> : L'âme qui pousse vers ses désirs sans discernement. L'état où les schémas sont actifs et non questionnés.</p>
+                <p><strong>Nafs al-lawwama</strong> : L'âme qui se blâme, qui prend conscience. L'état où tu commences à voir tes patterns.</p>
+                <p><strong>Nafs al-mutma'inna</strong> : L'âme apaisée. L'état de paix intérieure où les schémas ont été transformés.</p>
+            </div>
+
+            <div class="terme">
+                <h4>🔺 Les 3 dimensions de l'être</h4>
+                <p><strong>Al-'Aql (Esprit/Mental)</strong> : Tes pensées, croyances, interprétations.</p>
+                <p><strong>Al-Jism (Corps)</strong> : Tes sensations physiques, ton système nerveux. Le corps garde la mémoire de ce que l'esprit oublie.</p>
+                <p><strong>Al-Qalb (Cœur)</strong> : Ta dimension spirituelle, ton lien avec Allah, le centre de ta transformation.</p>
+            </div>
+
+            <div class="terme">
+                <h4>🎯 Les 6 axes de manifestation</h4>
+                <p>Un schéma se manifeste sur 6 axes interconnectés :</p>
+                <ul>
+                    <li><strong>Mental</strong> : pensées automatiques, croyances</li>
+                    <li><strong>Émotionnel</strong> : émotions, intensité</li>
+                    <li><strong>Comportemental</strong> : actions, évitements</li>
+                    <li><strong>Relationnel</strong> : dynamiques, patterns</li>
+                    <li><strong>Corporel</strong> : sensations, tensions</li>
+                    <li><strong>Spirituel</strong> : relation à Allah, état du cœur</li>
+                </ul>
+            </div>
+
+            <div class="terme">
+                <h4>🔗 Attachement</h4>
+                <p>Le style d'attachement décrit comment tu te lies aux autres, particulièrement dans les relations intimes.</p>
+                <p>Il s'est formé dans l'enfance à travers ta relation avec tes figures parentales. Il influence profondément tes relations adultes... <strong>et il peut évoluer</strong>.</p>
+            </div>
+
+            <div class="terme">
+                <h4>🌡️ Régulation</h4>
+                <p>La régulation émotionnelle, c'est ta capacité à gérer l'intensité de tes émotions sans te laisser submerger.</p>
+                <p>C'est comme avoir un thermostat intérieur. <strong>Bonne nouvelle : ça s'apprend et ça se renforce.</strong></p>
+            </div>
+
+        </div>
+
+        <!-- Note de résonance personnalisée -->
+        <div class="message-resonance mt-xl">
+            <p>Tu vas probablement remarquer que le terme "déclencheur" va beaucoup te parler, surtout quand tu repenses à ce que tu as décrit : cette réaction quand les promesses ne sont pas tenues, quand les actes ne suivent pas les paroles. Ce n'est pas un hasard - c'est l'un des concepts clés de ta cartographie, celui qui explique pourquoi certaines situations te touchent avec une intensité qui te surprend parfois toi-même.</p>
+        </div>
+
+    </section>
+
+    <!-- TRANSITION VERS DOC 2 -->
+    <section id="transition">
+        <div class="transition-box">
+            <p>→ <em>Maintenant que tu as ces repères, passons à la suite : comprendre comment fonctionne ton monde intérieur...</em></p>
+        </div>
+    </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p><strong>My Muqabala</strong></p>
+    <p>Ta cartographie émotionnelle personnalisée</p>
+    <p style="opacity: 0.7; font-size: 0.85rem;">Document confidentiel - Rislène - 23 décembre 2024</p>
+</footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

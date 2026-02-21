@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOC 8{{SCHEMA_LETTRE}} - Schéma {{SCHEMA_NOM}} | {{PRÉNOM}}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    /* ==========================================
+       MY MUQABALA - CSS DE BASE COMPLET
+       DOC 8 : Document Schéma
+       Version 1.0 - 22/12/2024
+    ========================================== */
+
+    /* ==================== VARIABLES CSS ==================== */
+    :root {
+        --primary: #D4569C;
+        --primary-deep: #B33D7E;
+        --primary-light: #F5D6E8;
+        --purple: #6B5A9C;
+        --purple-deep: #4A3B6E;
+        --purple-light: #B8AECC;
+        --success: #2C7A7B;
+        --success-light: #E6F7F7;
+        --danger: #D4569C;
+        --danger-light: #F5D6E8;
+        --accent: #D4A373;
+        --accent-deep: #B8895E;
+        --accent-light: #F0E5D8;
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-1: #FDFBF7;
+        --gray-2: #F5F1E8;
+        --gray-3: #E8E2D5;
+        --text: #1A1A1A;
+        --text-soft: #4A3B6E;
+        --text-muted: #6B6B6B;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --shadow-sm: 0 3px 12px rgba(107, 90, 156, 0.12);
+        --shadow-md: 0 6px 24px rgba(107, 90, 156, 0.18);
+        --shadow-lg: 0 12px 48px rgba(107, 90, 156, 0.25);
+        --shadow-accent: 0 16px 64px rgba(212, 163, 115, 0.35);
+    }
+
+    /* ==================== RESET & BASE ==================== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        overflow-x: hidden !important;
+        max-width: 100vw;
+        width: 100%;
+        position: relative;
+    }
+
+    body {
+        font-family: var(--font-body);
+        color: var(--text);
+        line-height: 1.7;
+        background: linear-gradient(135deg, #FDFBF7 0%, #F8F4ED 50%, #F5F1E8 100%);
+        -webkit-font-smoothing: antialiased;
+        font-weight: 400;
+        overflow-x: hidden !important;
+        overflow-y: auto;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    /* ==================== TYPOGRAPHY ==================== */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-body);
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text);
+        margin-bottom: var(--space-md);
+        letter-spacing: -0.02em;
+    }
+
+    h1 {
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        font-family: var(--font-display);
+    }
+    h2 {
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        font-weight: 700;
+        font-family: var(--font-display);
+    }
+    h3 {
+        font-size: clamp(1.5rem, 3vw, 2.25rem);
+        font-weight: 700;
+    }
+    h4 {
+        font-size: 1.35rem;
+        font-weight: 700;
+    }
+
+    p {
+        margin-bottom: var(--space-md);
+        line-height: 1.8;
+        font-weight: 400;
+    }
+
+    strong {
+        font-weight: 700;
+        color: var(--primary-deep);
+    }
+
+    /* ==================== LAYOUT ==================== */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 var(--space-lg);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    section {
+        padding: var(--space-2xl) 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+    }
+
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+        text-align: center;
+        padding: var(--space-xl) 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-title {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.75rem, 6vw, 4.5rem);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        line-height: 1.1;
+        font-family: var(--font-display);
+    }
+
+    /* ==================== BADGES ==================== */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 2rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: var(--font-body);
+    }
+
+    .badge-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+        color: white;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+    }
+
+    .intensite-badge {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+        color: white;
+        font-weight: 700;
+        padding: var(--space-md) var(--space-xl);
+        border-radius: 2rem;
+        display: inline-block;
+        margin: var(--space-md) 0;
+        box-shadow: var(--shadow-md);
+    }
+
+    .schema-badge {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 100%);
+        color: white;
+        font-weight: 700;
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 2rem;
+        display: inline-block;
+        margin-bottom: var(--space-md);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* ==================== CARDS ==================== */
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin-bottom: var(--space-lg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(107, 90, 156, 0.08);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* ==================== MESSAGES ==================== */
+    .message {
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-lg) 0;
+    }
+
+    .regulation-reminder {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border-left: 5px solid var(--danger);
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-lg) 0;
+    }
+
+    .insight-box {
+        background: linear-gradient(135deg, rgba(107, 90, 156, 0.12) 0%, white 100%);
+        border-left: 5px solid var(--purple);
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-lg) 0;
+    }
+
+    .note-realiste {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-left: 5px solid var(--success);
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-lg) 0;
+    }
+
+    /* ==================== DOC 8 - STYLES SPÉCIFIQUES ==================== */
+
+    /* Axes de manifestation */
+    .axes-manifestation {
+        display: grid;
+        gap: var(--space-lg);
+        margin: var(--space-xl) 0;
+    }
+
+    .axe {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        box-shadow: var(--shadow-sm);
+        border-left: 4px solid var(--purple);
+    }
+
+    .axe-mental { border-left-color: var(--purple); }
+    .axe-emotionnel { border-left-color: var(--primary); }
+    .axe-comportemental { border-left-color: var(--accent); }
+    .axe-relationnel { border-left-color: var(--success); }
+    .axe-corporel { border-left-color: #D4569C; }
+    .axe-spirituel { border-left-color: #2C7A7B; }
+
+    .axe h4 {
+        color: var(--purple-deep);
+        margin-bottom: var(--space-md);
+        font-size: 1.2rem;
+    }
+
+    .axe ul {
+        margin-left: var(--space-lg);
+        margin-top: var(--space-sm);
+    }
+
+    .axe li {
+        margin-bottom: var(--space-xs);
+        color: var(--text);
+    }
+
+    /* Kit d'urgence */
+    .kit-urgence-schema {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border: 3px solid var(--danger);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+    }
+
+    .etape-urgence {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .etape-urgence h4 {
+        color: var(--primary-deep);
+        margin-bottom: var(--space-sm);
+    }
+
+    .phrase-ancrage {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+        color: white;
+        padding: var(--space-md);
+        border-radius: 0.75rem;
+        font-weight: 700;
+        text-align: center;
+        margin: var(--space-md) 0;
+    }
+
+    /* Protocoles */
+    .protocole {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+        box-shadow: var(--shadow-md);
+        border-top: 4px solid var(--primary);
+    }
+
+    .protocole h4 {
+        color: var(--purple-deep);
+        margin-bottom: var(--space-lg);
+        font-size: 1.3rem;
+    }
+
+    .exercice {
+        background: var(--gray-1);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-lg) 0;
+        border-left: 3px solid var(--accent);
+    }
+
+    .exercice h5 {
+        color: var(--text);
+        margin-bottom: var(--space-md);
+        font-size: 1.1rem;
+    }
+
+    .exercice ol, .exercice ul {
+        margin-left: var(--space-xl);
+        margin-top: var(--space-sm);
+    }
+
+    .exercice li {
+        margin-bottom: var(--space-sm);
+        line-height: 1.6;
+    }
+
+    .variante-box {
+        background: linear-gradient(135deg, var(--accent-light) 0%, white 100%);
+        border: 2px dashed var(--accent);
+        border-radius: 0.75rem;
+        padding: var(--space-md);
+        margin-top: var(--space-md);
+    }
+
+    .defi-box {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border: 2px solid var(--success);
+        border-radius: 0.75rem;
+        padding: var(--space-lg);
+        margin-top: var(--space-md);
+    }
+
+    .affirmation {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-align: center;
+        margin: var(--space-md) 0;
+        box-shadow: var(--shadow-md);
+    }
+
+    .dua-box {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border: 3px solid var(--success);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+    }
+
+    .dua-arabe {
+        font-size: 1.3rem;
+        text-align: center;
+        direction: rtl;
+        margin-bottom: var(--space-md);
+        color: var(--text);
+        font-weight: 600;
+    }
+
+    .dua-francais {
+        font-style: italic;
+        text-align: center;
+        color: var(--text-soft);
+    }
+
+    .verset-meditation {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border-left: 5px solid var(--primary);
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-md) 0;
+    }
+
+    .verset {
+        font-size: 1.2rem;
+        font-style: italic;
+        margin-bottom: var(--space-sm);
+        color: var(--text);
+    }
+
+    .reference {
+        text-align: right;
+        color: var(--text-soft);
+        font-weight: 600;
+    }
+
+    /* Comportements alternatifs */
+    .comportement-alternatif {
+        background: var(--gray-1);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+        border-left: 4px solid var(--success);
+    }
+
+    .comportement-alternatif h5 {
+        color: var(--danger);
+        margin-bottom: var(--space-sm);
+    }
+
+    /* Exemple complet */
+    .exemple-complet {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-lg);
+        border: 3px solid var(--accent);
+    }
+
+    .scenario {
+        background: var(--gray-1);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+    }
+
+    .reaction-ancienne {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border-left: 5px solid var(--danger);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-lg) 0;
+    }
+
+    .reaction-nouvelle {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-left: 5px solid var(--success);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-lg) 0;
+    }
+
+    /* Transition box */
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin-top: var(--space-2xl);
+    }
+
+    .transition-box p {
+        color: white;
+        margin: 0;
+    }
+
+    /* ==================== LISTS ==================== */
+    ul {
+        margin-left: var(--space-xl);
+    }
+
+    li {
+        margin-bottom: var(--space-sm);
+        line-height: 1.6;
+    }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+        color: white;
+        margin-top: var(--space-2xl);
+    }
+
+    footer p {
+        margin-bottom: var(--space-sm);
+        opacity: 0.9;
+        color: white;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        :root {
+            --space-xl: 1.5rem;
+            --space-2xl: 2rem;
+        }
+
+        .container {
+            padding: 0 var(--space-md);
+        }
+
+        .hero-title {
+            font-size: 2.25rem;
+        }
+
+        .axes-manifestation {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* ==================== PRINT ==================== */
+    @media print {
+        body {
+            background: white;
+        }
+
+        .card {
+            box-shadow: none;
+            border: 1px solid #ddd;
+            page-break-inside: avoid;
+        }
+
+        section {
+            page-break-inside: avoid;
+        }
+
+        footer {
+            page-break-before: always;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- EN-TÊTE -->
+        <header class="hero">
+            <div class="schema-badge">DOC 8{{SCHEMA_LETTRE}}</div>
+            <h1 class="hero-title">{{SCHEMA_EMOJI}} Schéma : {{SCHEMA_NOM}}</h1>
+            <p class="intensite-badge">Intensité : {{SCHEMA_INTENSITE}}/10</p>
+        </header>
+
+        <!-- RAPPEL RÉGULATION -->
+        <div class="regulation-reminder">
+            <p><strong>⚠️ Ce document peut être émotionnellement intense.</strong></p>
+            <p>Garde ton kit de régulation à portée de main. Si tu sens des émotions fortes monter, fais une pause, respire, et reviens quand tu te sens prête.</p>
+        </div>
+
+        <!-- PARTIE 1 : COMPRENDRE -->
+        <section id="comprendre">
+            <h2>PARTIE 1 : COMPRENDRE</h2>
+
+            <div id="origine" class="card">
+                <h3>A. D'où vient ce schéma chez toi</h3>
+                {{SCHEMA_ORIGINE}}
+            </div>
+
+            <div id="explication" class="card">
+                <h3>B. Comprendre ce schéma</h3>
+                {{SCHEMA_EXPLICATION_PEDAGOGIQUE}}
+            </div>
+
+            <div id="nafs" class="card">
+                <h3>C. Lecture par les états de l'âme</h3>
+                {{SCHEMA_NAFS}}
+            </div>
+
+            <div id="forces" class="card">
+                <h3>D. Les forces que ce schéma t'a données</h3>
+                {{SCHEMA_FORCES}}
+            </div>
+
+            <div id="cout" class="card">
+                <h3>E. Ce qu'il te coûte aujourd'hui</h3>
+                {{SCHEMA_CONSEQUENCES}}
+            </div>
+
+            <div id="axes" class="card">
+                <h3>F. Comment il se manifeste (6 axes)</h3>
+                {{SCHEMA_6AXES}}
+            </div>
+
+            <div id="evolution" class="card">
+                <h3>G. Ce schéma transformé</h3>
+                {{SCHEMA_EVOLUTION}}
+            </div>
+        </section>
+
+        <!-- PARTIE 2 : RÉGULER -->
+        <section id="reguler">
+            <h2>PARTIE 2 : RÉGULER</h2>
+            {{SCHEMA_KIT_URGENCE}}
+        </section>
+
+        <!-- PARTIE 3 : TRANSFORMER -->
+        <section id="transformer">
+            <h2>PARTIE 3 : TRANSFORMER</h2>
+
+            {{SCHEMA_PROTO_CORPS}}
+            {{SCHEMA_PROTO_EMOTION}}
+            {{SCHEMA_PROTO_MENTAL}}
+            {{SCHEMA_PROTO_COMPORTEMENT}}
+            {{SCHEMA_PROTO_RELATIONNEL}}
+            {{SCHEMA_PROTO_SPIRITUEL}}
+        </section>
+
+        <!-- PARTIE 4 : EXEMPLE -->
+        <section id="exemple">
+            <h2>PARTIE 4 : EXEMPLE CONCRET</h2>
+            {{SCHEMA_EXEMPLE_COMPLET}}
+        </section>
+
+        <!-- CONCLUSION -->
+        <section id="conclusion-schema">
+            <h2>En résumé</h2>
+            <div class="card">
+                {{SCHEMA_RESUME}}
+            </div>
+
+            <div class="transition-box">
+                <p><em>→ {{TRANSITION_SUIVANT}}</em></p>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p><strong>My Muqabala</strong></p>
+        <p>Accompagnement thérapeutique musulman</p>
+        <p>Document confidentiel généré pour {{PRÉNOM}}</p>
+    </footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

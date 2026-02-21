@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOC 13 - La Transformation est un Chemin | Rislène</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    /* ==========================================
+       MY MUQABALA - CSS DE BASE COMPLET
+       DOC 13 : La Transformation est un Chemin
+       Version 1.0 - 22/12/2024
+    ========================================== */
+
+    /* ==================== VARIABLES CSS ==================== */
+    :root {
+        --primary: #D4569C;
+        --primary-deep: #B33D7E;
+        --primary-light: #F5D6E8;
+        --purple: #6B5A9C;
+        --purple-deep: #4A3B6E;
+        --purple-light: #B8AECC;
+        --success: #2C7A7B;
+        --success-light: #E6F7F7;
+        --danger: #D4569C;
+        --danger-light: #F5D6E8;
+        --accent: #D4A373;
+        --accent-deep: #B8895E;
+        --accent-light: #F0E5D8;
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-1: #FDFBF7;
+        --gray-2: #F5F1E8;
+        --gray-3: #E8E2D5;
+        --text: #1A1A1A;
+        --text-soft: #4A3B6E;
+        --text-muted: #6B6B6B;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --shadow-sm: 0 3px 12px rgba(107, 90, 156, 0.12);
+        --shadow-md: 0 6px 24px rgba(107, 90, 156, 0.18);
+        --shadow-lg: 0 12px 48px rgba(107, 90, 156, 0.25);
+        --shadow-accent: 0 16px 64px rgba(212, 163, 115, 0.35);
+    }
+
+    /* ==================== RESET & BASE ==================== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        overflow-x: hidden !important;
+        max-width: 100vw;
+        width: 100%;
+        position: relative;
+    }
+
+    body {
+        font-family: var(--font-body);
+        color: var(--text);
+        line-height: 1.7;
+        background: linear-gradient(135deg, #FDFBF7 0%, #F8F4ED 50%, #F5F1E8 100%);
+        -webkit-font-smoothing: antialiased;
+        font-weight: 400;
+        overflow-x: hidden !important;
+        overflow-y: auto;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    /* ==================== TYPOGRAPHY ==================== */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-body);
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text);
+        margin-bottom: var(--space-md);
+        letter-spacing: -0.02em;
+    }
+
+    h1 {
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        font-family: var(--font-display);
+    }
+    h2 {
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        font-weight: 700;
+        font-family: var(--font-display);
+    }
+    h3 {
+        font-size: clamp(1.5rem, 3vw, 2.25rem);
+        font-weight: 700;
+    }
+    h4 {
+        font-size: 1.35rem;
+        font-weight: 700;
+    }
+
+    p {
+        margin-bottom: var(--space-md);
+        line-height: 1.8;
+        font-weight: 400;
+    }
+
+    strong {
+        font-weight: 700;
+        color: var(--primary-deep);
+    }
+
+    em {
+        font-style: italic;
+        color: var(--text-soft);
+    }
+
+    /* ==================== LAYOUT ==================== */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 var(--space-lg);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    section {
+        padding: var(--space-2xl) 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+    }
+
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+        text-align: center;
+        padding: var(--space-xl) 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(107, 90, 156, 0.12) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(20px, 20px) rotate(180deg); }
+    }
+
+    .hero-title {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--accent) 50%, var(--primary) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        line-height: 1.1;
+        font-family: var(--font-display);
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-soft);
+        margin-bottom: var(--space-xl);
+        font-style: italic;
+    }
+
+    /* ==================== BADGES ==================== */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 2rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: var(--font-body);
+    }
+
+    .badge-date {
+        background: rgba(253, 251, 247, 0.95);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(107, 90, 156, 0.25);
+        color: var(--text-soft);
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* ==================== CARDS ==================== */
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin-bottom: var(--space-lg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(107, 90, 156, 0.08);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    /* ==================== DOC 13 - CSS SPÉCIFIQUE ==================== */
+
+    /* Sagesse blocks */
+    .sagesse-block {
+        background: linear-gradient(135deg, var(--accent-light) 0%, white 100%);
+        border-left: 5px solid var(--accent);
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        margin-bottom: var(--space-xl);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .sagesse-block h3 {
+        color: var(--accent-deep);
+        margin-bottom: var(--space-md);
+        font-size: 1.5rem;
+    }
+
+    .sagesse-block p {
+        line-height: 1.9;
+        color: var(--text);
+    }
+
+    /* Paradoxe cards */
+    .paradoxe-card {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin-bottom: var(--space-lg);
+        border-left: 5px solid var(--purple);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+    }
+
+    .paradoxe-card:hover {
+        transform: translateX(8px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .paradoxe-card h4 {
+        color: var(--purple-deep);
+        margin-bottom: var(--space-md);
+    }
+
+    .paradoxe-card p {
+        margin-bottom: var(--space-sm);
+    }
+
+    /* Temps sections */
+    .temps-realite, .temps-sagesse, .temps-pratique {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        margin-bottom: var(--space-lg);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .temps-realite {
+        border-top: 4px solid var(--success);
+    }
+
+    .temps-sagesse {
+        border-top: 4px solid var(--purple);
+    }
+
+    .temps-pratique {
+        border-top: 4px solid var(--accent);
+    }
+
+    .temps-realite h3,
+    .temps-sagesse h3,
+    .temps-pratique h3 {
+        margin-bottom: var(--space-md);
+    }
+
+    .temps-realite ul,
+    .temps-sagesse ul,
+    .temps-pratique ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .temps-realite li,
+    .temps-sagesse li,
+    .temps-pratique li {
+        padding: var(--space-sm) 0 var(--space-sm) var(--space-xl);
+        position: relative;
+        margin-bottom: var(--space-xs);
+    }
+
+    .temps-realite li::before,
+    .temps-sagesse li::before,
+    .temps-pratique li::before {
+        content: '•';
+        position: absolute;
+        left: var(--space-md);
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    /* Rechute sections */
+    .rechute-vision {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin-bottom: var(--space-lg);
+        border-left: 4px solid var(--success);
+    }
+
+    .rechute-vision h3 {
+        color: var(--success);
+        margin-bottom: var(--space-md);
+    }
+
+    /* Destination blocks */
+    .destination-block {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        margin-bottom: var(--space-lg);
+        box-shadow: var(--shadow-sm);
+        border-left: 5px solid var(--primary);
+    }
+
+    .destination-block h3 {
+        color: var(--primary-deep);
+        margin-bottom: var(--space-md);
+    }
+
+    .destination-block ul {
+        list-style: none;
+        padding: 0;
+        margin-top: var(--space-md);
+    }
+
+    .destination-block li {
+        padding: var(--space-sm) 0 var(--space-sm) var(--space-xl);
+        position: relative;
+    }
+
+    .destination-block li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--success);
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    /* Relation blocks */
+    .relation-block {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        margin-bottom: var(--space-lg);
+        border-left: 5px solid var(--primary);
+    }
+
+    .relation-block h3 {
+        color: var(--primary-deep);
+        margin-bottom: var(--space-md);
+    }
+
+    /* Méditation guidée */
+    .meditation-guidee {
+        background: linear-gradient(135deg, var(--purple-light) 0%, white 100%);
+        border: 3px solid var(--purple);
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        margin: var(--space-2xl) 0;
+        text-align: center;
+    }
+
+    .meditation-guidee h3 {
+        color: var(--purple-deep);
+        margin-bottom: var(--space-md);
+    }
+
+    .meditation-guidee ol {
+        text-align: left;
+        margin: var(--space-lg) 0;
+        padding-left: var(--space-xl);
+    }
+
+    .meditation-guidee li {
+        margin-bottom: var(--space-md);
+        line-height: 1.8;
+    }
+
+    .meditation-guidee .note {
+        font-size: 0.9rem;
+        font-style: italic;
+        color: var(--text-muted);
+        margin-top: var(--space-lg);
+    }
+
+    /* Pratique box */
+    .pratique-box {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin-top: var(--space-lg);
+        box-shadow: var(--shadow-sm);
+        border: 2px solid var(--accent);
+    }
+
+    .pratique-box h4 {
+        color: var(--accent-deep);
+        margin-bottom: var(--space-md);
+    }
+
+    .pratique-box ol {
+        padding-left: var(--space-xl);
+    }
+
+    .pratique-box li {
+        margin-bottom: var(--space-sm);
+    }
+
+    /* Verset & Hadith & Doua boxes */
+    .verset-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 100%);
+        color: white;
+        padding: var(--space-xl);
+        border-radius: 1rem;
+        text-align: center;
+        margin: var(--space-2xl) 0;
+    }
+
+    .hadith-box {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+        color: white;
+        padding: var(--space-xl);
+        border-radius: 1rem;
+        text-align: center;
+        margin: var(--space-2xl) 0;
+    }
+
+    .doua-box {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+        color: white;
+        padding: var(--space-2xl);
+        border-radius: 1rem;
+        text-align: center;
+        margin: var(--space-2xl) 0;
+    }
+
+    .verset, .hadith, .doua-traduction {
+        font-size: 1.25rem;
+        font-style: italic;
+        line-height: 1.9;
+        margin-bottom: var(--space-md);
+        font-family: var(--font-display);
+        color: white;
+    }
+
+    .doua-arabe {
+        font-size: 1.5rem;
+        line-height: 2;
+        margin-bottom: var(--space-xl);
+        color: white;
+        direction: rtl;
+    }
+
+    .reference {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        font-weight: 600;
+        color: white;
+    }
+
+    .commentaire {
+        font-size: 0.95rem;
+        margin-top: var(--space-md);
+        font-style: italic;
+        opacity: 0.95;
+        color: white;
+    }
+
+    /* Transition box */
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin-top: var(--space-2xl);
+    }
+
+    .transition-box p {
+        color: white;
+        margin: 0;
+    }
+
+    .transition-box em {
+        color: rgba(255,255,255,0.9);
+    }
+
+    /* ==================== UTILITIES ==================== */
+    .text-center { text-align: center; }
+    .mb-lg { margin-bottom: var(--space-lg); }
+    .mt-xl { margin-top: var(--space-xl); }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+        color: white;
+        margin-top: var(--space-2xl);
+    }
+
+    footer p {
+        margin-bottom: var(--space-sm);
+        opacity: 0.9;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        :root {
+            --space-xl: 1.5rem;
+            --space-2xl: 2rem;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+            width: 100%;
+        }
+
+        .container {
+            padding: 0 var(--space-md);
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        section {
+            padding: var(--space-xl) 0;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .card,
+        .sagesse-block,
+        .paradoxe-card,
+        .temps-realite,
+        .temps-sagesse,
+        .temps-pratique,
+        .rechute-vision,
+        .destination-block,
+        .relation-block {
+            padding: var(--space-lg);
+        }
+
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .doua-arabe {
+            font-size: 1.2rem;
+        }
+    }
+
+    /* ==================== PRINT ==================== */
+    @media print {
+        body {
+            background: white;
+        }
+
+        section {
+            page-break-inside: avoid;
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+
+        .hero::before {
+            display: none;
+        }
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="badge badge-date mb-lg">
+            <span>📅</span>
+            <span>Document préparé le 23 décembre 2024</span>
+        </div>
+
+        <h1 class="hero-title">La Transformation est un Chemin</h1>
+        <p class="hero-subtitle">Sagesse et perspective pour ton parcours, Rislène</p>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section id="intro">
+        <div class="card">
+            Rislène, avant de conclure cette cartographie, j'aimerais partager avec toi quelques vérités sur le chemin de transformation. Pas des techniques, pas des exercices. Juste de la sagesse — celle que j'ai acquise en accompagnant des femmes comme toi, et celle des sages qui nous ont précédés.<br><br>Prends ce document différemment. Lis-le lentement. Laisse les idées infuser. Ce n'est pas un document à "faire" mais à méditer. Tu as parcouru beaucoup de matière dans cette cartographie. Cette partie finale t'aide à intégrer tout cela dans une perspective plus large — celle du temps long, des paradoxes, du chemin lui-même.
+        </div>
+    </section>
+
+    <!-- SECTION A : NATURE DU CHANGEMENT -->
+    <section id="nature-changement">
+        <h2>A. La vraie nature du changement</h2>
+
+        <div class="sagesse-block">
+            <h3>Le changement n'est pas linéaire</h3>
+            <p>On imagine souvent le progrès comme une ligne droite qui monte. La réalité ressemble plus à une spirale. Tu passes et repasses par les mêmes endroits, mais chaque fois à un niveau différent.</p>
+            <p>Quand tu retombes dans un ancien pattern, tu n'es pas "revenue au point de départ". Tu es au même endroit de la spirale, mais un tour plus haut. Tu as maintenant la conscience que tu n'avais pas avant.</p>
+        </div>
+
+        <div class="sagesse-block">
+            <h3>Le changement est organique, pas mécanique</h3>
+            <p>Tu ne te "répares" pas comme on répare une machine. Tu GRANDIS, comme un arbre. Et la croissance a son propre rythme. Certaines saisons sont pour l'expansion, d'autres pour l'enracinement. Les deux sont nécessaires.</p>
+            <p>Parfois, il ne se passe "rien" en surface, mais les racines travaillent en profondeur. Ne juge pas les périodes de stagnation apparente.</p>
+        </div>
+
+        <div class="sagesse-block">
+            <h3>Le changement demande de l'oubli</h3>
+            <p>Pour devenir qui tu peux être, tu dois parfois "oublier" qui tu as appris à être. Tes schémas ont été des stratégies de survie. Les quitter, c'est accepter de ne plus savoir comment faire. C'est inconfortable. C'est aussi le signe que quelque chose de nouveau émerge.</p>
+        </div>
+
+        <div class="verset-box">
+            <p class="verset">"Chaque jour, Il accomplit une œuvre nouvelle."</p>
+            <p class="reference">— Sourate Ar-Rahman, 55:29</p>
+            <p class="commentaire">Le renouvellement est dans la nature même de la création. Toi aussi, tu te renouvelles.</p>
+        </div>
+    </section>
+
+    <!-- SECTION B : PARADOXES -->
+    <section id="paradoxes">
+        <h2>B. Les paradoxes du chemin</h2>
+
+        <p>Le chemin de transformation contient des vérités qui semblent contradictoires mais qui ne le sont pas :</p>
+
+        <div class="paradoxe-card">
+            <h4>Paradoxe 1 : Accepter pour changer</h4>
+            <p>Tant que tu luttes contre ce que tu es, tu restes figée. C'est en ACCEPTANT tes schémas, en les regardant avec compassion, qu'ils commencent à se transformer.</p>
+            <p><em>"Ce à quoi tu résistes persiste. Ce que tu acceptes se transforme."</em></p>
+        </div>
+
+        <div class="paradoxe-card">
+            <h4>Paradoxe 2 : La force dans la vulnérabilité</h4>
+            <p>Tes schémas t'ont appris à te protéger. Mais la vraie force est dans la capacité à te montrer vulnérable avec les bonnes personnes. L'ouverture n'est pas une faiblesse.</p>
+        </div>
+
+        <div class="paradoxe-card">
+            <h4>Paradoxe 3 : Contrôler en lâchant prise</h4>
+            <p>Plus tu essaies de contrôler tes émotions, plus elles te contrôlent. C'est en les laissant passer, comme des nuages, que tu retrouves ton ciel intérieur.</p>
+        </div>
+
+        <div class="paradoxe-card">
+            <h4>Paradoxe 4 : Avancer en s'arrêtant</h4>
+            <p>Parfois, le plus grand progrès vient d'une pause. D'un moment où tu arrêtes de "faire" pour simplement "être". L'intégration se fait dans le silence.</p>
+        </div>
+
+        <div class="paradoxe-card">
+            <h4>Paradoxe 5 : Trouver l'autre en te trouvant</h4>
+            <p>Ce n'est pas en cherchant désespérément l'autre que tu le trouveras. C'est en revenant à toi, en t'aimant, que tu attireras celui qui peut vraiment te voir.</p>
+        </div>
+    </section>
+
+    <!-- SECTION C : TEMPS -->
+    <section id="temps">
+        <h2>C. Le temps du changement</h2>
+
+        <div class="temps-realite">
+            <h3>Ce que la recherche nous dit</h3>
+            <ul>
+                <li>Un schéma met des années à se former, il ne disparaît pas en semaines</li>
+                <li>Le cerveau met 66 jours en moyenne pour créer une nouvelle habitude (pas 21)</li>
+                <li>Les changements profonds (attachement, schémas) demandent souvent 1-2 ans de travail conscient</li>
+                <li>Mais les premiers effets (conscience, régulation ponctuelle) peuvent apparaître en quelques semaines</li>
+            </ul>
+        </div>
+
+        <div class="temps-sagesse">
+            <h3>La sagesse islamique sur le temps</h3>
+            <p>La notion de "sabr" (patience) n'est pas une résignation passive. C'est une endurance active. C'est continuer à avancer même quand on ne voit pas les résultats.</p>
+
+            <div class="verset-box">
+                <p class="verset">"Ô vous qui croyez ! Cherchez secours dans la patience et la prière. Allah est avec les patients."</p>
+                <p class="reference">— Sourate Al-Baqara, 2:153</p>
+            </div>
+
+            <p>Ibn Qayyim al-Jawziyya écrivait : <em>"Le cœur malade a besoin de temps pour guérir, comme le corps malade. Celui qui veut guérir en un jour restera malade toute sa vie."</em></p>
+        </div>
+
+        <div class="temps-pratique">
+            <h3>En pratique, qu'est-ce que ça signifie ?</h3>
+            <ul>
+                <li>Ne te fixe pas de deadline pour "être guérie"</li>
+                <li>Célèbre les micro-progrès, pas seulement les grandes victoires</li>
+                <li>Un jour difficile ne efface pas des semaines de travail</li>
+                <li>La constance compte plus que l'intensité</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- SECTION D : RECHUTES -->
+    <section id="rechutes">
+        <h2>D. Quand tu "retombes" - une autre perspective</h2>
+
+        <div class="rechute-vision">
+            <h3>Ce n'est pas une rechute, c'est un test</h3>
+            <p>Quand ton schéma se réactive fortement après une période de progrès, tu peux te sentir découragée. "Je n'ai rien changé finalement."</p>
+            <p>Mais regarde autrement : la vie t'envoie un "examen" pour voir ce que tu as intégré. Et même si tu ne le "réussis" pas parfaitement, le simple fait de le VOIR est déjà une réussite.</p>
+        </div>
+
+        <div class="rechute-vision">
+            <h3>Les triggers sont des professeurs</h3>
+            <p>Chaque situation qui active ton schéma est une opportunité d'apprentissage. Elle te montre où tu en es vraiment, pas où tu aimerais être. Cette honnêteté est précieuse.</p>
+            <p>Demande-toi : "Qu'est-ce que cette situation m'apprend sur moi ? Sur ce qui n'est pas encore intégré ?"</p>
+        </div>
+
+        <div class="rechute-vision">
+            <h3>La différence entre cette fois et avant</h3>
+            <p>Même si le comportement semble le même, TOUT est différent si tu le VOIS. Avant, tu étais dans la réaction. Maintenant, tu es dans l'observation de la réaction. C'est un monde de différence.</p>
+        </div>
+
+        <div class="hadith-box">
+            <p class="hadith">"Tout fils d'Adam commet des erreurs, et les meilleurs de ceux qui commettent des erreurs sont ceux qui se repentent."</p>
+            <p class="reference">— Hadith (Tirmidhi)</p>
+        </div>
+
+        <div class="pratique-box">
+            <h4>Après une "rechute", pratique ceci :</h4>
+            <ol>
+                <li><strong>Pas de jugement</strong> : "C'est arrivé. C'est humain."</li>
+                <li><strong>Curiosité</strong> : "Qu'est-ce qui s'est passé ? Quel était le déclencheur ?"</li>
+                <li><strong>Apprentissage</strong> : "Qu'est-ce que je peux en tirer ?"</li>
+                <li><strong>Reprise</strong> : "Je reprends le chemin. Un pas après l'autre."</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- SECTION E : DESTINATION -->
+    <section id="destination">
+        <h2>E. La "destination" n'existe pas</h2>
+
+        <div class="destination-block">
+            <h3>Tu ne seras jamais "finie"</h3>
+            <p>Il n'y a pas de ligne d'arrivée où tu seras enfin "guérie", "complète", "prête". La vie est un processus continu de croissance. Et c'est une bonne nouvelle.</p>
+            <p>Parce que ça veut dire que tu n'as pas besoin d'attendre d'être "parfaite" pour vivre. Tu peux vivre, aimer, rencontrer MAINTENANT, en chemin.</p>
+        </div>
+
+        <div class="destination-block">
+            <h3>Le voyage EST la destination</h3>
+            <p>Chaque jour où tu pratiques la conscience, où tu choisis une réponse plutôt qu'une réaction, où tu te traites avec compassion - c'est ça, la vie transformée. Pas un état futur à atteindre.</p>
+        </div>
+
+        <div class="destination-block">
+            <h3>L'objectif révisé</h3>
+            <p>L'objectif n'est pas de ne plus jamais avoir de schémas activés. C'est de :</p>
+            <ul>
+                <li>Les VOIR quand ils s'activent</li>
+                <li>Les RÉGULER de mieux en mieux</li>
+                <li>Les INTÉGRER comme partie de ton histoire</li>
+                <li>Les TRANSCENDER progressivement</li>
+            </ul>
+        </div>
+
+        <div class="verset-box">
+            <p class="verset">"Par l'âme et Celui qui l'a façonnée harmonieusement, et lui a inspiré son immoralité et sa piété ! A réussi celui qui la purifie, et est perdu celui qui la corrompt."</p>
+            <p class="reference">— Sourate Ash-Shams, 91:7-10</p>
+            <p class="commentaire">La purification de l'âme (tazkiyat an-nafs) est un processus de toute une vie. C'est le chemin lui-même.</p>
+        </div>
+    </section>
+
+    <!-- SECTION F : RELATION À SOI -->
+    <section id="relation-soi">
+        <h2>F. La relation la plus importante</h2>
+
+        <div class="relation-block">
+            <h3>Avant de trouver l'autre, te trouver toi</h3>
+            <p>Cette cartographie t'a aidée à comprendre tes patterns dans les RELATIONS. Mais la relation la plus fondamentale est celle que tu as avec TOI-MÊME.</p>
+            <p>Comment tu te parles quand tu fais une erreur. Comment tu accueilles tes émotions. Comment tu honores tes besoins. C'est le socle de tout le reste.</p>
+        </div>
+
+        <div class="relation-block">
+            <h3>Tu mérites ta propre bienveillance</h3>
+            <p>Si tu avais une amie qui traversait ce que tu traverses, comment lui parlerais-tu ? Avec douceur, encouragement, compassion. Offre-toi le même traitement.</p>
+            <p>Ce n'est pas de l'égoïsme. C'est la base. On ne peut pas donner ce qu'on n'a pas.</p>
+        </div>
+
+        <div class="relation-block">
+            <h3>Tu es complète, même en chemin</h3>
+            <p>Tu n'as pas besoin d'un homme pour être complète. Tu n'as pas besoin d'être "guérie" pour être entière. Tu es DÉJÀ une femme complète, avec ton histoire, tes blessures, tes forces, ton chemin.</p>
+            <p>Un partenaire ne viendra pas te compléter. Il viendra PARTAGER ta complétude.</p>
+        </div>
+
+        <div class="hadith-box">
+            <p class="hadith">"Quiconque se connaît soi-même connaît son Seigneur."</p>
+            <p class="reference">— Parole attribuée aux sages soufis</p>
+        </div>
+
+        <!-- Méditation guidée -->
+        <div class="meditation-guidee mt-xl">
+            <h3>🧘‍♀️ Méditation : Contempler ton chemin</h3>
+            <p><em>Durée : 5-7 minutes</em></p>
+
+            <p>Installe-toi confortablement. Ferme les yeux si tu le souhaites.</p>
+
+            <ol>
+                <li><strong>Respire</strong> profondément 3 fois. Laisse ton corps se détendre.</li>
+                <li><strong>Visualise</strong> la femme que tu étais au début de ce parcours. Regarde-la avec compassion.</li>
+                <li><strong>Observe</strong> ce qu'elle portait : les peurs, les schémas, les blessures non comprises.</li>
+                <li><strong>Sens</strong> dans ton corps la différence entre cette femme et celle que tu es maintenant.</li>
+                <li><strong>Dis-lui</strong> intérieurement : "Tu as fait du bon travail. Tu continues d'avancer."</li>
+                <li><strong>Ressens</strong> la gratitude pour ce chemin, même s'il reste du travail.</li>
+                <li><strong>Reviens</strong> doucement, ouvre les yeux quand tu es prête.</li>
+            </ol>
+
+            <p class="note">Tu peux refaire cette méditation à chaque étape importante de ton parcours.</p>
+        </div>
+    </section>
+
+    <!-- PRIÈRE DE CLÔTURE -->
+    <section id="priere">
+        <h2>Une invocation pour ton chemin</h2>
+
+        <div class="doua-box">
+            <p class="doua-arabe">اللَّهُمَّ أَصْلِحْ لِي دِينِي الَّذِي هُوَ عِصْمَةُ أَمْرِي، وَأَصْلِحْ لِي دُنْيَايَ الَّتِي فِيهَا مَعَاشِي، وَأَصْلِحْ لِي آخِرَتِي الَّتِي فِيهَا مَعَادِي، وَاجْعَلِ الْحَيَاةَ زِيَادَةً لِي فِي كُلِّ خَيْرٍ، وَاجْعَلِ الْمَوْتَ رَاحَةً لِي مِنْ كُلِّ شَرٍّ</p>
+            <p class="doua-traduction">"Ô Allah, améliore pour moi ma religion qui est la sauvegarde de mes affaires, améliore pour moi ma vie d'ici-bas où se trouve ma subsistance, améliore pour moi mon au-delà où se trouve mon retour, fais que la vie soit pour moi une augmentation de tout bien, et fais que la mort soit pour moi un repos de tout mal."</p>
+            <p class="reference">— Hadith (Muslim)</p>
+        </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section id="conclusion">
+        <div class="card">
+            Rislène, le chemin de transformation est long, parfois difficile, souvent non-linéaire. Mais c'est un chemin sacré. Chaque pas que tu fais vers plus de conscience, plus de compassion envers toi-même, plus d'intégration de ton histoire — c'est un acte de courage et de foi.<br><br>Tu n'es pas seule sur ce chemin. Des millions de femmes avant toi ont traversé leurs propres déserts intérieurs et ont trouvé leur oasis. Et il y a une Force plus grande que toi qui t'accompagne, même dans les moments où tu ne La sens pas.<br><br>Continue. Un jour après l'autre. Un pas après l'autre. Le chemin se révèle en marchant. Tu as dit vouloir "faire de tes blessures une Force" et "accepter avec sérénité et confiance le destin." C'est exactement cette sagesse que tu incarneras, progressivement, à ton rythme.<br><br>Qu'Allah t'accompagne dans cette traversée. Qu'Il fasse de ton cœur un endroit apaisant et tranquille. Qu'Il t'accorde cette union bénie où tu te sentiras vue, respectée et aimée pour qui tu es vraiment.
+        </div>
+
+        <div class="transition-box">
+            <p><em>→ Dernier document : Ta Synthèse & Fil Rouge - tout ton parcours en un regard.</em></p>
+        </div>
+    </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p><strong>My Muqabala</strong></p>
+    <p>Ta cartographie émotionnelle personnalisée</p>
+    <p style="opacity: 0.7; font-size: 0.85rem;">Document confidentiel - Rislène - 23 décembre 2024</p>
+</footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

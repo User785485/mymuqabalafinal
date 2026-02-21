@@ -1,10 +1,13 @@
 /// Data model for a single Blink Date round.
 ///
 /// Maps to the `blink_dates` table in Supabase. Each match can have
-/// up to 3 rounds (ordre 1-3), each lasting [dureeSecondes] seconds.
+/// multiple rounds, each lasting [dureeSecondes] seconds.
 ///
 /// The [sujetsPoposes] field is stored as JSONB in the database and
 /// contains conversation prompts suggested for this round.
+///
+/// Partner fields ([partnerId], [partnerPrenom], [partnerPhotoFloueUrl])
+/// are populated when loaded via the `get_user_blink_dates_for_event` RPC.
 library;
 
 /// A single Blink Date round associated with a match.
@@ -19,6 +22,10 @@ class BlinkDateModel {
     required this.sujetsPoposes,
     this.enregistrementUrl,
     required this.createdAt,
+    this.partnerId,
+    this.partnerPrenom,
+    this.partnerPhotoFloueUrl,
+    this.roomName,
   });
 
   /// Unique identifier (UUID).
@@ -36,7 +43,7 @@ class BlinkDateModel {
   /// Duration of the call in seconds (default: 600 = 10 minutes).
   final int dureeSecondes;
 
-  /// Current status: 'en_attente', 'en_cours', 'termine', 'annule'.
+  /// Current status: 'planifie', 'en_cours', 'termine', 'annule'.
   final String statut;
 
   /// Conversation prompts / topics suggested for this round.
@@ -48,7 +55,21 @@ class BlinkDateModel {
   /// Timestamp when this Blink Date was created.
   final DateTime createdAt;
 
+  /// Partner user ID (populated from RPC).
+  final String? partnerId;
+
+  /// Partner first name (populated from RPC).
+  final String? partnerPrenom;
+
+  /// Partner blurred photo URL (populated from RPC).
+  final String? partnerPhotoFloueUrl;
+
+  /// Room name for LiveKit (populated from RPC).
+  final String? roomName;
+
   /// Deserialize from a Supabase row (JSON map).
+  ///
+  /// Handles both direct table rows and RPC-returned objects.
   factory BlinkDateModel.fromJson(Map<String, dynamic> json) {
     // Parse sujets_proposes — can be a JSON array of strings.
     final rawSujets = json['sujets_proposes'];
@@ -63,18 +84,25 @@ class BlinkDateModel {
       }
     }
 
+    // Support both direct table (id) and RPC format (blink_date_id).
+    final id = json['blink_date_id'] as String? ?? json['id'] as String;
+
     return BlinkDateModel(
-      id: json['id'] as String,
-      matchId: json['match_id'] as String,
+      id: id,
+      matchId: json['match_id'] as String? ?? '',
       eventId: json['event_id'] as String?,
       ordre: json['ordre'] as int? ?? 1,
       dureeSecondes: json['duree_secondes'] as int? ?? 600,
-      statut: json['statut'] as String? ?? 'en_attente',
+      statut: json['statut'] as String? ?? 'planifie',
       sujetsPoposes: sujets,
       enregistrementUrl: json['enregistrement_url'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'] as String)
           : DateTime.now(),
+      partnerId: json['partner_id'] as String?,
+      partnerPrenom: json['partner_prenom'] as String?,
+      partnerPhotoFloueUrl: json['partner_photo_floue_url'] as String?,
+      roomName: json['room_name'] as String?,
     );
   }
 
@@ -104,6 +132,10 @@ class BlinkDateModel {
     List<String>? sujetsPoposes,
     String? enregistrementUrl,
     DateTime? createdAt,
+    String? partnerId,
+    String? partnerPrenom,
+    String? partnerPhotoFloueUrl,
+    String? roomName,
   }) {
     return BlinkDateModel(
       id: id ?? this.id,
@@ -115,6 +147,10 @@ class BlinkDateModel {
       sujetsPoposes: sujetsPoposes ?? this.sujetsPoposes,
       enregistrementUrl: enregistrementUrl ?? this.enregistrementUrl,
       createdAt: createdAt ?? this.createdAt,
+      partnerId: partnerId ?? this.partnerId,
+      partnerPrenom: partnerPrenom ?? this.partnerPrenom,
+      partnerPhotoFloueUrl: partnerPhotoFloueUrl ?? this.partnerPhotoFloueUrl,
+      roomName: roomName ?? this.roomName,
     );
   }
 

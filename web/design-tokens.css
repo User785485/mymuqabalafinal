@@ -1,0 +1,226 @@
+/* ═══════════════════════════════════════
+   MY MUQABALA — DESIGN TOKENS
+   Isolated CSS custom properties for
+   light mode, dark mode, and shared values.
+   Imported by dashboard-styles.css
+═══════════════════════════════════════ */
+
+/* ─── Light mode (default) ─── */
+:root {
+    --mm-bg: #fdfbf8;
+    --mm-bg-warm: #faf6f1;
+    --mm-surface: #ffffff;
+    --mm-surface-hover: #f8f7f4;
+    --mm-border: rgba(107,90,156,0.08);
+    --mm-border-strong: rgba(107,90,156,0.15);
+    --mm-text: #1a1a1a;
+    --mm-text-soft: #3d3d3d;
+    --mm-text-muted: #6b6b6b;
+    --mm-text-faint: #9a9a9a;
+    --mm-header-bg: rgba(253,251,248,0.85);
+    --mm-overlay-bg: rgba(0,0,0,0.5);
+    --mm-input-bg: #ffffff;
+    --mm-input-border: rgba(107,90,156,0.15);
+    --mm-skeleton-from: rgba(107,90,156,0.08);
+    --mm-skeleton-via: rgba(107,90,156,0.04);
+    --mm-scrollbar-thumb: rgba(107,90,156,0.15);
+    --mm-scrollbar-hover: rgba(107,90,156,0.25);
+    --mm-gradient-subtle: radial-gradient(ellipse at 15% 50%, rgba(124,58,237,0.04) 0%, transparent 50%),
+                          radial-gradient(ellipse at 85% 20%, rgba(232,180,184,0.05) 0%, transparent 50%),
+                          radial-gradient(ellipse at 50% 85%, rgba(201,169,98,0.04) 0%, transparent 50%);
+}
+
+/* ─── Dark mode ─── */
+[data-theme="dark"] {
+    --mm-bg: #0e0e14;
+    --mm-bg-warm: #141420;
+    --mm-surface: #1a1a28;
+    --mm-surface-hover: #222234;
+    --mm-border: rgba(255,255,255,0.06);
+    --mm-border-strong: rgba(255,255,255,0.12);
+    --mm-text: #e8e6f0;
+    --mm-text-soft: #c4c2d0;
+    --mm-text-muted: #8a88a0;
+    --mm-text-faint: #5c5a70;
+    --mm-header-bg: rgba(14,14,20,0.85);
+    --mm-overlay-bg: rgba(0,0,0,0.7);
+    --mm-input-bg: #1a1a28;
+    --mm-input-border: rgba(255,255,255,0.1);
+    --mm-skeleton-from: rgba(255,255,255,0.06);
+    --mm-skeleton-via: rgba(255,255,255,0.03);
+    --mm-scrollbar-thumb: rgba(255,255,255,0.1);
+    --mm-scrollbar-hover: rgba(255,255,255,0.18);
+    --mm-gradient-subtle: radial-gradient(ellipse at 15% 50%, rgba(124,58,237,0.08) 0%, transparent 50%),
+                          radial-gradient(ellipse at 85% 20%, rgba(232,180,184,0.06) 0%, transparent 50%),
+                          radial-gradient(ellipse at 50% 85%, rgba(201,169,98,0.05) 0%, transparent 50%);
+
+    /* Override existing tokens for dark mode */
+    --paper: var(--mm-bg);
+    --paper-warm: var(--mm-bg-warm);
+    --card-bg: var(--mm-surface);
+    --card-border: var(--mm-border);
+    --ink: var(--mm-text);
+    --ink-soft: var(--mm-text-soft);
+    --ink-muted: var(--mm-text-muted);
+    --ink-faint: var(--mm-text-faint);
+    --purple-light: rgba(124,58,237,0.15);
+    --rose-light: rgba(232,180,184,0.12);
+    --sage-light: rgba(125,154,140,0.12);
+    --gold-light: rgba(201,169,98,0.12);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* ─── Dark mode specific overrides ─── */
+[data-theme="dark"] body {
+    color: var(--mm-text-soft);
+    background: var(--mm-bg);
+}
+
+[data-theme="dark"] body::before {
+    background: var(--mm-gradient-subtle);
+}
+
+[data-theme="dark"] .main-header {
+    background: var(--mm-header-bg);
+    backdrop-filter: blur(16px) saturate(180%);
+    border-bottom-color: var(--mm-border);
+}
+
+[data-theme="dark"] .hamburger {
+    background: var(--mm-surface);
+    border-color: var(--mm-border);
+    color: var(--mm-text);
+}
+
+[data-theme="dark"] .header-btn {
+    background: var(--mm-surface);
+    border-color: var(--mm-border);
+}
+
+[data-theme="dark"] .card {
+    background: var(--mm-surface);
+    border-color: var(--mm-border);
+}
+
+[data-theme="dark"] .card:hover {
+    border-color: var(--mm-border-strong);
+}
+
+[data-theme="dark"] .welcome-banner {
+    background: linear-gradient(135deg, #0e0a18 0%, #1a1035 40%, #120e20 100%);
+}
+
+[data-theme="dark"] .check-box {
+    background: var(--mm-surface);
+    border-color: var(--mm-border-strong);
+}
+
+[data-theme="dark"] .tab-btn {
+    background: var(--mm-surface);
+    border-color: var(--mm-border);
+    color: var(--mm-text-muted);
+}
+
+[data-theme="dark"] .tab-btn:hover {
+    color: var(--mm-text);
+}
+
+[data-theme="dark"] .month-accordion {
+    background: var(--mm-surface);
+    border-color: var(--mm-border);
+}
+
+[data-theme="dark"] .month-header:hover {
+    background: rgba(124,58,237,0.1);
+}
+
+[data-theme="dark"] .week-item {
+    background: var(--mm-bg-warm);
+}
+
+[data-theme="dark"] .week-item:hover {
+    background: rgba(124,58,237,0.1);
+}
+
+[data-theme="dark"] .progress-header {
+    background: var(--mm-surface);
+    border-color: var(--mm-border);
+}
+
+[data-theme="dark"] .progress-bar {
+    background: rgba(124,58,237,0.15);
+}
+
+[data-theme="dark"] .verset-card {
+    background: linear-gradient(135deg, rgba(125,154,140,0.1), var(--mm-surface));
+    border-color: rgba(125,154,140,0.08);
+}
+
+[data-theme="dark"] .agence-status {
+    background: linear-gradient(135deg, rgba(232,180,184,0.08), var(--mm-surface));
+    border-color: rgba(232,180,184,0.08);
+}
+
+[data-theme="dark"] .compat-form-cta {
+    background: linear-gradient(135deg, rgba(232,180,184,0.08), var(--mm-surface));
+    border-color: rgba(232,180,184,0.15);
+}
+
+[data-theme="dark"] .compat-searching {
+    background: linear-gradient(135deg, rgba(232,180,184,0.08), var(--mm-surface));
+    border-color: rgba(232,180,184,0.08);
+}
+
+[data-theme="dark"] .notice-box {
+    background: rgba(201,169,98,0.1);
+    border-left-color: var(--gold);
+}
+
+[data-theme="dark"] .skeleton {
+    background: linear-gradient(90deg, var(--mm-skeleton-from) 25%, var(--mm-skeleton-via) 50%, var(--mm-skeleton-from) 75%);
+    background-size: 200% 100%;
+}
+
+[data-theme="dark"] .sidebar-overlay {
+    background: var(--mm-overlay-bg);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--mm-scrollbar-thumb);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--mm-scrollbar-hover);
+}
+
+[data-theme="dark"] .dashboard-footer {
+    border-top-color: var(--mm-border);
+}
+
+[data-theme="dark"] .rencontre-card,
+[data-theme="dark"] .retour-semaine {
+    background: var(--mm-surface);
+    border-color: var(--mm-border);
+}
+
+[data-theme="dark"] .rencontre-header:hover,
+[data-theme="dark"] .retour-semaine-header:hover {
+    background: var(--mm-bg-warm);
+}
+
+[data-theme="dark"] .accordion-ctrl-btn {
+    background: var(--mm-surface);
+    border-color: var(--mm-border);
+    color: var(--mm-text-muted);
+}
+
+[data-theme="dark"] .doc-tooltip {
+    background: #1a1a28;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+[data-theme="dark"] .doc-tooltip::after {
+    border-top-color: #1a1a28;
+}

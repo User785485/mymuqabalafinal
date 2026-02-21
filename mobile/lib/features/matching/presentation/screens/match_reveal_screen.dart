@@ -131,7 +131,7 @@ class _MatchRevealScreenState extends ConsumerState<MatchRevealScreen>
     );
     context.pushNamed(
       RouteNames.chatDetail,
-      pathParameters: {'channelId': 'messaging:${widget.matchId}'},
+      pathParameters: {'channelId': 'messaging:match_${widget.matchId}'},
     );
   }
 

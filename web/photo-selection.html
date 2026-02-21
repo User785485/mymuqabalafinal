@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identification Photo | Mon Espace My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><a href="dashboard-test.html"><h2>My Muqabala</h2><span>Espace Personnel</span></a></div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="dashboard-test.html"><div class="nav-icon">🏠</div><span>Accueil</span></a>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de soi</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-ressources.html"><div class="nav-icon">🎓</div><span>Ressources Pédagogiques</span></a>
+                    <a class="nav-item" href="dashboard-formulaires.html"><div class="nav-icon">🔍</div><span>Formulaires Exploratoires</span></a>
+                    <a class="nav-item" href="dashboard-cartographie.html"><div class="nav-icon">🧭</div><span>Cartographie Émotionnelle</span></a>
+                </div>
+            </details>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de l'autre</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-compatibilite.html"><div class="nav-icon">💞</div><span>Recherche de Compatibilité</span></a>
+                    <a class="nav-item" href="dashboard-plan-action.html"><div class="nav-icon">🎯</div><span>Plan d'Action</span></a>
+                    <a class="nav-item active" href="dashboard-rencontres.html"><div class="nav-icon">💬</div><span>Rencontres en Cours</span></a>
+                    <a class="nav-item" href="dashboard-historique.html"><div class="nav-icon">📋</div><span>Historique des Rencontres</span></a>
+                </div>
+            </details>
+        </nav>
+        <div class="sidebar-client"><div class="client-avatar"></div><div><div class="client-name"></div><div class="client-id"></div></div></div>
+    </aside>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+    <main class="main">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                <div><div class="header-greeting">Bienvenue, <em></em></div><div class="header-date"></div></div>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Mode sombre"></button>
+                <a class="notif-bell" href="dashboard-notifications.html"><span class="notif-badge" id="notif-count"></span>🔔</a>
+                <a class="header-btn" title="Aide" href="#">❓</a>
+            </div>
+        </header>
+        <div class="content">
+            <!-- ═══ Page Header ═══ -->
+            <div class="page-header fade-up">
+                <div class="page-title"><div class="page-title-icon rose">📸</div>Identification Photo</div>
+                <div class="page-subtitle">Reconnais-tu la personne avec qui tu as échangé ?</div>
+            </div>
+
+            <!-- ═══ Explanation ═══ -->
+            <div class="card fade-up" style="margin-bottom:2rem; text-align:center;">
+                <p style="font-size:0.9rem; color:var(--ink-muted); max-width:550px; margin:0 auto; line-height:1.7;">
+                    Parmi ces 5 photos anonymes, sélectionne celle(s) que tu penses correspondre à ton interlocuteur/trice.
+                </p>
+            </div>
+
+            <!-- ═══ Photo Grid ═══ -->
+            <div class="photo-grid fade-up" id="photo-grid" style="margin-bottom:2rem;">
+                <div class="photo-option" onclick="togglePhoto(this)" data-label="A">
+                    <div style="width:100%; height:100%; background:linear-gradient(135deg, var(--purple-light), var(--rose-light)); filter:blur(8px);"></div>
+                    <div class="photo-check">✓</div>
+                    <div style="position:absolute; bottom:8px; left:0; right:0; text-align:center; font-size:0.82rem; font-weight:600; color:var(--ink); background:rgba(255,255,255,0.85); padding:0.3rem 0; border-radius:0 0 13px 13px;">Profil A</div>
+                </div>
+                <div class="photo-option" onclick="togglePhoto(this)" data-label="B">
+                    <div style="width:100%; height:100%; background:linear-gradient(135deg, var(--sage-light), var(--gold-light)); filter:blur(8px);"></div>
+                    <div class="photo-check">✓</div>
+                    <div style="position:absolute; bottom:8px; left:0; right:0; text-align:center; font-size:0.82rem; font-weight:600; color:var(--ink); background:rgba(255,255,255,0.85); padding:0.3rem 0; border-radius:0 0 13px 13px;">Profil B</div>
+                </div>
+                <div class="photo-option" onclick="togglePhoto(this)" data-label="C">
+                    <div style="width:100%; height:100%; background:linear-gradient(135deg, var(--rose), var(--purple-soft)); filter:blur(8px);"></div>
+                    <div class="photo-check">✓</div>
+                    <div style="position:absolute; bottom:8px; left:0; right:0; text-align:center; font-size:0.82rem; font-weight:600; color:var(--ink); background:rgba(255,255,255,0.85); padding:0.3rem 0; border-radius:0 0 13px 13px;">Profil C</div>
+                </div>
+                <div class="photo-option" onclick="togglePhoto(this)" data-label="D">
+                    <div style="width:100%; height:100%; background:linear-gradient(135deg, var(--gold), var(--sage)); filter:blur(8px);"></div>
+                    <div class="photo-check">✓</div>
+                    <div style="position:absolute; bottom:8px; left:0; right:0; text-align:center; font-size:0.82rem; font-weight:600; color:var(--ink); background:rgba(255,255,255,0.85); padding:0.3rem 0; border-radius:0 0 13px 13px;">Profil D</div>
+                </div>
+                <div class="photo-option" onclick="togglePhoto(this)" data-label="E">
+                    <div style="width:100%; height:100%; background:linear-gradient(135deg, var(--purple), var(--amber)); filter:blur(8px);"></div>
+                    <div class="photo-check">✓</div>
+                    <div style="position:absolute; bottom:8px; left:0; right:0; text-align:center; font-size:0.82rem; font-weight:600; color:var(--ink); background:rgba(255,255,255,0.85); padding:0.3rem 0; border-radius:0 0 13px 13px;">Profil E</div>
+                </div>
+            </div>
+
+            <!-- ═══ Confirm Button ═══ -->
+            <div style="text-align:center; margin-bottom:2rem;" class="fade-up">
+                <button class="btn-cta" style="width:100%; max-width:300px;" onclick="confirmSelection()">Confirmer ma sélection</button>
+            </div>
+
+            <footer class="dashboard-footer"><strong>My Muqabala</strong><p style="margin-top:0.25rem">Accompagnement thérapeutique musulman — Psychologie moderne & Spiritualité islamique</p></footer>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard-app.js"></script>
+<script>
+function togglePhoto(el) {
+    el.classList.toggle('selected');
+}
+
+function confirmSelection() {
+    const selected = document.querySelectorAll('.photo-option.selected');
+    if (selected.length === 0) {
+        alert('Sélectionne au moins une photo avant de confirmer.');
+        return;
+    }
+    alert('Merci ! Tes réponses ont été enregistrées.');
+    window.location.href = 'feedback-form.html';
+}
+</script>
+</body>
+</html>

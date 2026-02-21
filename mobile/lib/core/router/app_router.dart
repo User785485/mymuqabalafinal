@@ -16,8 +16,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
+
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:my_muqabala/core/constants/app_colors.dart';
@@ -52,6 +53,8 @@ import 'package:my_muqabala/features/notifications/presentation/screens/notifica
 import 'package:my_muqabala/features/matching/presentation/screens/blink_date_screen.dart';
 import 'package:my_muqabala/features/matching/presentation/screens/photo_selection_screen.dart';
 import 'package:my_muqabala/features/matching/presentation/screens/match_reveal_screen.dart';
+import 'package:my_muqabala/features/blink_date/presentation/screens/photo_reveal_screen.dart';
+import 'package:my_muqabala/features/blink_date/presentation/screens/match_results_screen.dart';
 import 'package:my_muqabala/features/questionnaire/presentation/screens/questionnaire_screen.dart';
 import 'package:my_muqabala/features/feedback/presentation/screens/feedback_screen.dart';
 
@@ -79,8 +82,11 @@ final _authStateProvider = StreamProvider<AuthState>((ref) {
 });
 
 /// Whether the user has completed the onboarding flow.
-/// In production, persist this via SharedPreferences or Hive.
-final _onboardingCompleteProvider = StateProvider<bool>((ref) => false);
+/// Persisted via SharedPreferences so onboarding only shows once.
+final _onboardingCompleteProvider = FutureProvider<bool>((ref) async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('onboarding_seen') ?? false;
+});
 
 // ── Router provider ─────────────────────────────────────────────────────────
 
@@ -97,6 +103,10 @@ final routerProvider = Provider<GoRouter>((ref) {
   final refreshNotifier = ValueNotifier<int>(0);
 
   ref.listen(_authStateProvider, (_, __) {
+    refreshNotifier.value++;
+  });
+
+  ref.listen(_onboardingCompleteProvider, (_, __) {
     refreshNotifier.value++;
   });
 
@@ -129,7 +139,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isOnAuth = state.matchedLocation == '/login' ||
           state.matchedLocation == '/onboarding';
 
-      final hasCompletedOnboarding = ref.read(_onboardingCompleteProvider);
+      final hasCompletedOnboarding = ref.read(_onboardingCompleteProvider).value ?? false;
 
       if (isOnSplash) {
         if (!isAuthenticated) {
@@ -171,7 +181,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           key: state.pageKey,
           child: OnboardingScreen(
             onComplete: () {
-              ref.read(_onboardingCompleteProvider.notifier).state = true;
+              ref.invalidate(_onboardingCompleteProvider);
             },
           ),
         ),
@@ -194,10 +204,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: RouteNames.blinkDate,
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) {
-          final matchId = state.extra as String?;
+          // Supports both eventId (new flow) and matchId (legacy).
+          // extra can be a String (eventId) or Map with keys.
+          String? eventId;
+          String? matchId;
+          if (state.extra is Map<String, String>) {
+            final params = state.extra as Map<String, String>;
+            eventId = params['eventId'];
+            matchId = params['matchId'];
+          } else if (state.extra is String) {
+            eventId = state.extra as String;
+          }
           return _slideTransitionPage(
             key: state.pageKey,
-            child: BlinkDateScreen(matchId: matchId),
+            child: BlinkDateScreen(eventId: eventId, matchId: matchId),
           );
         },
       ),
@@ -224,6 +244,32 @@ final routerProvider = Provider<GoRouter>((ref) {
           return _fadeTransitionPage(
             key: state.pageKey,
             child: MatchRevealScreen(matchId: matchId),
+          );
+        },
+      ),
+
+      GoRoute(
+        path: '/photo-reveal',
+        name: RouteNames.photoReveal,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) {
+          final eventId = state.extra as String? ?? '';
+          return _slideTransitionPage(
+            key: state.pageKey,
+            child: PhotoRevealScreen(eventId: eventId),
+          );
+        },
+      ),
+
+      GoRoute(
+        path: '/match-results',
+        name: RouteNames.matchResults,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) {
+          final eventId = state.extra as String? ?? '';
+          return _fadeTransitionPage(
+            key: state.pageKey,
+            child: MatchResultsScreen(eventId: eventId),
           );
         },
       ),

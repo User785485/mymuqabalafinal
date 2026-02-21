@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blink Date | Mon Espace My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><a href="dashboard-test.html"><h2>My Muqabala</h2><span>Espace Personnel</span></a></div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="dashboard-test.html"><div class="nav-icon">🏠</div><span>Accueil</span></a>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de soi</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-ressources.html"><div class="nav-icon">🎓</div><span>Ressources Pédagogiques</span></a>
+                    <a class="nav-item" href="dashboard-formulaires.html"><div class="nav-icon">🔍</div><span>Formulaires Exploratoires</span></a>
+                    <a class="nav-item" href="dashboard-cartographie.html"><div class="nav-icon">🧭</div><span>Cartographie Émotionnelle</span></a>
+                </div>
+            </details>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de l'autre</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-compatibilite.html"><div class="nav-icon">💞</div><span>Recherche de Compatibilité</span></a>
+                    <a class="nav-item" href="dashboard-plan-action.html"><div class="nav-icon">🎯</div><span>Plan d'Action</span></a>
+                    <a class="nav-item active" href="dashboard-rencontres.html"><div class="nav-icon">💬</div><span>Rencontres en Cours</span></a>
+                    <a class="nav-item" href="dashboard-historique.html"><div class="nav-icon">📋</div><span>Historique des Rencontres</span></a>
+                </div>
+            </details>
+        </nav>
+        <div class="sidebar-client"><div class="client-avatar"></div><div><div class="client-name"></div><div class="client-id"></div></div></div>
+    </aside>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+    <main class="main">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                <div><div class="header-greeting">Bienvenue, <em></em></div><div class="header-date"></div></div>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Mode sombre"></button>
+                <a class="notif-bell" href="dashboard-notifications.html"><span class="notif-badge" id="notif-count"></span>🔔</a>
+                <a class="header-btn" title="Aide" href="#">❓</a>
+            </div>
+        </header>
+        <div class="content">
+            <!-- ═══ Page Header ═══ -->
+            <div class="page-header fade-up">
+                <div class="page-title"><div class="page-title-icon rose">💬</div>Blink Date</div>
+                <div class="page-subtitle">Rencontre en cours</div>
+            </div>
+
+            <!-- ═══ Match Info Banner ═══ -->
+            <div class="match-card fade-up" style="justify-content:center; text-align:center; flex-direction:column; align-items:center; gap:1rem; margin-bottom:2rem;">
+                <div class="match-avatar blurred"><span class="match-avatar-initial">?</span></div>
+                <div class="match-name" style="filter:blur(4px);">Prénom</div>
+                <div class="doc-tags" style="justify-content:center;">
+                    <span class="doc-tag">Lecture</span>
+                    <span class="doc-tag sage">Randonnée</span>
+                    <span class="doc-tag gold">Cuisine</span>
+                </div>
+            </div>
+
+            <!-- ═══ Circular Timer ═══ -->
+            <div class="blink-timer fade-up">
+                <svg class="blink-timer-ring" viewBox="0 0 200 200">
+                    <circle class="ring-bg" cx="100" cy="100" r="90"/>
+                    <circle class="ring-fill" cx="100" cy="100" r="90"
+                        stroke-dasharray="565" stroke-dashoffset="0" id="timer-ring"/>
+                </svg>
+                <div class="blink-timer-text" id="timer-text">10:00</div>
+                <div class="blink-timer-label">restantes</div>
+            </div>
+
+            <!-- ═══ Topic Cards ═══ -->
+            <div class="grid-3 fade-up" id="topic-grid" style="margin-bottom:2rem;">
+                <div class="topic-card active" data-topic="0">
+                    <div class="topic-number">1</div>
+                    <div class="topic-text">Parle-moi de ta relation avec ta famille</div>
+                </div>
+                <div class="topic-card" data-topic="1">
+                    <div class="topic-number">2</div>
+                    <div class="topic-text">Qu'est-ce qui te fait rire dans la vie?</div>
+                </div>
+                <div class="topic-card" data-topic="2">
+                    <div class="topic-number">3</div>
+                    <div class="topic-text">Comment imagines-tu ton quotidien à deux ?</div>
+                </div>
+                <div class="topic-card" data-topic="3">
+                    <div class="topic-number">4</div>
+                    <div class="topic-text">Quelle est ta vision de la spiritualité dans le couple ?</div>
+                </div>
+                <div class="topic-card" data-topic="4">
+                    <div class="topic-number">5</div>
+                    <div class="topic-text">Si tu pouvais changer une chose dans le monde...</div>
+                </div>
+            </div>
+
+            <!-- ═══ Action Buttons ═══ -->
+            <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;" class="fade-up">
+                <button class="btn-cta" style="background:var(--rose-deep);" onclick="BlinkDate.end()">Fin d'appel</button>
+                <button class="btn-cta-secondary" onclick="BlinkDate.nextTopic()">Sujet suivant</button>
+            </div>
+
+            <footer class="dashboard-footer"><strong>My Muqabala</strong><p style="margin-top:0.25rem">Accompagnement thérapeutique musulman — Psychologie moderne & Spiritualité islamique</p></footer>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard-app.js"></script>
+<script>
+const BlinkDate = {
+    totalSeconds: 600,
+    remaining: 600,
+    currentTopic: 0,
+    totalTopics: 5,
+    interval: null,
+    autoAdvanceInterval: null,
+    circumference: 565,
+
+    init() {
+        this.startTimer();
+        this.autoAdvanceInterval = setInterval(() => this.nextTopic(), 120000);
+    },
+
+    startTimer() {
+        this.interval = setInterval(() => {
+            this.remaining--;
+            if (this.remaining <= 0) {
+                clearInterval(this.interval);
+                clearInterval(this.autoAdvanceInterval);
+                this.end();
+                return;
+            }
+            this.updateDisplay();
+        }, 1000);
+    },
+
+    updateDisplay() {
+        const minutes = Math.floor(this.remaining / 60);
+        const seconds = this.remaining % 60;
+        document.getElementById('timer-text').textContent =
+            String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+
+        const offset = this.circumference * (1 - this.remaining / this.totalSeconds);
+        document.getElementById('timer-ring').setAttribute('stroke-dashoffset', offset);
+    },
+
+    nextTopic() {
+        const cards = document.querySelectorAll('.topic-card');
+        if (this.currentTopic >= this.totalTopics - 1) return;
+
+        cards[this.currentTopic].classList.remove('active');
+        cards[this.currentTopic].classList.add('completed');
+        this.currentTopic++;
+        cards[this.currentTopic].classList.add('active');
+    },
+
+    end() {
+        clearInterval(this.interval);
+        clearInterval(this.autoAdvanceInterval);
+        window.location.href = 'feedback-form.html';
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => BlinkDate.init());
+</script>
+</body>
+</html>

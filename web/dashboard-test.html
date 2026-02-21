@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil | Mon Espace My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><a href="dashboard-test.html"><h2>My Muqabala</h2><span>Espace Personnel</span></a></div>
+        <nav class="sidebar-nav">
+            <a class="nav-item active" href="dashboard-test.html"><div class="nav-icon">🏠</div><span>Accueil</span></a>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de soi</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-ressources.html"><div class="nav-icon">🎓</div><span>Ressources Pédagogiques</span></a>
+                    <a class="nav-item" href="dashboard-formulaires.html"><div class="nav-icon">🔍</div><span>Formulaires Exploratoires</span></a>
+                    <a class="nav-item" href="dashboard-cartographie.html"><div class="nav-icon">🧭</div><span>Cartographie Émotionnelle</span></a>
+                </div>
+            </details>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de l'autre</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-compatibilite.html"><div class="nav-icon">💞</div><span>Recherche de Compatibilité</span></a>
+                    <a class="nav-item" href="dashboard-plan-action.html"><div class="nav-icon">🎯</div><span>Plan d'Action</span></a>
+                    <a class="nav-item" href="dashboard-rencontres.html"><div class="nav-icon">💬</div><span>Rencontres en Cours</span></a>
+                    <a class="nav-item" href="dashboard-historique.html"><div class="nav-icon">📋</div><span>Historique des Rencontres</span></a>
+                </div>
+            </details>
+        </nav>
+        <div class="sidebar-client"><div class="client-avatar"></div><div><div class="client-name"></div><div class="client-id"></div></div></div>
+    </aside>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+    <main class="main">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                <div><div class="header-greeting">Bienvenue, <em></em></div><div class="header-date"></div></div>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Mode sombre"></button>
+                <a class="notif-bell" href="dashboard-notifications.html"><span class="notif-badge" id="notif-count"></span>🔔</a>
+                <a class="header-btn" title="Aide" href="#">❓</a>
+            </div>
+        </header>
+        <div class="content">
+            <div class="welcome-banner fade-up">
+                <div class="welcome-content">
+                    <div class="welcome-badge">◆ Mon espace privé ◆</div>
+                    <h1 class="welcome-title">As-salamu alaykum</h1>
+                    <p class="welcome-text">Ton espace personnel est prêt. Ici, tu trouveras l'ensemble de ton parcours My Muqabala — tes ressources pédagogiques, tes formulaires exploratoires, ta cartographie émotionnelle, ta recherche de compatibilité et ton plan d'action sur 3 mois.</p>
+                    <div class="welcome-stats">
+                        <div class="welcome-stat"><div class="welcome-stat-value">48</div><div class="welcome-stat-label">Semaines</div></div>
+                        <div class="welcome-stat"><div class="welcome-stat-value">14</div><div class="welcome-stat-label">Formulaires</div></div>
+                        <div class="welcome-stat"><div class="welcome-stat-value">21</div><div class="welcome-stat-label">Documents</div></div>
+                        <div class="welcome-stat"><div class="welcome-stat-value">3</div><div class="welcome-stat-label">Bilans</div></div>
+                    </div>
+                </div>
+            </div>
+            <!-- ═══ Phase Progression Indicator ═══ -->
+            <div class="phase-progress fade-up" id="phase-widget" data-phase="1">
+                <div class="phase-progress-step active">
+                    <div class="phase-progress-dot">1</div>
+                    <div class="phase-progress-label">Exploration</div>
+                </div>
+                <div class="phase-progress-step pending">
+                    <div class="phase-progress-dot">2</div>
+                    <div class="phase-progress-label">Préparation</div>
+                </div>
+                <div class="phase-progress-step pending">
+                    <div class="phase-progress-dot">3</div>
+                    <div class="phase-progress-label">Rencontres</div>
+                </div>
+                <div class="phase-progress-step pending">
+                    <div class="phase-progress-dot">4</div>
+                    <div class="phase-progress-label">Engagement</div>
+                </div>
+            </div>
+
+            <!-- ═══ 2-Column Widget Grid ═══ -->
+            <div class="grid-2" style="margin-bottom: 1.5rem;">
+                <!-- Left column -->
+                <div style="display:flex;flex-direction:column;gap:1.25rem;">
+                    <!-- Event Countdown Widget -->
+                    <div class="countdown-widget fade-up" id="countdown-widget">
+                        <div class="countdown-icon">📅</div>
+                        <div class="countdown-info">
+                            <div class="countdown-label">Prochain événement</div>
+                            <div class="countdown-title" id="countdown-title">Aucun événement prévu</div>
+                            <div class="countdown-timer" id="countdown-timer">
+                                <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-unit-label">Jours</div></div>
+                                <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-unit-label">Heures</div></div>
+                                <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-unit-label">Min</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Active Match Card -->
+                    <div class="match-card fade-up" id="match-widget" style="display:none;">
+                        <div class="match-avatar blurred" id="match-avatar"><span class="match-avatar-initial" id="match-initial">?</span></div>
+                        <div class="match-info">
+                            <div class="match-name" id="match-name" style="filter:blur(4px);">---</div>
+                            <div class="match-meta" id="match-meta"></div>
+                            <div class="match-score-bar"><div class="match-score-fill" id="match-score-fill" style="width:0%"></div></div>
+                            <div class="match-score-text" id="match-score-text">Compatibilité : --%</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right column -->
+                <div style="display:flex;flex-direction:column;gap:1.25rem;">
+                    <!-- Coach Message Widget -->
+                    <div class="coach-widget fade-up" id="coach-widget">
+                        <div class="coach-avatar">🤝</div>
+                        <div class="coach-content">
+                            <div class="coach-label">Ton accompagnant</div>
+                            <div class="coach-message" id="coach-message">Ton accompagnant te contactera bientôt.</div>
+                            <div class="coach-date" id="coach-date"></div>
+                        </div>
+                    </div>
+                    <!-- Pending Actions Tracker -->
+                    <div class="actions-tracker fade-up" id="actions-widget">
+                        <div class="actions-tracker-title">📌 Actions en attente <span class="actions-tracker-count" id="actions-count">3</span></div>
+                        <div id="actions-list">
+                            <a class="action-item" href="dashboard-formulaires.html" style="text-decoration:none;">
+                                <div class="action-icon urgent">📝</div>
+                                <div class="action-text">Compléter ton profil</div>
+                                <span class="action-cta">Commencer →</span>
+                            </a>
+                            <a class="action-item" href="dashboard-ressources.html" style="text-decoration:none;">
+                                <div class="action-icon info">🎓</div>
+                                <div class="action-text">Découvrir les ressources</div>
+                                <span class="action-cta">Explorer →</span>
+                            </a>
+                            <a class="action-item" href="dashboard-formulaires.html" style="text-decoration:none;">
+                                <div class="action-icon normal">🔍</div>
+                                <div class="action-text">Remplir le formulaire express</div>
+                                <span class="action-cta">Remplir →</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-4" style="margin-bottom: 2rem;">
+                <a class="card fade-up fade-up-1" href="dashboard-ressources.html" style="text-decoration:none;color:inherit">
+                    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
+                        <div class="page-title-icon purple">🎓</div>
+                        <div><div style="font-weight:600;color:var(--ink)">Ressources</div><div style="font-size:0.78rem;color:var(--ink-muted)">48 semaines de contenu</div></div>
+                    </div>
+                    <p style="font-size:0.85rem;color:var(--ink-muted)">Vidéos, audios et guides écrits pour t'accompagner à chaque étape.</p>
+                </a>
+                <a class="card fade-up fade-up-2" href="dashboard-formulaires.html" style="text-decoration:none;color:inherit">
+                    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
+                        <div class="page-title-icon sage">🔍</div>
+                        <div><div style="font-weight:600;color:var(--ink)">Formulaires</div><div style="font-size:0.78rem;color:var(--ink-muted)">14 formulaires exploratoires</div></div>
+                    </div>
+                    <p style="font-size:0.85rem;color:var(--ink-muted)">Scénarios et questionnaires qui alimentent ta cartographie.</p>
+                </a>
+                <a class="card fade-up fade-up-3" href="dashboard-cartographie.html" style="text-decoration:none;color:inherit">
+                    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
+                        <div class="page-title-icon rose">🧭</div>
+                        <div><div style="font-weight:600;color:var(--ink)">Cartographie</div><div style="font-size:0.78rem"><span class="status-badge prete" style="padding:0.15rem 0.6rem;font-size:0.68rem"><span class="status-dot"></span> Prête</span></div></div>
+                    </div>
+                    <p style="font-size:0.85rem;color:var(--ink-muted)">21 documents personnalisés façonnés par ce que tu as exploré en toi.</p>
+                </a>
+                <a class="card fade-up fade-up-4" href="dashboard-compatibilite.html" style="text-decoration:none;color:inherit">
+                    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
+                        <div class="page-title-icon gold">💞</div>
+                        <div><div style="font-weight:600;color:var(--ink)">Compatibilité</div><div style="font-size:0.78rem;color:var(--ink-muted)">Recherche de partenaire</div></div>
+                    </div>
+                    <p style="font-size:0.85rem;color:var(--ink-muted)">Ton accompagnement vers une compatibilité profonde et durable.</p>
+                </a>
+            </div>
+            <div class="verset-card fade-up">
+                <p class="verset-arabic">أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</p>
+                <p class="verset-translation">"N'est-ce point par le rappel d'Allah que se tranquillisent les coeurs ?"</p>
+                <p class="verset-ref">Sourate Ar-Ra'd, 13:28</p>
+            </div>
+            <footer class="dashboard-footer"><strong>My Muqabala</strong><p style="margin-top:0.25rem">Accompagnement thérapeutique musulman — Psychologie moderne & Spiritualité islamique</p></footer>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard-app.js"></script>
+</body>
+</html>

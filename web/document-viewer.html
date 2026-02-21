@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Viewer | Mon Espace My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><a href="dashboard-test.html"><h2>My Muqabala</h2><span>Espace Personnel</span></a></div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="dashboard-test.html"><div class="nav-icon">🏠</div><span>Accueil</span></a>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de soi</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-ressources.html"><div class="nav-icon">🎓</div><span>Ressources Pédagogiques</span></a>
+                    <a class="nav-item" href="dashboard-formulaires.html"><div class="nav-icon">🔍</div><span>Formulaires Exploratoires</span></a>
+                    <a class="nav-item active" href="dashboard-cartographie.html"><div class="nav-icon">🧭</div><span>Cartographie Émotionnelle</span></a>
+                </div>
+            </details>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de l'autre</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-compatibilite.html"><div class="nav-icon">💞</div><span>Recherche de Compatibilité</span></a>
+                    <a class="nav-item" href="dashboard-plan-action.html"><div class="nav-icon">🎯</div><span>Plan d'Action</span></a>
+                    <a class="nav-item" href="dashboard-rencontres.html"><div class="nav-icon">💬</div><span>Rencontres en Cours</span></a>
+                    <a class="nav-item" href="dashboard-historique.html"><div class="nav-icon">📋</div><span>Historique des Rencontres</span></a>
+                </div>
+            </details>
+        </nav>
+        <div class="sidebar-client"><div class="client-avatar"></div><div><div class="client-name"></div><div class="client-id"></div></div></div>
+    </aside>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+    <main class="main">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+                <div><div class="header-greeting">Bienvenue, <em></em></div><div class="header-date"></div></div>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Mode sombre"></button>
+                <a class="notif-bell" href="dashboard-notifications.html"><span class="notif-badge" id="notif-count"></span>&#128276;</a>
+                <a class="header-btn" title="Aide" href="#">&#10067;</a>
+            </div>
+        </header>
+        <div class="content">
+
+            <!-- Document Viewer Navigation Bar -->
+            <div class="doc-viewer-nav fade-up">
+                <button class="doc-viewer-btn" id="btn-prev" onclick="DocViewer.prev()">&#8592; Précédent</button>
+                <span class="doc-viewer-counter" id="doc-counter">1 / 19</span>
+                <button class="doc-viewer-btn" id="btn-next" onclick="DocViewer.next()">Suivant &#8594;</button>
+            </div>
+
+            <!-- Reading Progress Bar -->
+            <div class="doc-viewer-progress">
+                <div class="doc-viewer-progress-fill" id="doc-progress-fill" style="width:0%"></div>
+            </div>
+
+            <!-- Document Title Area -->
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;" class="fade-up">
+                <span class="form-badge pending" id="doc-badge" style="display:none;">Nouveau</span>
+                <h2 id="doc-title" class="page-title" style="font-family:var(--font-display,serif);margin:0;"></h2>
+            </div>
+
+            <!-- iframe Container -->
+            <div class="fade-up" style="margin-bottom:2rem;">
+                <iframe id="doc-frame" src="about:blank" style="width:100%;min-height:600px;border:1px solid var(--card-border);border-radius:var(--radius,16px);background:var(--card-bg,#fff);"></iframe>
+            </div>
+
+            <footer class="dashboard-footer"><strong>My Muqabala</strong><p style="margin-top:0.25rem">Accompagnement thérapeutique musulman — Psychologie moderne & Spiritualité islamique</p></footer>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard-app.js"></script>
+<script>
+const DocViewer = {
+    docs: [
+        { id: 'DOC_01', title: 'Le Socle Identitaire' },
+        { id: 'DOC_02', title: 'Les Blessures Fondatrices' },
+        { id: 'DOC_03', title: 'Le Style d\'Attachement' },
+        { id: 'DOC_04', title: 'Les Patterns Relationnels' },
+        { id: 'DOC_05', title: 'Les Mécanismes de Défense' },
+        { id: 'DOC_06', title: 'La Carte des Émotions' },
+        { id: 'DOC_07', title: 'La Grammaire de l\'Amour' },
+        { id: 'DOC_08A', title: 'Protocole Thérapeutique \u2014 Partie A' },
+        { id: 'DOC_08B', title: 'Protocole Thérapeutique \u2014 Partie B' },
+        { id: 'DOC_08C', title: 'Protocole Thérapeutique \u2014 Partie C' },
+        { id: 'DOC_08D', title: 'Protocole Thérapeutique \u2014 Partie D' },
+        { id: 'DOC_09', title: 'Les Forces Intérieures' },
+        { id: 'DOC_10', title: 'La Vision du Couple' },
+        { id: 'DOC_11', title: 'Les Valeurs Profondes' },
+        { id: 'DOC_12', title: 'Le Profil de Compatibilité' },
+        { id: 'DOC_13', title: 'La Synthèse Émotionnelle' },
+        { id: 'DOC_14', title: 'Le Plan de Transformation' },
+        { id: 'dashboard', title: 'Tableau de Bord Cartographie' },
+        { id: 'index', title: 'Vue d\'Ensemble' }
+    ],
+    currentIndex: 0,
+    cartoId: null,
+
+    init() {
+        const params = new URLSearchParams(window.location.search);
+        const docParam = params.get('doc') || 'DOC_01';
+        this.cartoId = params.get('carto') || '210030';
+        this.currentIndex = Math.max(0, this.docs.findIndex(d => d.id === docParam));
+        this.render();
+    },
+
+    render() {
+        const doc = this.docs[this.currentIndex];
+        document.getElementById('doc-title').textContent = doc.title;
+        document.getElementById('doc-counter').textContent = (this.currentIndex + 1) + ' / ' + this.docs.length;
+        document.getElementById('doc-frame').src = 'cartographie/' + this.cartoId + '/' + doc.id + '.html';
+        document.getElementById('btn-prev').disabled = this.currentIndex === 0;
+        document.getElementById('btn-next').disabled = this.currentIndex === this.docs.length - 1;
+        const pct = ((this.currentIndex + 1) / this.docs.length * 100);
+        document.getElementById('doc-progress-fill').style.width = pct + '%';
+        // Mark as read in ProgressStore
+        if (typeof ProgressStore !== 'undefined') {
+            ProgressStore.setItem('cartographie', doc.id, true);
+        }
+        // Update badge
+        const badge = document.getElementById('doc-badge');
+        const isRead = typeof ProgressStore !== 'undefined' && ProgressStore.getItem('cartographie', doc.id);
+        badge.style.display = isRead ? 'none' : 'inline-flex';
+    },
+
+    prev() { if (this.currentIndex > 0) { this.currentIndex--; this.render(); } },
+    next() { if (this.currentIndex < this.docs.length - 1) { this.currentIndex++; this.render(); } }
+};
+
+/* Init DocViewer after DashboardData is ready */
+document.addEventListener('DOMContentLoaded', () => {
+    /* DashboardData.init() is called by dashboard-data.js DOMContentLoaded listener.
+       We use a small delay to ensure it has run first, then init DocViewer. */
+    const waitForData = setInterval(() => {
+        if (typeof DashboardData !== 'undefined') {
+            clearInterval(waitForData);
+            DocViewer.init();
+        }
+    }, 50);
+    /* Safety timeout — init anyway after 2s */
+    setTimeout(() => { if (!DocViewer.cartoId) DocViewer.init(); }, 2000);
+});
+</script>
+</body>
+</html>

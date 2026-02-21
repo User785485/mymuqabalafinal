@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOC 2 - Comprendre ton monde intérieur | Rislène</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    /* ==========================================
+       MY MUQABALA - CSS DE BASE COMPLET
+       DOC 2 : Comprendre ton monde intérieur
+       Version 1.0 - 22/12/2024
+    ========================================== */
+
+    /* ==================== VARIABLES CSS ==================== */
+    :root {
+        --primary: #D4569C;
+        --primary-deep: #B33D7E;
+        --primary-light: #F5D6E8;
+        --purple: #6B5A9C;
+        --purple-deep: #4A3B6E;
+        --purple-light: #B8AECC;
+        --success: #2C7A7B;
+        --success-light: #E6F7F7;
+        --danger: #D4569C;
+        --danger-light: #F5D6E8;
+        --accent: #D4A373;
+        --accent-deep: #B8895E;
+        --accent-light: #F0E5D8;
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-1: #FDFBF7;
+        --gray-2: #F5F1E8;
+        --gray-3: #E8E2D5;
+        --text: #1A1A1A;
+        --text-soft: #4A3B6E;
+        --text-muted: #6B6B6B;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --shadow-sm: 0 3px 12px rgba(107, 90, 156, 0.12);
+        --shadow-md: 0 6px 24px rgba(107, 90, 156, 0.18);
+        --shadow-lg: 0 12px 48px rgba(107, 90, 156, 0.25);
+        --shadow-accent: 0 16px 64px rgba(212, 163, 115, 0.35);
+    }
+
+    /* ==================== RESET & BASE ==================== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { overflow-x: hidden !important; max-width: 100vw; width: 100%; position: relative; }
+    body {
+        font-family: var(--font-body);
+        color: var(--text);
+        line-height: 1.7;
+        background: linear-gradient(135deg, #FDFBF7 0%, #F8F4ED 50%, #F5F1E8 100%);
+        -webkit-font-smoothing: antialiased;
+        font-weight: 400;
+        overflow-x: hidden !important;
+        overflow-y: auto;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    /* ==================== TYPOGRAPHY ==================== */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-body);
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text);
+        margin-bottom: var(--space-md);
+        letter-spacing: -0.02em;
+    }
+    h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); font-family: var(--font-display); }
+    h2 { font-size: clamp(2rem, 4vw, 2.75rem); font-family: var(--font-display); }
+    h3 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+    h4 { font-size: 1.35rem; }
+    p { margin-bottom: var(--space-md); line-height: 1.8; font-weight: 400; }
+    strong { font-weight: 700; color: var(--primary-deep); }
+    em { font-style: italic; }
+    ul { margin-left: var(--space-lg); margin-bottom: var(--space-md); }
+    li { margin-bottom: var(--space-sm); }
+
+    /* ==================== LAYOUT ==================== */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 var(--space-lg);
+        overflow-x: hidden;
+        width: 100%;
+    }
+    section {
+        padding: var(--space-2xl) 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+    }
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+    section:nth-child(4) { animation-delay: 0.4s; }
+    section:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+        text-align: center;
+        padding: var(--space-xl) 0;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(212, 86, 156, 0.12) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(20px, 20px) rotate(180deg); }
+    }
+    .hero-title {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.75rem, 6vw, 4.5rem);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        line-height: 1.1;
+        font-family: var(--font-display);
+    }
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-soft);
+        margin-bottom: var(--space-xl);
+    }
+
+    /* ==================== BADGES ==================== */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 2rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+    .badge-date {
+        background: rgba(253, 251, 247, 0.95);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(212, 86, 156, 0.25);
+        color: var(--text-soft);
+        box-shadow: var(--shadow-sm);
+    }
+    .badge-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+        color: white;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+    }
+
+    /* ==================== CARDS ==================== */
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin-bottom: var(--space-lg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(107, 90, 156, 0.08);
+    }
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* ==================== MESSAGES ==================== */
+    .message {
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-lg) 0;
+    }
+    .message-validation {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-left: 5px solid var(--success);
+    }
+    .message-insight {
+        background: linear-gradient(135deg, rgba(107, 90, 156, 0.12) 0%, white 100%);
+        border-left: 5px solid var(--purple);
+    }
+    .message-warning {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border-left: 5px solid var(--danger);
+    }
+
+    /* ==================== UTILITIES ==================== */
+    .text-center { text-align: center; }
+    .text-soft { color: var(--text-soft); }
+    .text-muted { color: var(--text-muted); }
+    .mb-lg { margin-bottom: var(--space-lg); }
+    .mb-xl { margin-bottom: var(--space-xl); }
+    .mt-lg { margin-top: var(--space-lg); }
+    .mt-xl { margin-top: var(--space-xl); }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+        color: white;
+        margin-top: var(--space-2xl);
+    }
+    footer p { margin-bottom: var(--space-sm); opacity: 0.9; }
+
+    /* ==================== DOC 2 - CSS SPÉCIFIQUE ==================== */
+
+    /* Verset coranique */
+    .verset-box {
+        background: linear-gradient(135deg, rgba(107, 90, 156, 0.08) 0%, rgba(253, 251, 247, 0.9) 100%);
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+        text-align: center;
+        border: 1px solid rgba(107, 90, 156, 0.15);
+    }
+    .verset-box .verset {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-style: italic;
+        color: var(--purple-deep);
+        margin-bottom: var(--space-sm);
+        line-height: 1.6;
+    }
+    .verset-box .reference {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    /* Dimension cards */
+    .dimension-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin-bottom: var(--space-lg);
+        box-shadow: var(--shadow-md);
+        border-left: 5px solid var(--purple);
+    }
+    .dimension-card:nth-of-type(1) { border-left-color: var(--purple); }
+    .dimension-card:nth-of-type(2) { border-left-color: var(--primary); }
+    .dimension-card:nth-of-type(3) { border-left-color: var(--success); }
+    .dimension-card h3 { color: var(--purple-deep); margin-bottom: var(--space-md); }
+
+    /* Insight box */
+    .insight-box {
+        background: linear-gradient(135deg, rgba(212, 163, 115, 0.15) 0%, white 100%);
+        border-left: 5px solid var(--accent);
+        padding: var(--space-lg);
+        border-radius: 0 1rem 1rem 0;
+        margin: var(--space-xl) 0;
+    }
+    .insight-box p { margin: 0; }
+
+    /* Hope box */
+    .hope-box {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border: 2px solid var(--success);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+    }
+    .hope-box h3 { color: var(--success); margin-bottom: var(--space-md); }
+
+    /* Boucle schéma */
+    .boucle-schema {
+        background: var(--cream-dark);
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        margin: var(--space-lg) 0;
+    }
+    .boucle-schema .etape {
+        background: white;
+        padding: var(--space-md);
+        border-radius: 0.5rem;
+        text-align: center;
+        margin: var(--space-sm) 0;
+        box-shadow: var(--shadow-sm);
+    }
+    .boucle-schema .fleche {
+        text-align: center;
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+
+    /* Exemple box */
+    .exemple-box {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-lg) 0;
+        border-left: 4px solid var(--primary);
+    }
+
+    /* Mode cards (système nerveux) */
+    .mode-card {
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+    }
+    .mode-securite {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-left: 5px solid var(--success);
+    }
+    .mode-combat {
+        background: linear-gradient(135deg, rgba(212, 163, 115, 0.15) 0%, white 100%);
+        border-left: 5px solid var(--accent);
+    }
+    .mode-fige {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border-left: 5px solid var(--danger);
+    }
+    .mode-card h4 { margin-bottom: var(--space-sm); }
+
+    /* Nafs cards */
+    .nafs-card {
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-lg) 0;
+    }
+    .nafs-ammara {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border: 2px solid var(--danger);
+    }
+    .nafs-lawwama {
+        background: linear-gradient(135deg, rgba(212, 163, 115, 0.2) 0%, white 100%);
+        border: 2px solid var(--accent);
+    }
+    .nafs-mutmainna {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border: 2px solid var(--success);
+    }
+
+    /* Exercice box */
+    .exercice-box {
+        background: linear-gradient(135deg, var(--purple-light) 0%, white 100%);
+        border: 2px dashed var(--purple);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+    }
+    .exercice-box h4 { color: var(--purple-deep); margin-bottom: var(--space-md); }
+
+    /* Transition box */
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin-top: var(--space-2xl);
+    }
+    .transition-box p { color: white; margin: 0; }
+    .transition-box em { color: rgba(255,255,255,0.9); }
+
+    /* Transition text */
+    .transition-text {
+        color: var(--text-soft);
+        font-style: italic;
+        margin-top: var(--space-xl);
+        padding-top: var(--space-lg);
+        border-top: 1px solid var(--gray-3);
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        :root {
+            --space-xl: 1.5rem;
+            --space-2xl: 2rem;
+        }
+        .container { padding: 0 var(--space-md); }
+        section { padding: var(--space-xl) 0; }
+        .hero-title { font-size: 2.25rem; }
+        .card, .dimension-card, .nafs-card { padding: var(--space-lg); }
+    }
+
+    /* ==================== PRINT ==================== */
+    @media print {
+        body { background: white; }
+        section { page-break-inside: avoid; animation: none; opacity: 1; transform: none; }
+        .hero::before { display: none; }
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1 class="hero-title">Comprendre ton monde intérieur</h1>
+        <p class="hero-subtitle">Les clés pour éclairer ce qui se passe en toi</p>
+        <div class="badge badge-primary">
+            <span>📖</span>
+            <span>Document pédagogique</span>
+        </div>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section id="intro">
+        <div class="card">
+            Rislène, maintenant que tu as tes repères de base, je veux t'emmener un peu plus loin. Avant de découvrir ta cartographie personnelle dans les documents qui suivent, il est essentiel que tu comprennes comment fonctionne ton monde intérieur. Pas de façon théorique et ennuyeuse, mais de façon vivante, concrète, et surtout utile pour toi. Parce que ce que tu vas apprendre ici, c'est le fondement de tout ce qui va suivre.<br><br>Ce que tu vas lire dans les pages qui suivent va probablement mettre des mots sur des choses que tu ressentais sans pouvoir les expliquer. Ces "pourquoi je réagis comme ça", ces "c'est plus fort que moi", ces "je ne comprends pas ce qui m'arrive" - tu sais, toutes ces questions que tu te poses depuis si longtemps. Et sache une chose : comprendre, c'est déjà commencer à transformer. La lumière de la conscience dissipe l'obscurité de l'automatisme. Tu n'es pas condamnée à répéter les mêmes schémas pour toujours. Ce que tu vas découvrir ici te prouvera que le changement est possible.
+        </div>
+    </section>
+
+    <!-- SECTION A : LES 3 DIMENSIONS -->
+    <section id="trois-dimensions">
+        <h2>🔺 A. Les 3 dimensions de ton être</h2>
+
+        <div class="verset-box">
+            <p class="verset">"Et quand Je l'aurai façonné et que J'aurai insufflé en lui de Mon Esprit..."</p>
+            <p class="reference">— Sourate Al-Hijr, 15:29</p>
+        </div>
+
+        <p>En Islam, l'être humain n'est pas qu'un corps ou qu'un mental. Tu es composée de trois dimensions indissociables, et chacune a son rôle dans ta vie émotionnelle et relationnelle :</p>
+
+        <div class="dimension-card">
+            <h3>🧠 Al-'Aql - L'Esprit / Le Mental</h3>
+            <p>C'est le siège de tes pensées, de tes croyances, de tes interprétations. C'est la partie de toi qui analyse, qui juge, qui planifie. C'est aussi là que naissent tes pensées automatiques - ces voix intérieures qui commentent tout ce qui t'arrive.</p>
+            <p><strong>Son rôle</strong> : Comprendre, analyser, donner du sens.</p>
+        </div>
+
+        <div class="dimension-card">
+            <h3>🫀 Al-Jism - Le Corps</h3>
+            <p>Ton corps n'est pas juste un véhicule pour ton esprit. Il a sa propre intelligence, sa propre mémoire. Il réagit aux situations avant même que ton mental ait eu le temps d'analyser. Les tensions, les nœuds, les sensations - tout cela a du sens.</p>
+            <p><strong>Son rôle</strong> : Ressentir, mémoriser, alerter.</p>
+        </div>
+
+        <div class="dimension-card">
+            <h3>💚 Al-Qalb - Le Cœur</h3>
+            <p>En Islam, le cœur n'est pas juste un organe qui pompe le sang. C'est le centre spirituel de ton être, le lieu où réside ta connexion avec Allah, ton intuition profonde, ta conscience. C'est là que se joue la vraie transformation.</p>
+            <p><strong>Son rôle</strong> : Guider, connecter au divin, transformer.</p>
+        </div>
+
+        <div class="insight-box">
+            <p><strong>💡 Ce que ça signifie pour toi :</strong> Quand un schéma s'active, il ne touche pas qu'une seule dimension. Ton esprit pense, ton corps réagit, et ton cœur ressent. C'est pourquoi un travail vraiment transformateur doit toucher les trois dimensions.</p>
+        </div>
+
+        <p class="transition-text">Maintenant que tu vois le cadre global avec ces trois dimensions - l'esprit qui pense, le corps qui réagit, le cœur qui guide - plongeons dans la première : ton esprit. Comment fonctionne-t-il vraiment ? Pourquoi certaines pensées surgissent-elles automatiquement, comme si elles attendaient le moindre signal pour prendre le contrôle ?</p>
+    </section>
+
+    <!-- SECTION B : COMMENT FONCTIONNE L'ESPRIT -->
+    <section id="esprit">
+        <h2>🧠 B. Comment fonctionne ton Esprit (Al-'Aql)</h2>
+
+        <h3>La boucle pensée → émotion → comportement</h3>
+
+        <p>Sais-tu que ton cerveau génère entre 60 000 et 80 000 pensées par jour ? Et que la grande majorité de ces pensées sont automatiques, répétitives, et souvent négatives ?</p>
+
+        <div class="boucle-schema">
+            <div class="etape">1. Un ÉVÉNEMENT se produit</div>
+            <div class="fleche">↓</div>
+            <div class="etape">2. Tu as une PENSÉE automatique sur cet événement</div>
+            <div class="fleche">↓</div>
+            <div class="etape">3. Cette pensée génère une ÉMOTION</div>
+            <div class="fleche">↓</div>
+            <div class="etape">4. L'émotion déclenche un COMPORTEMENT</div>
+            <div class="fleche">↓</div>
+            <div class="etape">5. Le comportement a des CONSÉQUENCES</div>
+            <div class="fleche">↻</div>
+            <div class="etape">6. Les conséquences renforcent la CROYANCE initiale</div>
+        </div>
+
+        <h3>Exemple concret</h3>
+
+        <div class="exemple-box">
+            <p><strong>Événement :</strong> Il ne répond pas à ton message depuis 3 heures.</p>
+            <p><strong>Pensée automatique :</strong> "Il s'en fiche de moi. Je ne suis pas assez importante pour lui."</p>
+            <p><strong>Émotion :</strong> Anxiété, tristesse, colère qui monte.</p>
+            <p><strong>Comportement :</strong> Tu renvoies 3 messages, ou tu te fermes quand il répond enfin.</p>
+            <p><strong>Conséquence :</strong> Tension dans la relation.</p>
+            <p><strong>Renforcement :</strong> "Tu vois, j'avais raison, ça ne marche jamais."</p>
+        </div>
+
+        <div class="insight-box">
+            <p><strong>💡 La clé :</strong> Ce n'est pas l'événement qui crée l'émotion. C'est l'INTERPRÉTATION de l'événement. Deux personnes peuvent vivre la même situation et réagir totalement différemment selon leurs pensées automatiques.</p>
+        </div>
+
+        <p class="transition-text">Tu commences à voir la boucle pensée-émotion-comportement ? Bien. Mais une question se pose naturellement : pourquoi est-ce qu'on répète toujours les mêmes schémas ? Pourquoi ces mêmes pensées, ces mêmes réactions, encore et encore, même quand on sait rationnellement que ça ne sert à rien ? C'est ce qu'on va voir maintenant. Et la réponse va te surprendre - et surtout, elle va te donner de l'espoir.</p>
+    </section>
+
+    <!-- SECTION C : POURQUOI ON RÉPÈTE -->
+    <section id="repetition">
+        <h2>🔄 C. Pourquoi on répète toujours les mêmes schémas</h2>
+
+        <h3>Les autoroutes neuronales</h3>
+
+        <p>Imagine ton cerveau comme un paysage. Chaque pensée, chaque réaction, c'est comme marcher dans ce paysage. Au début, tu marches dans l'herbe haute - c'est difficile, ça demande de l'effort. Mais si tu passes au même endroit encore et encore, tu crées un chemin. Puis un sentier. Puis une route. Puis une autoroute.</p>
+
+        <p>C'est exactement ce qui se passe dans ton cerveau. Quand une réaction se répète des centaines de fois depuis l'enfance, elle devient une <strong>autoroute neuronale</strong>. Le trajet se fait automatiquement, sans effort, sans même y penser.</p>
+
+        <h3>La bonne nouvelle : la neuroplasticité</h3>
+
+        <div class="hope-box">
+            <h3>🌟 Ce que la science a découvert</h3>
+            <p>Ton cerveau peut changer. À tout âge. C'est ce qu'on appelle la <strong>neuroplasticité</strong>. Tu peux créer de nouveaux chemins, de nouvelles autoroutes. Les anciens chemins ne disparaissent pas, mais ils peuvent devenir des sentiers peu fréquentés pendant que tu construis de nouvelles routes.</p>
+        </div>
+
+        <p class="transition-text">L'esprit crée des autoroutes neuronales. Mais il n'est pas seul à réagir. Ton corps, lui aussi, a sa propre intelligence... et parfois il réagit avant même que tu aies le temps de penser. Voyons comment. Parce que comprendre ton système nerveux, c'est comprendre pourquoi parfois tu te sens complètement dépassée par tes réactions.</p>
+    </section>
+
+    <!-- SECTION D : COMMENT FONCTIONNE LE CORPS -->
+    <section id="corps">
+        <h2>🫀 D. Comment fonctionne ton Corps (Al-Jism)</h2>
+
+        <div class="verset-box">
+            <p class="verset">"Et dans vos propres personnes, n'observez-vous donc pas ?"</p>
+            <p class="reference">— Sourate Adh-Dhariyat, 51:21</p>
+        </div>
+
+        <h3>Les 3 modes de ton système nerveux</h3>
+
+        <div class="mode-card mode-securite">
+            <h4>🟢 Mode SÉCURITÉ (Ventral vagal)</h4>
+            <p><strong>Ce que tu ressens :</strong> Calme, connectée, présente, capable de réfléchir clairement.</p>
+            <p><strong>Ton corps :</strong> Respiration lente, muscles détendus, digestion normale.</p>
+            <p><strong>Relationnel :</strong> Tu peux écouter, comprendre, répondre avec nuance.</p>
+        </div>
+
+        <div class="mode-card mode-combat">
+            <h4>🟡 Mode COMBAT ou FUITE (Sympathique)</h4>
+            <p><strong>Ce que tu ressens :</strong> Anxieuse, agitée, sur la défensive, besoin de fuir ou d'attaquer.</p>
+            <p><strong>Ton corps :</strong> Cœur qui s'accélère, respiration courte, muscles tendus, boule au ventre.</p>
+            <p><strong>Relationnel :</strong> Tu réagis, tu te défends, tu accuses, ou tu fuis la conversation.</p>
+        </div>
+
+        <div class="mode-card mode-fige">
+            <h4>🔴 Mode FIGÉ (Dorsal vagal)</h4>
+            <p><strong>Ce que tu ressens :</strong> Déconnectée, engourdie, vide, comme "absente".</p>
+            <p><strong>Ton corps :</strong> Lourdeur, fatigue soudaine, dissociation, brouillard mental.</p>
+            <p><strong>Relationnel :</strong> Tu te fermes, tu te retires, tu n'arrives plus à répondre.</p>
+        </div>
+
+        <!-- EXERCICE DÉCOUVERTE -->
+        html
+<div class="exercice-box">
+    <h4>🔍 Mini-exercice : Où es-tu maintenant ?</h4><br><br>    <p>Prends 30 secondes pour te poser cette question :</p><br><br>    <p><strong>En ce moment, en lisant ces lignes, dans quel mode es-tu ?</strong></p><br><br>    <ul>
+        <li>🟢 <strong>Sécurité</strong> : Je suis calme, présente, je peux réfléchir clairement</li>
+        <li>🟡 <strong>Alerte</strong> : Je sens une certaine tension, mon esprit s'agite</li>
+        <li>🔴 <strong>Figé</strong> : Je me sens engourdie, déconnectée, fatiguée</li>
+    </ul><br><br>    <p>Il n'y a pas de "bonne" réponse. C'est juste une observation. Le simple fait de REMARQUER ton état, c'est déjà le début de la régulation. C'est exactement ce qu'on va t'apprendre : observer avant de réagir. Reconnaître ton état pour ne plus être à sa merci.
+</p>
+</div>
+
+        <div class="insight-box">
+            <p><strong>💡 Pourquoi c'est crucial :</strong> Ton corps réagit AVANT ton mental. Quand un schéma s'active, c'est d'abord ton système nerveux qui bascule. Si tu es en mode combat/fuite ou figé, tu ne peux PAS réfléchir calmement. C'est pour ça qu'on te donnera des outils de RÉGULATION du corps.</p>
+        </div>
+
+        <p class="transition-text">Ton esprit pense, ton corps réagit. Mais il reste une dimension que la psychologie occidentale oublie souvent... et que l'Islam place au centre de tout : le cœur. Al-Qalb. Ce n'est pas juste une métaphore poétique. C'est le centre réel de ta transformation.</p>
+    </section>
+
+    <!-- SECTION E : LE CŒUR -->
+    <section id="coeur">
+        <h2>💚 E. Comment fonctionne le Cœur (Al-Qalb)</h2>
+
+        <div class="verset-box">
+            <p class="verset">"Ceux qui ont cru, et dont les cœurs s'apaisent au rappel d'Allah. N'est-ce pas par le rappel d'Allah que les cœurs s'apaisent ?"</p>
+            <p class="reference">— Sourate Ar-Ra'd, 13:28</p>
+        </div>
+
+        <h3>Le cœur comme centre spirituel</h3>
+
+        <p>En Islam, le cœur (al-qalb) n'est pas juste une métaphore poétique. C'est le centre réel de ton être, le lieu où se joue ta relation avec Allah, où résident ta conscience et ton intuition profonde.</p>
+
+        <p>Le Prophète ﷺ a dit : <em>"Il y a dans le corps un morceau de chair qui, s'il est sain, tout le corps est sain, et s'il est corrompu, tout le corps est corrompu. C'est le cœur."</em></p>
+
+        <h3>Le cœur comme ressource de guérison</h3>
+
+        <p>Le cœur est aussi ta plus grande ressource de transformation. C'est là que le changement profond se produit. C'est pourquoi ton parcours intégrera :</p>
+
+        <ul>
+            <li>Le <strong>dhikr</strong> comme outil de régulation et de reconnexion</li>
+            <li>La <strong>salat</strong> avec présence comme pratique d'ancrage</li>
+            <li>La <strong>du'a</strong> personnalisée comme dialogue avec Allah</li>
+        </ul>
+
+        <div class="insight-box">
+            <p><strong>💡 La dimension verticale :</strong> C'est ce qui distingue notre approche. On ne travaille pas que sur l'horizontal (psychologie, comportements). On travaille aussi sur le vertical (ta relation avec Allah). Les deux sont indissociables.</p>
+        </div>
+
+        <p class="transition-text">Le cœur comme centre spirituel, tu commences à voir le tableau. Mais en Islam, on parle aussi des états de l'âme - les Nafs. C'est un concept puissant qui va éclairer tout le reste de ton parcours. Parce que chaque schéma que tu vis correspond à un état de l'âme. Et comprendre ces états, c'est comprendre où tu en es et surtout vers où tu peux aller.</p>
+    </section>
+
+    <!-- SECTION F : LES 3 NAFS -->
+    <section id="nafs">
+        <h2>🌙 F. Les 3 états de l'âme (Nafs)</h2>
+
+        <p>Le Coran décrit trois états de l'âme. Ce ne sont pas des catégories figées, mais des états entre lesquels on oscille.</p>
+
+        <div class="nafs-card nafs-ammara">
+            <h3>1. Nafs al-Ammara - L'âme qui incite</h3>
+            <p style="font-style: italic; margin-bottom: var(--space-md);">"Certes, l'âme est très incitatrice au mal, à moins que mon Seigneur ne lui fasse miséricorde." — Sourate Yusuf, 12:53</p>
+            <p><strong>Ce que c'est :</strong> L'état où tu es sous l'emprise de tes désirs, de tes réactions automatiques, de tes schémas. Tu agis sans conscience.</p>
+            <p><strong>Lien avec les schémas :</strong> Quand un schéma est actif et non questionné, c'est la nafs al-ammara qui domine.</p>
+        </div>
+
+        <div class="nafs-card nafs-lawwama">
+            <h3>2. Nafs al-Lawwama - L'âme qui se blâme</h3>
+            <p style="font-style: italic; margin-bottom: var(--space-md);">"Et Je jure par l'âme qui ne cesse de se blâmer." — Sourate Al-Qiyama, 75:2</p>
+            <p><strong>Ce que c'est :</strong> L'état de prise de conscience. Tu commences à voir tes schémas, à reconnaître tes réactions automatiques.</p>
+            <p><strong>Lien avec les schémas :</strong> C'est l'étape de CONSCIENCE. Tu vois le schéma. C'est inconfortable, mais c'est le début de la transformation.</p>
+        </div>
+
+        <div class="nafs-card nafs-mutmainna">
+            <h3>3. Nafs al-Mutma'inna - L'âme apaisée</h3>
+            <p style="font-style: italic; margin-bottom: var(--space-md);">"Ô toi, âme apaisée, retourne vers ton Seigneur, satisfaite et agréée." — Sourate Al-Fajr, 89:27-28</p>
+            <p><strong>Ce que c'est :</strong> L'état de paix intérieure, d'alignement. Tu n'es plus sous l'emprise automatique de tes schémas. Tu peux choisir ta réponse avec conscience.</p>
+            <p><strong>Lien avec les schémas :</strong> Ce n'est pas que les schémas disparaissent. C'est qu'ils n'ont plus le pouvoir de te contrôler.</p>
+        </div>
+
+        <div class="insight-box">
+            <p><strong>💡 Le chemin :</strong> Le travail que tu fais avec cette cartographie, c'est exactement ça : passer de nafs al-ammara à nafs al-lawwama puis vers nafs al-mutma'inna. C'est le jihad an-nafs - le combat intérieur le plus noble.</p>
+        </div>
+
+        <p class="transition-text">Tu connais maintenant les trois Nafs. La question qui vient naturellement : comment passe-t-on de l'un à l'autre ? Comment le déblocage se fait-il vraiment ? Comment est-ce qu'on passe de nafs al-ammara (réactions automatiques) à nafs al-mutma'inna (paix intérieure) ? C'est la partie la plus porteuse d'espoir. Parce que oui, c'est possible.</p>
+    </section>
+
+    <!-- SECTION G : LE DÉBLOCAGE -->
+    <section id="deblocage">
+        <h2>🌟 G. Comment le déblocage se fait</h2>
+
+        <h3>La neuroplasticité : tu peux changer</h3>
+
+        <p>On l'a vu : ton cerveau crée des autoroutes. Mais il peut aussi en créer de nouvelles. Ce qu'il faut :</p>
+
+        <ul>
+            <li><strong>Conscience</strong> : Voir le schéma (sortir du pilote automatique)</li>
+            <li><strong>Répétition</strong> : Pratiquer de nouvelles réponses (créer un nouveau chemin)</li>
+            <li><strong>Émotion</strong> : Le changement doit toucher le cœur, pas juste la tête</li>
+            <li><strong>Temps</strong> : Les autoroutes ne se construisent pas en un jour</li>
+        </ul>
+
+        <div class="hope-box">
+            <h3>🌟 Ce que tu peux espérer</h3>
+            <ul>
+                <li>Des réactions qui étaient automatiques deviennent des choix conscients</li>
+                <li>Des émotions qui te submergeaient deviennent observables et gérables</li>
+                <li>Des schémas qui sabotaient tes relations deviennent des signaux que tu sais décoder</li>
+                <li>Une connexion plus profonde avec toi-même et avec Allah</li>
+            </ul>
+            <p>Ce n'est pas de la magie. C'est du travail. Mais c'est possible.</p>
+        </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section id="conclusion">
+        <div class="card">
+            Tu viens de parcourir les fondements de ton monde intérieur, Rislène. Tu comprends maintenant comment ton esprit crée des pensées automatiques à partir d'interprétations, comment ton corps réagit à travers le système nerveux autonome, et comment ton cœur est au centre de ta transformation spirituelle. Tu connais les trois états de l'âme - nafs al-ammara, nafs al-lawwama, nafs al-mutma'inna - et tu sais que le passage de l'un à l'autre est possible grâce à la neuroplasticité et au travail sur soi. Tu sais que ton cerveau peut changer, que de nouvelles autoroutes peuvent se créer. Ce ne sont pas juste des concepts théoriques. Ce sont des clés précieuses qui vont éclairer tout ce qui suit.<br><br>Garde-les avec toi pour la suite. Dans le prochain document, on va voir comment t'organiser concrètement pour intégrer tout ce qui va suivre. On va aussi te donner ta "trousse de secours" - les outils de régulation dont tu auras besoin avant de plonger dans les parties plus intenses de ta cartographie. Parce que oui, certaines observations vont peut-être secouer un peu. Mais tu auras les outils pour gérer ces moments. Tu es prête ?
+        </div>
+
+        <div class="transition-box">
+            <p>→ <em>Dans le prochain document, on va voir comment t'organiser concrètement et te donner ta "trousse de secours" - les outils de régulation dont tu auras besoin.</em></p>
+        </div>
+    </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p><strong>My Muqabala</strong></p>
+    <p>Ta cartographie émotionnelle personnalisée</p>
+    <p style="opacity: 0.7; font-size: 0.85rem;">Document pédagogique - Rislène</p>
+</footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

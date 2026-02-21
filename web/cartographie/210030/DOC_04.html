@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOC 4 - Tu es une histoire qui se raconte | Rislène</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    /* ==========================================
+       MY MUQABALA - CSS DE BASE COMPLET
+       DOC 4 : Tu es une histoire qui se raconte
+       Version 1.0 - 22/12/2024
+    ========================================== */
+
+    :root {
+        --primary: #D4569C;
+        --primary-deep: #B33D7E;
+        --primary-light: #F5D6E8;
+        --purple: #6B5A9C;
+        --purple-deep: #4A3B6E;
+        --purple-light: #B8AECC;
+        --success: #2C7A7B;
+        --success-light: #E6F7F7;
+        --danger: #D4569C;
+        --danger-light: #F5D6E8;
+        --accent: #D4A373;
+        --accent-light: #F0E5D8;
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-3: #E8E2D5;
+        --text: #1A1A1A;
+        --text-soft: #4A3B6E;
+        --text-muted: #6B6B6B;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --shadow-sm: 0 3px 12px rgba(107, 90, 156, 0.12);
+        --shadow-md: 0 6px 24px rgba(107, 90, 156, 0.18);
+        --shadow-lg: 0 12px 48px rgba(107, 90, 156, 0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { overflow-x: hidden !important; max-width: 100vw; }
+    body {
+        font-family: var(--font-body);
+        color: var(--text);
+        line-height: 1.7;
+        background: linear-gradient(135deg, #FDFBF7 0%, #F8F4ED 50%, #F5F1E8 100%);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden !important;
+        overflow-y: auto;
+    }
+
+    h1, h2, h3, h4, h5 { font-weight: 700; line-height: 1.2; color: var(--text); margin-bottom: var(--space-md); }
+    h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); font-family: var(--font-display); }
+    h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-family: var(--font-display); }
+    h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+    h4 { font-size: 1.15rem; }
+    h5 { font-size: 1rem; }
+    p { margin-bottom: var(--space-md); line-height: 1.8; }
+    strong { font-weight: 700; color: var(--primary-deep); }
+    em { font-style: italic; }
+    ul { margin-left: var(--space-lg); margin-bottom: var(--space-md); }
+    li { margin-bottom: var(--space-sm); }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 0 var(--space-lg); }
+    section {
+        padding: var(--space-2xl) 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+    }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    .hero { text-align: center; padding: var(--space-xl) 0; position: relative; }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(212, 86, 156, 0.12) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(20px, 20px) rotate(180deg); }
+    }
+    .hero-title {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        font-family: var(--font-display);
+    }
+    .hero-subtitle { font-size: 1.2rem; color: var(--text-soft); margin-bottom: var(--space-xl); }
+
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin-bottom: var(--space-lg);
+    }
+
+    .badge-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 2rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+        color: white;
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    .text-center { text-align: center; }
+    .mb-lg { margin-bottom: var(--space-lg); }
+    .mt-lg { margin-top: var(--space-lg); }
+    .note { background: var(--cream-dark); padding: var(--space-md); border-radius: 0.5rem; font-size: 0.9rem; }
+
+    footer {
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+        color: white;
+        margin-top: var(--space-2xl);
+    }
+    footer p { margin-bottom: var(--space-sm); opacity: 0.9; }
+
+    /* ==================== DOC 4 - CSS SPÉCIFIQUE ==================== */
+
+    .exemples-recits {
+        background: linear-gradient(135deg, var(--cream-dark) 0%, white 100%);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-lg) 0;
+    }
+    .exemples-recits ul { list-style: none; padding: 0; }
+    .exemples-recits li {
+        background: white;
+        padding: var(--space-md);
+        margin: var(--space-sm) 0;
+        border-radius: 0.5rem;
+        border-left: 4px solid var(--primary);
+        font-style: italic;
+        color: var(--text-soft);
+    }
+
+    .concept {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin: var(--space-lg) 0;
+    }
+    .concept h3 { color: var(--purple-deep); margin-bottom: var(--space-lg); }
+
+    .memoire-type {
+        background: var(--cream-dark);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+    }
+    .memoire-type h4 { color: var(--purple-deep); margin-bottom: var(--space-sm); }
+
+    .comparaison {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--space-lg);
+        margin: var(--space-lg) 0;
+    }
+    .colonne {
+        background: var(--cream-dark);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        text-align: center;
+    }
+    .colonne h4 { color: var(--purple-deep); margin-bottom: var(--space-sm); }
+
+    .exemple-box {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-lg) 0;
+        border-left: 4px solid var(--primary);
+    }
+
+    .fonction-box {
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+    }
+    .fonction-box.protection {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-left: 5px solid var(--success);
+    }
+    .fonction-box.limitation {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border-left: 5px solid var(--danger);
+    }
+    .fonction-box h4 { margin-bottom: var(--space-sm); }
+
+    .insight-box {
+        background: linear-gradient(135deg, rgba(212, 163, 115, 0.15) 0%, white 100%);
+        border-left: 5px solid var(--accent);
+        padding: var(--space-lg);
+        border-radius: 0 1rem 1rem 0;
+        margin: var(--space-xl) 0;
+    }
+    .insight-box p { margin: 0; }
+
+    .hope-section {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border: 2px solid var(--success);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+    }
+    .hope-section h3 { color: var(--success); margin-bottom: var(--space-lg); }
+
+    .exemple-reecriture { margin: var(--space-lg) 0; }
+    .ancien-recit {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border-left: 5px solid var(--danger);
+        border-radius: 0 1rem 1rem 0;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+    }
+    .ancien-recit h5 { color: var(--danger); margin-bottom: var(--space-sm); }
+    .nouveau-recit {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-left: 5px solid var(--success);
+        border-radius: 0 1rem 1rem 0;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+    }
+    .nouveau-recit h5 { color: var(--success); margin-bottom: var(--space-sm); }
+    .fleche { text-align: center; font-size: 2rem; color: var(--purple); margin: var(--space-md) 0; }
+
+    .exercice-box {
+        background: linear-gradient(135deg, var(--purple-light) 0%, white 100%);
+        border: 2px dashed var(--purple);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+    }
+    .exercice-box h4 { color: var(--purple-deep); margin-bottom: var(--space-md); }
+
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin-top: var(--space-2xl);
+    }
+    .transition-box p { color: white; margin: 0; }
+    .transition-box em { color: rgba(255,255,255,0.9); }
+
+    @media (max-width: 768px) {
+        :root { --space-xl: 1.5rem; --space-2xl: 2rem; }
+        .container { padding: 0 var(--space-md); }
+        .hero-title { font-size: 2rem; }
+        .comparaison { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+        body { background: white; }
+        section { page-break-inside: avoid; animation: none; opacity: 1; transform: none; }
+        .hero::before { display: none; }
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1 class="hero-title">Tu es une histoire qui se raconte</h1>
+        <p class="hero-subtitle">Et cette histoire peut se réécrire</p>
+        <div class="badge-primary">
+            <span>📖</span>
+            <span>Document pédagogique</span>
+        </div>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section id="intro">
+        <div class="card">
+            Rislène, j'aimerais te partager une idée qui pourrait changer ta façon de te voir. C'est une idée simple, mais profonde : tu n'es pas ce qui t'est arrivé. Tu es l'histoire que tu te racontes sur ce qui t'est arrivé.<br><br>Autrement dit, tu es un ensemble de récits. Des histoires que tu te répètes sur toi-même, sur les autres, sur l'amour, sur ce que tu mérites. Et voici la nouvelle libératrice : ces histoires, tu peux les réécrire. Non pas en niant ce qui s'est passé, mais en changeant le sens que tu donnes à ces événements, la place qu'ils occupent dans ton présent, et la direction qu'ils donnent à ton futur.
+        </div>
+    </section>
+
+    <!-- SECTION A : ON EST UN ENSEMBLE DE RÉCITS -->
+    <section id="recits">
+        <h2>📖 A. Tu es un ensemble de récits</h2>
+
+        <p>Depuis ton enfance, tu construis des histoires. Des histoires sur qui tu es, sur ce que tu vaux, sur comment fonctionne l'amour, sur ce que tu peux attendre des autres.</p>
+
+        <p>Ces histoires ne sont pas apparues de nulle part. Elles se sont construites à partir de tes expériences, de ce que tu as observé, de ce qu'on t'a dit, de ce que tu as ressenti.</p>
+
+        ```html
+<div class="exemples-recits">
+    <p><strong>Exemples de récits qu'on se construit :</strong></p>
+    <ul>
+        <li>"Je suis quelqu'un qui se fait toujours abandonner"</li>
+        <li>"Les hommes finissent toujours par me décevoir"</li>
+        <li>"Je ne suis pas assez belle/intelligente/intéressante pour garder quelqu'un"</li>
+        <li>"L'amour vrai, c'est pour les autres, pas pour moi"</li>
+        <li>"Je fais fuir les gens qui m'aiment vraiment"</li>
+        <li>"Je suis trop intense / trop compliquée / trop sensible"</li>
+        <li>"Si je m'ouvre vraiment, on va me blesser"</li>
+        <li>"Dès que je donne beaucoup, on profite de moi"</li>
+    </ul>
+    <p>Ces phrases, tu te les répètes peut-être depuis des années. Elles sont devenues des "vérités" à tes yeux. Mais ce sont des récits, pas des faits. Ce sont des interprétations que tu as construites à partir de tes expériences - des interprétations qui ont du sens au vu de ce que tu as vécu, mais qui ne sont pas la seule lecture possible.</p>
+</div>
+```
+
+        <p>Le problème ? Ces récits fonctionnent comme des prophéties auto-réalisatrices. Si tu crois profondément que "les hommes finissent toujours par partir", tu vas inconsciemment créer les conditions pour que ça arrive - ou interpréter chaque situation à travers ce filtre.</p>
+    </section>
+
+    <!-- SECTION B : POURQUOI ON N'A PAS ACCÈS À TOUT -->
+    <section id="memoire">
+        <h2>🧠 B. Pourquoi on n'a pas accès à tout</h2>
+
+        ```html
+<div class="concept">
+    <h3>La mémoire implicite vs explicite</h3><br><br>    <p>Ton cerveau stocke deux types de souvenirs :</p><br><br>    <div class="memoire-type">
+        <h4>🧠 Mémoire explicite (consciente)</h4>
+        <p>Ce dont tu te souviens consciemment : des événements, des dates, des visages, des conversations. Tu peux les raconter. Tu peux dire "À 16 ans, j'ai rencontré mon premier amour" ou "En 2020, j'ai vécu telle rupture". Ces souvenirs sont accessibles, verbalisables.</p>
+    </div><br><br>    <div class="memoire-type">
+        <h4>💭 Mémoire implicite (inconsciente)</h4>
+        <p>Ce que ton corps et ton système nerveux ont enregistré SANS que tu en aies conscience. Des ambiances, des sensations, des réactions automatiques. Tu ne peux pas les "raconter" parce qu'ils ne sont pas stockés sous forme de récit, mais ils influencent tout : tes réactions face à certains comportements, tes attirances, tes peurs, tes mécanismes de défense.</p>
+        <p><strong>Exemple :</strong> Tu peux ne pas te souvenir consciemment d'un moment précis où tu t'es sentie abandonnée petite. Mais ton corps, lui, a enregistré cette sensation d'abandon. Résultat : aujourd'hui, dès qu'un homme met quelques heures à répondre à un message, ton système nerveux s'active comme si l'abandon était imminent. Ce n'est pas "logique" - c'est implicite.</p>
+    </div><br><br>    <p><strong>Pourquoi c'est important :</strong> Certains de tes récits se sont formés à partir de cette mémoire implicite. Tu ne sais même pas d'où ils viennent, mais ils dirigent ta vie. C'est pour ça que "comprendre rationnellement" ne suffit pas toujours à changer. Il faut aussi travailler sur ce qui est inscrit dans le corps, dans l'inconscient.</p>
+</div>
+```
+    </section>
+
+    <!-- SECTION C : FAITS VS INTERPRÉTATIONS -->
+    <section id="faits-interpretations">
+        <h2>⚖️ C. La différence entre faits et interprétations</h2>
+
+        ```html
+<div class="concept">
+    <h3>Distinguer ce qui s'est passé de ce que tu en as fait</h3><br><br>    <p>Voici une distinction cruciale :</p><br><br>    <div class="comparaison">
+        <div class="colonne">
+            <h4>LE FAIT (ce qui s'est passé)</h4>
+            <p>Observable, vérifiable, sans jugement. C'est ce qui pourrait être filmé par une caméra.</p>
+        </div>
+        <div class="colonne">
+            <h4>L'INTERPRÉTATION (le récit)</h4>
+            <p>Ce que tu en as conclu, la signification que tu lui as donnée. C'est la narration que tu as construite autour du fait.</p>
+        </div>
+    </div><br><br>    <div class="exemple-box">
+        <p><strong>Exemple 1 :</strong></p>
+        <p><strong>Fait :</strong> Ton premier amour t'a quittée après 2 ans de relation.</p>
+        <p><strong>Interprétation possible 1 (limitante) :</strong> "Je n'étais pas assez bien pour qu'il reste. Il y a quelque chose en moi qui fait fuir les gens quand ils me connaissent vraiment."</p>
+        <p><strong>Interprétation possible 2 (neutre) :</strong> "Cette relation s'est terminée. Peut-être qu'on n'était pas compatibles sur le long terme. Peut-être qu'il n'était pas prêt. Peut-être que c'était simplement le moment."</p>
+        <p><em>Le même fait, deux récits totalement différents. L'un te condamne. L'autre t'ouvre des portes.</em></p>
+    </div><br><br>    <div class="exemple-box">
+        <p><strong>Exemple 2 :</strong></p>
+        <p><strong>Fait :</strong> Dans plusieurs de tes relations, tu as eu l'impression que l'homme voulait quelque chose de toi (intimité physique) sans vraiment te respecter ou t'écouter.</p>
+        <p><strong>Interprétation possible 1 (généralisante) :</strong> "Les hommes ne veulent qu'une chose. Je ne mérite que ça de toute façon. Si je refuse de donner vite, ils partent."</p>
+        <p><strong>Interprétation possible 2 (nuancée) :</strong> "J'ai rencontré plusieurs hommes qui n'étaient pas alignés avec mes valeurs. Ces expériences m'ont appris ce que je ne veux plus. Maintenant, je peux identifier ces comportements plus tôt et poser des limites claires."</p>
+        <p><em>Le même fait, deux récits aux conséquences très différentes sur ta vie actuelle et future.</em></p>
+    </div><br><br>    <p><strong>La nuance essentielle :</strong> Reconnaître qu'un fait peut avoir plusieurs interprétations ne veut pas dire nier ta souffrance ou minimiser ce qui s'est passé. Ça veut dire reconnaître que TU AS LE POUVOIR de choisir quelle histoire tu racontes à partir de ce fait.</p>
+</div>
+```
+    </section>
+
+    <!-- SECTION D : LES RÉCITS PROTÈGENT ET LIMITENT -->
+    <section id="protection-limitation">
+        <h2>🛡️ D. Comment les récits protègent ET limitent</h2>
+
+        ```html
+<div class="concept">
+    <h3>La double fonction des récits</h3><br><br>    <p>Avant de vouloir "changer" tes récits, il faut comprendre qu'ils ont eu une fonction. Ils t'ont protégée. Et c'est important de l'honorer.</p><br><br>    <div class="fonction-box protection">
+        <h4>🛡️ La fonction de PROTECTION</h4>
+        <p>Le récit "si je m'ouvre vraiment, on va me blesser" t'a peut-être protégée de souffrances répétées. En gardant une distance émotionnelle, en ne donnant pas accès à ton intimité profonde, tu évitais d'être vulnérable face à des hommes qui n'étaient pas dignes de cette confiance. C'était une forme d'armure. Une armure intelligente, construite par une partie de toi qui voulait te préserver.</p>
+        <p>Le récit "je donne trop vite, donc il faut que je contrôle" venait peut-être d'une sagesse inconsciente : tu avais remarqué que quand tu t'investissais trop rapidement, tu te retrouvais souvent déçue. Alors tu as construit un mécanisme de contrôle pour ralentir, pour te protéger.</p>
+    </div><br><br>    <div class="fonction-box limitation">
+        <h4>⛓️ La fonction de LIMITATION</h4>
+        <p>Mais cette même armure, qui t'a protégée à un moment, t'empêche maintenant de t'ouvrir vraiment, même face à quelqu'un qui pourrait être différent. Elle crée de la méfiance là où il n'y en a pas forcément besoin. Elle sabote des relations qui auraient peut-être pu se construire autrement.</p>
+        <p>Le mécanisme de contrôle, qui était une protection intelligente, est peut-être devenu aujourd'hui une prison. Il te coupe de tes émotions spontanées. Il crée une tension permanente. Il transforme chaque rencontre en terrain miné où tu dois "gérer" au lieu de simplement vivre.</p>
+    </div><br><br>    <div class="insight-box">
+        <p><strong>💡 La nuance importante :</strong> On ne rejette pas les récits comme "faux" ou "stupides". On reconnaît qu'ils ont eu leur utilité - ils t'ont protégée dans des contextes où tu en avais besoin. Et maintenant, on choisit consciemment d'en écrire de nouveaux, plus adaptés à qui tu es aujourd'hui et à la vie que tu veux construire. Ce n'est pas un rejet du passé. C'est une évolution.</p>
+    </div>
+</div>
+```
+    </section>
+
+    <!-- SECTION E : ON PEUT RÉÉCRIRE -->
+    <section id="reecrire">
+        <h2>✨ E. La bonne nouvelle : on peut réécrire</h2>
+
+        ```html
+<div class="hope-section">
+    <h3>🌟 La bonne nouvelle : tu peux réécrire</h3><br><br>    <p>Ton histoire n'est pas figée. Les récits qui dirigent ta vie aujourd'hui peuvent évoluer. Ce n'est pas de la pensée positive superficielle ni du déni. C'est un travail de conscience et de réécriture progressive.</p><br><br>    <p>Réécrire ne veut pas dire "faire comme si rien ne s'était passé" ou "oublier les blessures". Ça veut dire choisir activement quelle place ces expériences vont occuper dans ton identité. Ça veut dire décider si elles vont te définir ou si elles vont t'informer.</p><br><br>    <div class="exemple-reecriture">
+        <p><strong>Exemple de réécriture :</strong></p><br><br>        <div class="ancien-recit">
+            <h5>Ancien récit (limitant) :</h5>
+            <p>"Je suis quelqu'un qui se fait toujours blesser dans l'amour. Il y a quelque chose en moi qui attire les mauvaises personnes. Je ne mérite peut-être que ça. Si je m'ouvre vraiment, je vais encore souffrir, donc autant garder mes distances."</p>
+        </div><br><br>        <div class="fleche">↓</div><br><br>        <div class="nouveau-recit">
+            <h5>Nouveau récit (en construction) :</h5>
+            <p>"J'ai vécu des expériences douloureuses dans l'amour. Ces expériences m'ont marquée et m'ont appris à me protéger, parfois de manière excessive. Je comprends maintenant d'où viennent mes mécanismes de défense. Je reconnais que certains hommes que j'ai rencontrés n'étaient pas alignés avec mes valeurs, et je peux maintenant mieux identifier ces signes. Ma sensibilité et mon besoin de profondeur ne sont pas des défauts - ce sont des qualités qui demandent simplement à être offertes aux bonnes personnes. Mon passé ne définit pas mon avenir. Je peux apprendre de ces expériences sans en faire une identité."</p>
+        </div>
+    </div><br><br>    <p>Tu vois la différence ? Le premier récit est une condamnation. Une fermeture. Une prophétie qui se réalise d'elle-même. Le second est une compréhension qui ouvre des possibilités. Il honore ce qui s'est passé, il reconnaît les blessures, mais il ne s'y enferme pas.</p><br><br>    <p><strong>Comment se fait cette réécriture ?</strong></p>
+    <ul>
+        <li>En prenant conscience des récits actuels (ce que tu fais en ce moment même)</li>
+        <li>En les écrivant, en les verbalisant (le fait de les sortir de toi les rend moins absolus)</li>
+        <li>En identifiant les faits bruts derrière les interprétations</li>
+        <li>En explorant d'autres interprétations possibles, plus nuancées</li>
+        <li>En choisissant activement de nourrir les nouveaux récits par tes actions</li>
+    </ul><br><br>    <p>Ce n'est pas instantané. C'est un processus. Mais c'est possible. Et tu as déjà commencé.</p>
+</div>
+```
+    </section>
+
+    <!-- EXERCICE MON RÉCIT -->
+    <section id="exercice">
+        ```html
+<div class="exercice-box">
+    <h4>✏️ Mini-exercice : Un de tes récits</h4><br><br>    <p>Avant de passer au prochain document, prends un moment pour réfléchir. Tu n'as pas besoin de tout résoudre maintenant. Juste observer.</p><br><br>    <p><strong>Quel est UN récit que tu te racontes souvent sur toi-même ou sur l'amour ?</strong></p><br><br>    <p>Par exemple :</p>
+    <ul>
+        <li>"Je suis quelqu'un qui..."</li>
+        <li>"Les hommes sont toujours..."</li>
+        <li>"Dans mes relations, il se passe toujours..."</li>
+        <li>"Si je donne trop vite, alors..."</li>
+    </ul><br><br>    <p>Note-le quelque part - dans ton journal, dans tes notes, même mentalement. Ce n'est pas pour le juger, juste pour le VOIR. Pour commencer à le distinguer de toi. Pour reconnaître que c'est une histoire que tu te racontes, pas une vérité absolue.</p><br><br>    <p class="note">💡 Si plusieurs récits te viennent, choisis celui qui te semble le plus "automatique" - celui que tu te répètes sans même y penser. Celui qui influence le plus tes décisions dans l'amour.</p><br><br>    <p>Tu le retrouveras peut-être dans le prochain document. Et ça sera peut-être inconfortable. Mais souviens-toi : le voir, c'est déjà commencer à ne plus en être prisonnier.</p>
+</div>
+```
+    </section>
+
+    <!-- CONCLUSION -->
+    <section id="conclusion">
+        <div class="card">
+            Ce que tu viens de lire, Rislène, c'est le cadre. Tu comprends maintenant que tu es un ensemble de récits, que ces récits se sont formés souvent sans ta pleine conscience, qu'ils mélangent faits et interprétations, qu'ils ont eu une fonction de protection, et qu'ils peuvent évoluer.<br><br>Dans le prochain document, on passe du général au personnel. Tu vas découvrir TON récit de vie - l'histoire que je perçois à travers tout ce que tu m'as partagé. Ce sera peut-être confrontant, peut-être libérateur, probablement les deux. Mais souviens-toi : ce récit n'est pas une condamnation. C'est un point de départ pour la réécriture. C'est une manière de VOIR ce qui était jusque-là invisible, enfoui dans l'implicite. Et voir, c'est déjà transformer.
+        </div>
+
+        <div class="transition-box">
+            <p>→ <em>Prochain document : Ton Récit de Vie - l'histoire que je perçois à travers ce que tu m'as partagé.</em></p>
+        </div>
+    </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p><strong>My Muqabala</strong></p>
+    <p>Ta cartographie émotionnelle personnalisée</p>
+    <p style="opacity: 0.7; font-size: 0.85rem;">Document pédagogique - Rislène</p>
+</footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOC 5 - Ton Récit de Vie | Rislène</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    /* ==========================================
+       MY MUQABALA - CSS DE BASE COMPLET
+       DOC 5 : Ton Récit de Vie
+       Version 1.0 - 22/12/2024
+    ========================================== */
+
+    :root {
+        --primary: #D4569C;
+        --primary-deep: #B33D7E;
+        --primary-light: #F5D6E8;
+        --purple: #6B5A9C;
+        --purple-deep: #4A3B6E;
+        --purple-light: #B8AECC;
+        --success: #2C7A7B;
+        --success-light: #E6F7F7;
+        --danger: #D4569C;
+        --danger-light: #F5D6E8;
+        --accent: #D4A373;
+        --accent-light: #F0E5D8;
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-3: #E8E2D5;
+        --text: #1A1A1A;
+        --text-soft: #4A3B6E;
+        --text-muted: #6B6B6B;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --shadow-sm: 0 3px 12px rgba(107, 90, 156, 0.12);
+        --shadow-md: 0 6px 24px rgba(107, 90, 156, 0.18);
+        --shadow-lg: 0 12px 48px rgba(107, 90, 156, 0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { overflow-x: hidden !important; max-width: 100vw; }
+    body {
+        font-family: var(--font-body);
+        color: var(--text);
+        line-height: 1.7;
+        background: linear-gradient(135deg, #FDFBF7 0%, #F8F4ED 50%, #F5F1E8 100%);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden !important;
+        overflow-y: auto;
+    }
+
+    h1, h2, h3, h4 { font-weight: 700; line-height: 1.2; color: var(--text); margin-bottom: var(--space-md); }
+    h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); font-family: var(--font-display); }
+    h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-family: var(--font-display); }
+    h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+    p { margin-bottom: var(--space-md); line-height: 1.8; }
+    strong { font-weight: 700; color: var(--primary-deep); }
+    ul { margin-left: var(--space-lg); margin-bottom: var(--space-md); }
+    li { margin-bottom: var(--space-sm); }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 0 var(--space-lg); }
+    section {
+        padding: var(--space-2xl) 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+    }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    .hero { text-align: center; padding: var(--space-xl) 0; position: relative; }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(212, 86, 156, 0.12) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(20px, 20px) rotate(180deg); }
+    }
+    .hero-title {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        font-family: var(--font-display);
+    }
+    .hero-subtitle { font-size: 1.2rem; color: var(--text-soft); margin-bottom: var(--space-xl); }
+
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin-bottom: var(--space-lg);
+    }
+
+    footer {
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+        color: white;
+        margin-top: var(--space-2xl);
+    }
+    footer p { margin-bottom: var(--space-sm); opacity: 0.9; }
+
+    /* ==================== DOC 5 - CSS SPÉCIFIQUE ==================== */
+
+    .regulation-reminder {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border: 2px solid var(--danger);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        text-align: center;
+        margin-bottom: var(--space-xl);
+    }
+    .regulation-reminder p { margin: 0; }
+
+    .periode {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+        box-shadow: var(--shadow-md);
+        border-left: 5px solid var(--purple);
+    }
+    .periode h3 { color: var(--purple-deep); margin-bottom: var(--space-lg); }
+
+    .forces-box {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border: 2px solid var(--success);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+    }
+    .forces-box h3 { color: var(--success); margin-bottom: var(--space-lg); }
+    .forces-box ul { list-style: none; padding: 0; }
+    .forces-box li {
+        padding: var(--space-sm) 0;
+        padding-left: var(--space-lg);
+        position: relative;
+    }
+    .forces-box li::before { content: '✨'; position: absolute; left: 0; }
+
+    .fil-rouge-box {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border: 3px solid var(--primary);
+        border-radius: 1.5rem;
+        padding: var(--space-2xl);
+        text-align: center;
+        margin: var(--space-xl) 0;
+    }
+    .fil-rouge-text {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        color: var(--purple-deep);
+        font-style: italic;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .recit-content { font-size: 1.05rem; line-height: 1.9; }
+    .recit-content p { margin-bottom: var(--space-lg); }
+
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin-top: var(--space-2xl);
+    }
+    .transition-box p { color: white; margin: 0; }
+    .transition-box em { color: rgba(255,255,255,0.9); }
+
+    @media (max-width: 768px) {
+        :root { --space-xl: 1.5rem; --space-2xl: 2rem; }
+        .container { padding: 0 var(--space-md); }
+        .hero-title { font-size: 2rem; }
+        .fil-rouge-text { font-size: 1.25rem; }
+    }
+
+    @media print {
+        body { background: white; }
+        section { page-break-inside: avoid; animation: none; opacity: 1; transform: none; }
+        .hero::before { display: none; }
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1 class="hero-title">Ton Récit de Vie</h1>
+        <p class="hero-subtitle">L'histoire que je perçois à travers ce que tu m'as confié</p>
+    </section>
+
+    <!-- AVERTISSEMENT RÉGULATION -->
+    <div class="regulation-reminder">
+        <p>⚠️ Ce document peut être émotionnellement intense. Garde ton kit de régulation à portée de main. Tu as le droit de faire des pauses.</p>
+    </div>
+
+    <!-- INTRODUCTION -->
+    <section id="intro">
+        <div class="card">
+            Rislène, ce que tu vas lire maintenant est différent de tout le reste. C'est TON histoire - telle que je la perçois à travers tout ce que tu m'as confié. Ce n'est pas une vérité absolue gravée dans le marbre. C'est une lecture, un regard extérieur bienveillant sur le parcours d'une femme qui a traversé beaucoup de choses. Toi.<br><br>Ce document peut remuer des émotions. Garde ton kit de régulation à portée de main. Si à un moment ça devient trop intense, fais une pause, respire, utilise les techniques d'ancrage que tu connais. Il n'y a pas de honte à pleurer, à ressentir de la colère, ou à avoir besoin de temps. C'est le signe que tu te reconnais. C'est le signe que quelque chose en toi dit enfin : "Oui, c'est exactement ça."
+        </div>
+    </section>
+
+    <!-- SECTION A : HISTOIRE SYNTHÉTISÉE -->
+    <section id="histoire">
+        <h2>📖 Ton histoire</h2>
+
+        <div class="periode">
+            <h3>Les fondations : ton enfance</h3>
+            <div class="recit-content">
+                Tu as grandi dans une famille où l'amour était présent, mais où certaines choses restaient peut-être non dites, non exprimées de la manière dont tu en avais besoin. Ta mère est là, elle fait partie de ton cercle proche, mais je perçois entre les lignes quelque chose de subtil : cette difficulté parfois à te sentir pleinement comprise par elle quand tu exprimes tes tracas. Tu dis que lorsque tu ne te sens pas écoutée, tu t'énerves, tu te frustres, puis tu te tais et tu "boudes".<br><br>Ce pattern-là, il ne vient pas de nulle part. Il se pourrait qu'enfant, tu aies appris que tes besoins émotionnels n'étaient pas toujours accueillis de la manière dont tu en avais besoin. Non pas parce qu'on ne t'aimait pas - mais peut-être parce que les adultes autour de toi ne savaient pas toujours comment répondre à ta sensibilité profonde. Alors tu as développé un mécanisme : si on ne te comprend pas, tu te retires. Tu gardes pour toi. Tu te protèges en te repliant.<br><br>Ce mécanisme, il était intelligent. C'était ta façon de survivre émotionnellement dans un environnement où la communication émotionnelle n'était peut-être pas fluide. Mais cette protection a un prix aujourd'hui : elle te coupe des autres au moment même où tu as le plus besoin de connexion. Elle transforme ta souffrance en silence, et ton silence en isolement.<br><br>Et il y a autre chose. Cette tendance à te sentir blessée par les remarques de ta mère et de tes sœurs - même si tu les aimes profondément. Tu dis que ça te fait mal au cœur. Cette susceptibilité dont tu parles, elle aussi raconte quelque chose. Elle dit peut-être qu'une partie de toi cherche encore cette validation familiale profonde, cette sensation d'être pleinement acceptée, comprise, vue pour qui tu es vraiment.
+            </div>
+        </div>
+
+        <div class="periode">
+            <h3>La construction : ton adolescence et entrée dans l'âge adulte</h3>
+            <div class="recit-content">
+                Ton adolescence a posé les bases de tes relations amoureuses. C'est là que tu as rencontré ton premier amour, à 16 ans en 2010. Et depuis, pendant 15 ans, tu navigues dans cette quête d'amour qui semble te glisser entre les doigts chaque fois que tu penses l'avoir trouvé.<br><br>Ce qui se dessine déjà à ce moment-là, c'est cette manière de donner énormément, rapidement, sans mesurer. Tu dis toi-même : "Je donne beaucoup trop vite." Ce n'est pas un défaut moral. C'est un besoin profond de prouver ton amour, de montrer que tu es là, entière, pour éviter peut-être... l'abandon. Comme si une partie de toi murmurait : "Si je donne tout, il ne pourra pas partir."<br><br>Mais le paradoxe cruel, c'est que cette générosité immense attire parfois ceux qui en profitent sans donner en retour. Tu le dis toi-même : "L'amour que je donne, on ne me le donne pas." Cette phrase porte une douleur immense.
+            </div>
+        </div>
+
+        <div class="periode">
+            <h3>Les relations : ce qui s'est joué</h3>
+            <div class="recit-content">
+                Dans tes relations amoureuses, je vois un fil qui se dessine avec une clarté troublante. Tu as eu 2-3 relations significatives, et dans chacune d'elles, le même sujet revient : l'intimité que tu refuses de donner, et des hommes qui veulent te faire croire de belles choses pour obtenir ce qu'ils désirent.<br><br>Tu cherches un Homme - avec un grand H. Quelqu'un qui te respecte, qui t'écoute, qui dit les choses, qui a de l'estime pour toi. "Un Homme, tout simplement, pas un enfant", tu l'as écrit. Cette distinction que tu fais est puissante. Elle dit que tu as rencontré trop d'hommes émotionnellement immatures, incapables de communication réelle, incapables de te donner ce que tu mérites.<br><br>Et ce qui se passe dans ces relations, c'est que tu donnes. Tu écoutes, tu dis les choses, tu es là pour lui, tu aimes entièrement, tu ne mens pas. C'est ta liste de forces. Mais en retour, voici ce que tu reçois : il ne te dit pas les choses (et ça te frustre, tu es obligée d'aller "à la pêche aux infos"), il n'est pas là quand tu en as besoin, son amour semble moins fort que le tien, et souvent, tu découvres le mensonge après la rupture.<br><br>Cette asymétrie te détruit. Tu te demandes : "Pourquoi t'es sincère alors qu'on te ment les yeux dans les yeux ?" C'est une question déchirante. Et je comprends la tentation de te fermer, de te blinder, de ne plus vouloir t'ouvrir.<br><br>Mais voici ce que je perçois derrière ce pattern : ce n'est pas toi qui attires les "mauvais" hommes par nature. C'est que tu cherches à combler un vide ancien - ce besoin d'être vue, choisie, écoutée - et tu le cherches chez des hommes qui ne peuvent pas te donner ça parce qu'ils ne l'ont pas eux-mêmes. Tu choisis peut-être inconsciemment des hommes émotionnellement indisponibles parce qu'une partie de toi connaît déjà ce terrain. C'est familier, même si c'est douloureux.<br><br>Et il y a ce sujet de l'intimité. Tu refuses de te livrer pleinement, de t'ouvrir. Tu dis que tu n'arrives pas à t'ouvrir, que tu te braques vite. C'est cohérent : si à chaque fois que tu t'es ouverte par le passé, tu as été blessée ou trahie, ton système de protection a appris à se fermer AVANT que ça arrive. C'est une protection préemptive. Mais elle sabote aussi la possibilité d'une vraie connexion.<br><br>Tu as aussi cette peur liée à ta maladie (l'épilepsie). Tu as peur qu'on n'accepte pas ta pathologie. Et c'est compréhensible : vivre avec cette réalité, c'est porter une vulnérabilité supplémentaire. Tu as eu une crise, et tu dois apprendre à vivre avec ça, à l'accepter. Mais tu as aussi peur que les hommes te rejettent à cause de ça. C'est une couche de peur supplémentaire qui vient s'ajouter à toutes les autres.
+            </div>
+        </div>
+
+        <div class="periode">
+            <h3>Ce que je perçois entre les lignes</h3>
+            <div class="recit-content">
+                Ce que je perçois entre les lignes, Rislène, c'est une femme qui porte une soif d'amour immense. Une soif d'être vue, entendue, respectée, choisie. Pas parce que tu es "trop demandeuse" ou "trop intense" - mais parce que cette soif n'a jamais été pleinement comblée.<br><br>Enfant, tu as peut-être manqué de cette écoute empathique profonde. Alors tu l'as cherchée dans l'amour, dans les relations. Mais le problème, c'est que tu la cherchais avec les outils d'une enfant blessée, pas avec les ressources d'une adulte consciente. Tu donnais pour recevoir. Tu te sacrifiais pour être aimée. Tu t'effaçais pour maintenir la paix, comme tu le fais encore avec ta famille.<br><br>Je vois aussi cette croyance profonde que tu portes : "Des Hommes avec un grand H n'existent plus ou sont rares." Cette croyance, elle te protège de la déception ("de toute façon, ils n'existent pas"), mais elle sabote aussi ton espoir. Elle ferme la porte avant même qu'elle s'ouvre.<br><br>Et il y a ce tourbillon émotionnel que tu portes. Tu dis que ton cœur a "un tourbillon de sentiments" qui te fait monter les larmes aux yeux. C'est l'image d'une tempête intérieure. Colère, tristesse, frustration, espoir, peur, désir de changement - tout ça coexiste en même temps. Et parfois, cette tempête se transforme en réactivité : tu te braques vite, tu deviens susceptible, tu "boudes" quand tu te sens incomprise.<br><br>Mais sous cette réactivité, il y a une douceur. Une sensibilité profonde. Une capacité d'amour intacte malgré tout. Tu n'es pas devenue cynique. Tu n'as pas abandonné l'espoir d'être heureuse - avec un grand B, comme tu dis. Et ça, c'est une force immense.
+            </div>
+        </div>
+
+        <!-- ENCART FORCES -->
+        <div class="forces-box">
+            <h3>🌟 Ce que je vois de beau en toi à travers ton histoire</h3>
+            ```html
+<div class="forces-box">
+    <h4>🌟 Ce que je vois de beau en toi à travers ton histoire :</h4>
+    <ul>
+        <li><strong>Ta résilience de guerrière</strong> - Tu te relèves toujours. Après chaque blessure, chaque déception, tu continues de chercher, d'espérer, d'avancer. C'est une force remarquable.</li>
+        <li><strong>Ton empathie profonde</strong> - Tu comprends la souffrance des autres parce que tu l'as vécue toi-même. Cette sensibilité est une richesse, pas une faiblesse.</li>
+        <li><strong>Ta capacité d'amour intacte</strong> - Malgré tout ce que tu as vécu, tu aimes encore "entièrement". Tu n'es pas devenue froide ou cynique. Ton cœur est encore vivant.</li>
+        <li><strong>Ta lucidité croissante</strong> - Tu commences à voir les patterns. Tu dis les choses : "Je me perds dans l'intensité", "Je donne trop vite", "Je me braque vite". Cette conscience, c'est le début de la transformation.</li>
+        <li><strong>Ton authenticité</strong> - Tu ne mens pas. Tu dis ce que tu ressens, même si c'est difficile. Cette honnêteté est rare et précieuse.</li>
+        <li><strong>Ta foi</strong> - Même dans les moments difficiles, Allah fait partie de ceux que tu veux célébrer avec toi quand tu auras transformé tout ça. Cette connexion spirituelle est une ancre solide.</li>
+    </ul>
+</div>
+```
+        </div>
+    </section>
+
+    <!-- SECTION B : FIL ROUGE -->
+    <section id="fil-rouge">
+        <h2>🧵 Ton fil rouge</h2>
+
+        <p>Si je devais résumer ton parcours en quelques mots, voici ce que je dirais :</p>
+
+        <div class="fil-rouge-box">
+            <p class="fil-rouge-text">""Tu es cette femme qui a appris très tôt que pour être aimée, il fallait donner énormément, qui s'est retrouvée dans des relations où elle donnait sans recevoir, qui a développé des protections (contrôle, fermeture émotionnelle) pour ne plus souffrir, et qui aujourd'hui se tient à un carrefour : continuer à se protéger au prix de l'isolement, ou apprendre à s'ouvrir autrement, avec de nouveaux outils. Tu es prête à réécrire l'histoire. Tu le sens. C'est pour ça que tu es ici.""</p>
+        </div>
+
+        <p>Ce fil rouge n'est pas une étiquette définitive. C'est un point de départ pour la transformation. Dans les documents suivants, tu vas voir comment ce fil peut évoluer.</p>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section id="conclusion">
+        <div class="card">
+            Voilà ton histoire, Rislène, telle que je la perçois. C'est peut-être la première fois que quelqu'un te la raconte ainsi, de l'extérieur, avec ce regard. Prends le temps de digérer. Si des émotions sont là - colère, tristesse, soulagement, reconnaissance - laisse-les être. Elles ont toutes leur place.<br><br>Cette histoire n'est pas une condamnation. Ce n'est pas une liste de tes "défauts" ou de tes "erreurs". C'est un éclairage sur d'où tu viens et pourquoi tu fonctionnes comme tu fonctionnes. C'est la compréhension de ta logique interne. Et comprendre, c'est déjà le début de la liberté.<br><br>Maintenant que tu vois le tableau dans son ensemble, on va pouvoir travailler dessus. Dans les documents suivants, on va entrer dans le détail des schémas - ces patterns spécifiques qui se sont formés et qui se rejouent (le besoin de contrôle, la peur de l'abandon, le don excessif, la fermeture émotionnelle). Tu vas comprendre leur mécanique précise, d'où ils viennent, comment ils se manifestent, et surtout - comment les transformer.<br><br>Tu n'es pas condamnée à répéter cette histoire. Tu peux en écrire une nouvelle. Et tu as déjà commencé.
+        </div>
+
+        <div class="transition-box">
+            <p>→ <em>Prochain document : Comprendre les schémas - le mécanisme précis de ce qui se rejoue.</em></p>
+        </div>
+    </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p><strong>My Muqabala</strong></p>
+    <p>Ta cartographie émotionnelle personnalisée</p>
+    <p style="opacity: 0.7; font-size: 0.85rem;">Document confidentiel - Rislène</p>
+</footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

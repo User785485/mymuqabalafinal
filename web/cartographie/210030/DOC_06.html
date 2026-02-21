@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprendre les Schémas - My Muqabala</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+    /* ==================== VARIABLES CSS ==================== */
+    :root {
+        /* Couleurs principales */
+        --primary: #D4569C;
+        --primary-light: rgba(212, 86, 156, 0.1);
+        --purple: #6B5A9C;
+        --purple-light: rgba(107, 90, 156, 0.1);
+        --purple-deep: #4A3A6C;
+        --accent: #D4A373;
+        --success: #10b981;
+        --success-light: rgba(16, 185, 129, 0.1);
+        --danger: #ef4444;
+        --danger-light: rgba(239, 68, 68, 0.1);
+
+        /* Couleurs neutres */
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-1: #F8FAFC;
+        --gray-2: #E2E8F0;
+        --gray-3: #CBD5E1;
+        --text-dark: #1E293B;
+        --text-soft: #475569;
+        --text-muted: #64748B;
+
+        /* Typographie */
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Inter', sans-serif;
+
+        /* Espacements */
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+
+        /* Ombres */
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 15px rgba(0,0,0,0.08);
+        --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    /* ==================== RESET & BASE ==================== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: var(--font-body);
+        color: var(--text-dark);
+        background: var(--cream);
+        line-height: 1.7;
+        font-size: 16px;
+    }
+
+    /* ==================== TYPOGRAPHIE ==================== */
+    h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; line-height: 1.3; margin-bottom: var(--space-md); }
+    h1 { font-size: 3rem; color: var(--purple-deep); }
+    h2 { font-size: 2rem; color: var(--purple); margin-top: var(--space-2xl); margin-bottom: var(--space-lg); }
+    h3 { font-size: 1.5rem; color: var(--purple-deep); margin-top: var(--space-xl); }
+    h4 { font-size: 1.25rem; color: var(--text-dark); }
+
+    p { margin-bottom: var(--space-md); color: var(--text-soft); }
+    strong { color: var(--text-dark); font-weight: 600; }
+    em { font-style: italic; }
+
+    ul, ol { margin-left: var(--space-xl); margin-bottom: var(--space-md); }
+    li { margin-bottom: var(--space-sm); color: var(--text-soft); }
+
+    /* ==================== LAYOUT ==================== */
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 var(--space-lg);
+    }
+
+    section {
+        padding: var(--space-2xl) 0;
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        margin-bottom: var(--space-2xl);
+        border-radius: 0 0 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+    .hero h1 { color: white; margin-bottom: var(--space-sm); }
+    .hero-subtitle { font-size: 1.25rem; color: rgba(255,255,255,0.9); margin-bottom: var(--space-lg); }
+
+    .badge {
+        display: inline-block;
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 2rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: var(--space-md);
+    }
+
+    .badge-purple {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    /* ==================== CARDS ==================== */
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin-bottom: var(--space-lg);
+        box-shadow: var(--shadow-md);
+    }
+
+    .content-block {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin-bottom: var(--space-md);
+    }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+        background: var(--purple-deep);
+        color: white;
+        text-align: center;
+        padding: var(--space-xl);
+        margin-top: var(--space-2xl);
+    }
+    footer p { margin-bottom: var(--space-sm); opacity: 0.9; color: white; }
+
+    /* ==================== DOC 6 - CSS SPÉCIFIQUE ==================== */
+
+    /* --- Boîtes pédagogiques --- */
+    .caracteristiques-box {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(59, 130, 246, 0.08));
+        border-left: 4px solid var(--purple);
+        border-radius: 0 12px 12px 0;
+        padding: 1.5rem 2rem;
+        margin: 1.5rem 0;
+    }
+
+    .caracteristiques-box h4 {
+        color: var(--purple);
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .caracteristiques-box ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .caracteristiques-box li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .caracteristiques-box li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--purple);
+    }
+
+    .metaphore-box {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 2rem 0;
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);
+    }
+
+    .metaphore-box h4 {
+        color: #92400e;
+        margin-bottom: 1rem;
+    }
+
+    .metaphore-box p {
+        color: #78350f;
+        margin-bottom: 0.8rem;
+    }
+
+    /* --- Étapes de formation --- */
+    .etapes-formation {
+        display: grid;
+        gap: 1.5rem;
+        margin: 2rem 0;
+        counter-reset: etape-counter;
+    }
+
+    .etape {
+        background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border-left: 4px solid var(--purple);
+        position: relative;
+        counter-increment: etape-counter;
+    }
+
+    .etape::before {
+        content: counter(etape-counter);
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: 32px;
+        height: 32px;
+        background: var(--purple);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .etape h4 {
+        color: var(--purple);
+        margin-bottom: 0.5rem;
+    }
+
+    /* --- Schéma d'activation --- */
+    .schema-activation {
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 2rem 0;
+    }
+
+    .schema-activation h4 {
+        color: var(--success);
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .flow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .flow-item {
+        background: white;
+        border: 2px solid var(--success);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        text-align: center;
+        font-weight: 500;
+        min-width: 150px;
+        color: var(--text-dark);
+    }
+
+    .flow-arrow {
+        font-size: 1.5rem;
+        color: var(--success);
+        font-weight: bold;
+    }
+
+    /* --- Schémas et Nafs --- */
+    .nafs-schema {
+        display: grid;
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .nafs-item {
+        background: linear-gradient(135deg, #fff 0%, #fdf4ff 100%);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.15);
+        border-left: 4px solid var(--purple);
+    }
+
+    .nafs-item h4 {
+        color: var(--purple);
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    .nafs-item p {
+        margin-bottom: 0.5rem;
+    }
+
+    .nafs-item em {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    /* --- Grille des 6 Axes --- */
+    .axes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .axe {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border-top: 4px solid var(--primary);
+    }
+
+    .axe h4 {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .axe > p:first-of-type {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .axe ul {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+
+    .axe li {
+        padding: 0.3rem 0;
+        font-size: 0.9rem;
+    }
+
+    .axe .exemple {
+        background: #f1f5f9;
+        padding: 0.8rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    /* Couleurs par axe */
+    .axe-mental { border-top-color: #3b82f6; }
+    .axe-mental h4 { color: #3b82f6; }
+
+    .axe-emotionnel { border-top-color: #ef4444; }
+    .axe-emotionnel h4 { color: #ef4444; }
+
+    .axe-comportemental { border-top-color: #f59e0b; }
+    .axe-comportemental h4 { color: #f59e0b; }
+
+    .axe-relationnel { border-top-color: #8b5cf6; }
+    .axe-relationnel h4 { color: #8b5cf6; }
+
+    .axe-corporel { border-top-color: #ec4899; }
+    .axe-corporel h4 { color: #ec4899; }
+
+    .axe-spirituel { border-top-color: #10b981; }
+    .axe-spirituel h4 { color: #10b981; }
+
+    /* --- Cascade d'interconnexion --- */
+    .cascade-schema {
+        background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 2rem 0;
+        text-align: center;
+    }
+
+    .cascade-item {
+        background: white;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        display: inline-block;
+        margin: 0.5rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        font-weight: 500;
+        min-width: 300px;
+        color: var(--text-dark);
+    }
+
+    .cascade-arrow {
+        display: block;
+        font-size: 1.5rem;
+        color: var(--purple);
+        margin: 0.3rem 0;
+    }
+
+    /* --- Exemple complet --- */
+    .exemple-complet-box {
+        background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
+        border: 2px solid var(--primary);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 2rem 0;
+    }
+
+    .exemple-complet-box > h4:first-child {
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .axe-manifestation {
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin: 0.8rem 0;
+        border-left: 3px solid var(--purple);
+    }
+
+    .axe-manifestation strong {
+        display: inline-block;
+        margin-bottom: 0.3rem;
+        color: var(--text-dark);
+    }
+
+    .realite-box {
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .realite-box h4 {
+        color: var(--success);
+        margin-bottom: 0.5rem;
+    }
+
+    /* --- Stratégie steps --- */
+    .strategie-steps {
+        counter-reset: step-counter;
+        list-style: none;
+        padding: 0;
+        margin: 2rem 0;
+    }
+
+    .strategie-steps li {
+        background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+        border-radius: 12px;
+        padding: 1.5rem 1.5rem 1.5rem 4rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: relative;
+        counter-increment: step-counter;
+    }
+
+    .strategie-steps li::before {
+        content: counter(step-counter);
+        position: absolute;
+        left: 1.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        background: var(--purple);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    .strategie-steps li strong {
+        color: var(--purple);
+    }
+
+    /* --- Tableau axes-outils --- */
+    .axes-outils {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+    }
+
+    .axes-outils th,
+    .axes-outils td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .axes-outils th {
+        background: var(--purple);
+        color: white;
+    }
+
+    .axes-outils tr:nth-child(even) {
+        background: #f8fafc;
+    }
+
+    .axes-outils td:first-child {
+        font-weight: 600;
+        color: var(--purple);
+    }
+
+    /* --- Comparaison colonnes --- */
+    .comparaison {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .colonne {
+        border-radius: 16px;
+        padding: 1.5rem;
+    }
+
+    .colonne.erreur {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border: 2px solid #fca5a5;
+    }
+
+    .colonne.erreur h4 {
+        color: #dc2626;
+        margin-bottom: 1rem;
+    }
+
+    .colonne.succes {
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border: 2px solid #86efac;
+    }
+
+    .colonne.succes h4 {
+        color: #16a34a;
+        margin-bottom: 1rem;
+    }
+
+    .colonne ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .colonne li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .colonne.erreur li::before {
+        content: "✗";
+        position: absolute;
+        left: 0;
+        color: #dc2626;
+    }
+
+    .colonne.succes li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #16a34a;
+    }
+
+    /* --- Exemple et Insight boxes --- */
+    .exemple-box {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin: 1.5rem 0;
+        border-left: 4px solid var(--primary);
+    }
+
+    .exemple-box h4 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+
+    .exemple-box p {
+        color: var(--text-soft);
+    }
+
+    .insight-box {
+        background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin: 1.5rem 0;
+    }
+
+    .insight-box p {
+        margin: 0;
+        color: #713f12;
+    }
+
+    /* --- Transition box --- */
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 1.5rem 2rem;
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .transition-box p {
+        margin: 0;
+        color: white;
+    }
+
+    .transition-box em {
+        color: rgba(255,255,255,0.95);
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        :root {
+            --space-xl: 1.5rem;
+            --space-2xl: 2rem;
+        }
+
+        .container { padding: 0 var(--space-md); }
+        section { padding: var(--space-xl) 0; }
+        h1 { font-size: 2.25rem; }
+        h2 { font-size: 1.75rem; }
+
+        .axes-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .flow {
+            flex-direction: column;
+        }
+
+        .flow-arrow {
+            transform: rotate(90deg);
+        }
+
+        .comparaison {
+            grid-template-columns: 1fr;
+        }
+
+        .cascade-item {
+            min-width: auto;
+            width: 100%;
+        }
+    }
+
+    /* ==================== PRINT ==================== */
+    @media print {
+        body { background: white; }
+        section { page-break-inside: avoid; }
+        .hero::before { display: none; }
+    }
+    </style>
+</head>
+<body>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge badge-purple">Document Pédagogique</span>
+            <h1>Comprendre les Schémas</h1>
+            <p class="hero-subtitle">Le mécanisme derrière les patterns qui se répètent</p>
+        </div>
+    </section>
+
+    <!-- CONTAINER -->
+    <div class="container">
+
+        <!-- INTRODUCTION -->
+        <section id="intro">
+            <h2>Introduction</h2>
+            <div class="content-block">
+                Rislène, tu as maintenant vu ton histoire. Tu as reconnu des patterns, des répétitions - cette manière de donner trop vite, de te briser quand tu ne te sens pas écoutée, de te fermer quand on cherche ton intimité. Maintenant, il est temps de comprendre le MÉCANISME derrière tout ça. Ce mécanisme a un nom : les schémas.<br><br>Ce que tu vas lire dans ce document va te donner les clés pour comprendre non seulement TES schémas spécifiques (qu'on verra en détail dans les documents suivants), mais aussi comment fonctionne ce phénomène chez tous les êtres humains. Comprendre le mécanisme, c'est déjà commencer à s'en libérer. C'est passer de "je subis" à "je vois ce qui se passe".
+            </div>
+        </section>
+
+        <!-- A. DÉFINITION -->
+        <section id="definition">
+            <h2>A. C'est quoi un schéma ?</h2>
+
+            <p>Un schéma, c'est un <strong>pattern émotionnel et comportemental</strong> qui s'est formé dans l'enfance comme mécanisme de protection, et qui se réactive automatiquement dans certaines situations de la vie adulte.</p>
+
+            <p>Imagine un programme informatique qui tourne en arrière-plan. Tu ne le vois pas, tu n'en es pas consciente, mais il influence tout ce que tu fais. C'est ça, un schéma.</p>
+
+            <div class="caracteristiques-box">
+                <h4>Les caractéristiques d'un schéma :</h4>
+                <ul>
+                    <li><strong>Il s'est formé tôt</strong> : généralement dans l'enfance ou l'adolescence</li>
+                    <li><strong>Il avait une fonction</strong> : te protéger, t'adapter à ton environnement</li>
+                    <li><strong>Il est automatique</strong> : tu ne choisis pas de l'activer, il se déclenche seul</li>
+                    <li><strong>Il est disproportionné</strong> : la réaction est souvent plus intense que la situation ne le justifie</li>
+                    <li><strong>Il se répète</strong> : les mêmes situations, les mêmes réactions, encore et encore</li>
+                    <li><strong>Il peut changer</strong> : avec conscience et travail, il peut se transformer</li>
+                </ul>
+            </div>
+
+            <div class="metaphore-box">
+                <h4>🎭 Métaphore : le schéma comme "lunettes colorées"</h4>
+                <p>Imagine que depuis l'enfance, tu portes des lunettes avec des verres teintés. Ces lunettes colorent TOUT ce que tu vois. Tu ne te rends même plus compte que tu les portes - pour toi, c'est juste "la réalité". Mais ce n'est pas la réalité objective. C'est la réalité vue à travers tes lunettes.</p>
+                <p>Le travail sur les schémas, c'est d'abord VOIR que tu portes des lunettes. Puis comprendre POURQUOI tu les as mises. Et enfin, choisir de les enlever - ou au moins de savoir quand elles déforment ce que tu vois.</p>
+            </div>
+        </section>
+
+        <!-- B. FORMATION -->
+        <section id="formation">
+            <h2>B. Comment les schémas se forment dans l'enfance</h2>
+
+            <p>Un schéma ne naît pas de nulle part. Il se forme à travers un processus en 4 étapes :</p>
+
+            <div class="etapes-formation">
+                <div class="etape">
+                    <h4>Étape 1 : Un BESOIN non comblé</h4>
+                    <p>Enfant, tu avais des besoins fondamentaux : sécurité, amour inconditionnel, validation, limites saines, autonomie encouragée. Si un de ces besoins n'a pas été suffisamment comblé...</p>
+                </div>
+
+                <div class="etape">
+                    <h4>Étape 2 : Une EXPÉRIENCE répétée</h4>
+                    <p>Ce n'est généralement pas un événement unique qui crée un schéma, mais la répétition. Un parent régulièrement absent, des critiques constantes, une ambiance d'insécurité chronique...</p>
+                </div>
+
+                <div class="etape">
+                    <h4>Étape 3 : Une CONCLUSION tirée</h4>
+                    <p>Face à cette expérience, l'enfant tire une conclusion sur lui-même et le monde. "Je ne suis pas assez bien", "On ne peut pas compter sur les autres", "Je dois être parfaite pour être aimée"...</p>
+                </div>
+
+                <div class="etape">
+                    <h4>Étape 4 : Une STRATÉGIE d'adaptation</h4>
+                    <p>Pour survivre émotionnellement, l'enfant développe une stratégie. Se fermer, chercher constamment la validation, contrôler tout, fuir les conflits... C'est le SCHÉMA qui prend forme.</p>
+                </div>
+            </div>
+
+            <div class="exemple-box">
+                <h4>Exemple concret :</h4>
+                <p><strong>Besoin :</strong> Sentiment de sécurité dans l'attachement</p>
+                <p><strong>Expérience :</strong> Un parent émotionnellement instable, parfois très présent, parfois absent</p>
+                <p><strong>Conclusion :</strong> "L'amour peut disparaître à tout moment. Je ne peux pas compter sur les autres."</p>
+                <p><strong>Stratégie :</strong> Hypervigilance dans les relations, besoin constant de réassurance, ou au contraire, évitement de l'intimité</p>
+                <p>→ C'est le schéma d'<strong>abandon</strong> ou de <strong>méfiance</strong> qui se forme.</p>
+            </div>
+
+            <div class="insight-box">
+                <p><strong>💡 Important :</strong> Les parents ne sont pas forcément "mauvais" ou malveillants. Souvent, ils ont fait de leur mieux avec leurs propres blessures et limitations. Le but n'est pas de les blâmer, mais de COMPRENDRE comment ton système s'est construit.</p>
+            </div>
+        </section>
+
+        <!-- C. DÉCLENCHEURS -->
+        <section id="declencheurs">
+            <h2>C. Pourquoi ils reviennent toujours : les déclencheurs</h2>
+
+            <p>Un schéma ne tourne pas en permanence. Il s'<strong>active</strong> face à certaines situations qu'on appelle des <strong>déclencheurs</strong>.</p>
+
+            <p>Un déclencheur, c'est tout ce qui "ressemble" - de près ou de loin - à l'expérience originelle qui a créé le schéma. Ça peut être :</p>
+
+            <ul>
+                <li>Une situation (ex: ton partenaire qui prend de la distance)</li>
+                <li>Une parole (ex: "j'ai besoin d'espace")</li>
+                <li>Un comportement (ex: quelqu'un qui ne répond pas tout de suite)</li>
+                <li>Une sensation (ex: le silence dans une conversation)</li>
+                <li>Même un lieu, une odeur, une ambiance</li>
+            </ul>
+
+            <div class="schema-activation">
+                <h4>Comment ça se passe :</h4>
+                <div class="flow">
+                    <div class="flow-item">DÉCLENCHEUR<br>(situation présente)</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">ACTIVATION DU SCHÉMA<br>(le programme se lance)</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">RÉACTION AUTOMATIQUE<br>(émotions + comportements)</div>
+                </div>
+            </div>
+
+            <div class="exemple-box">
+                <h4>Exemple :</h4>
+                <table class="axes-outils">
+                    <tr>
+                        <th>Schéma</th>
+                        <th>Déclencheurs typiques</th>
+                    </tr>
+                    <tr>
+                        <td>Abandon</td>
+                        <td>Distance, silence, changement de plans, partenaire occupé</td>
+                    </tr>
+                    <tr>
+                        <td>Méfiance</td>
+                        <td>Ambiguïté, secrets perçus, comportements "suspects"</td>
+                    </tr>
+                    <tr>
+                        <td>Imperfection</td>
+                        <td>Critique, erreur commise, comparaison avec d'autres</td>
+                    </tr>
+                    <tr>
+                        <td>Dépendance</td>
+                        <td>Décisions à prendre seule, absence de validation</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="insight-box">
+                <p><strong>💡 La clé :</strong> Le problème n'est pas le déclencheur. C'est la RÉACTION disproportionnée. La situation présente n'est souvent pas dangereuse. Mais ton système nerveux réagit comme si c'était le cas, car il la confond avec le passé.</p>
+            </div>
+        </section>
+
+        <!-- D. SCHÉMAS ET NAFS -->
+        <section id="schemas-nafs">
+            <h2>D. Schémas et états de l'âme : le lien spirituel</h2>
+
+            <p>En Islam, les états de l'âme (Nafs) offrent un cadre puissant pour comprendre les schémas. Voici comment ils se relient :</p>
+
+            <div class="nafs-schema">
+                <div class="nafs-item">
+                    <h4>Schéma ACTIF = Nafs al-Ammara</h4>
+                    <p>Quand un schéma est activé et que tu réagis automatiquement, sans conscience, c'est la nafs al-ammara qui domine. Tu es "sous l'emprise" de la réaction, portée par l'émotion et l'automatisme.</p>
+                    <p><em>Exemple : Tu t'emportes, tu accuses, tu te fermes - sans même réaliser ce que tu fais.</em></p>
+                </div>
+
+                <div class="nafs-item">
+                    <h4>CONSCIENCE du schéma = Nafs al-Lawwama</h4>
+                    <p>Quand tu commences à VOIR le schéma, à te dire "tiens, j'ai encore réagi comme ça", tu passes à la nafs al-lawwama. C'est inconfortable - tu te "blâmes" - mais c'est le signe que la conscience émerge.</p>
+                    <p><em>Exemple : Après coup, tu réalises "j'ai surréagi, ce n'était pas justifié".</em></p>
+                </div>
+
+                <div class="nafs-item">
+                    <h4>TRANSFORMATION du schéma = chemin vers Nafs al-Mutma'inna</h4>
+                    <p>Avec le travail, tu arrives à voir le schéma AVANT de réagir, et tu peux choisir une réponse différente. Le schéma ne disparaît pas, mais il ne te contrôle plus. C'est le chemin vers l'âme apaisée.</p>
+                    <p><em>Exemple : Tu sens l'anxiété monter, tu la reconnais ("ah, c'est mon schéma d'abandon"), tu régules, et tu choisis une réponse alignée.</em></p>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <p><strong>💡 Le jihad an-nafs :</strong> Le travail que tu fais sur tes schémas, c'est exactement ça : le jihad an-nafs, le combat intérieur. C'est le plus noble des combats selon le Prophète ﷺ. Tu ne combats pas contre toi-même, tu combats pour devenir la meilleure version de toi-même.</p>
+            </div>
+        </section>
+
+        <!-- E. LES 6 AXES -->
+        <section id="six-axes">
+            <h2>E. Les 6 axes de manifestation d'un schéma</h2>
+
+            <p>Un schéma n'est pas juste "dans ta tête". Il se manifeste sur 6 axes interconnectés qui touchent l'ensemble de ton être :</p>
+
+            <div class="axes-grid">
+                <div class="axe axe-mental">
+                    <h4>1. AXE MENTAL (Al-'Aql) 🧠</h4>
+                    <p><strong>Ce qui se passe dans ta tête</strong></p>
+                    <ul>
+                        <li>Pensées automatiques</li>
+                        <li>Croyances profondes</li>
+                        <li>Interprétations biaisées</li>
+                        <li>Ruminations</li>
+                        <li>Projections sur l'autre</li>
+                    </ul>
+                    <p class="exemple"><em>Ex: "Il ne m'a pas rappelée → Il ne tient pas à moi"</em></p>
+                </div>
+
+                <div class="axe axe-emotionnel">
+                    <h4>2. AXE ÉMOTIONNEL 💔</h4>
+                    <p><strong>Ce que tu ressens</strong></p>
+                    <ul>
+                        <li>Émotions primaires (peur, tristesse, colère, honte)</li>
+                        <li>Intensité émotionnelle (1 à 10)</li>
+                        <li>Nuances (anxiété vs terreur, agacement vs rage)</li>
+                        <li>Réactivité émotionnelle</li>
+                    </ul>
+                    <p class="exemple"><em>Ex: Anxiété 8/10, boule au ventre, envie de pleurer</em></p>
+                </div>
+
+                <div class="axe axe-comportemental">
+                    <h4>3. AXE COMPORTEMENTAL 🎬</h4>
+                    <p><strong>Ce que tu fais concrètement</strong></p>
+                    <ul>
+                        <li>Actions automatiques</li>
+                        <li>Évitements</li>
+                        <li>Compensations</li>
+                        <li>Sabotages</li>
+                        <li>Patterns répétitifs</li>
+                    </ul>
+                    <p class="exemple"><em>Ex: Envoyer 5 messages d'affilée, ou au contraire, se fermer complètement</em></p>
+                </div>
+
+                <div class="axe axe-relationnel">
+                    <h4>4. AXE RELATIONNEL 👥</h4>
+                    <p><strong>Comment ça impacte tes relations</strong></p>
+                    <ul>
+                        <li>Dynamiques créées avec l'autre</li>
+                        <li>Rôles joués (sauveur, victime...)</li>
+                        <li>Choix de partenaires</li>
+                        <li>Conflits récurrents</li>
+                    </ul>
+                    <p class="exemple"><em>Ex: Attirer des partenaires évitants, créer des disputes par peur du silence</em></p>
+                </div>
+
+                <div class="axe axe-corporel">
+                    <h4>5. AXE CORPOREL (Al-Jism) 🫀</h4>
+                    <p><strong>Ce que ton corps ressent</strong></p>
+                    <ul>
+                        <li>Sensations physiques</li>
+                        <li>Zones du corps touchées</li>
+                        <li>Réactions du système nerveux</li>
+                        <li>Tensions, nœuds</li>
+                    </ul>
+                    <p class="exemple"><em>Ex: Gorge serrée, cœur qui s'emballe, mains moites, estomac noué</em></p>
+                </div>
+
+                <div class="axe axe-spirituel">
+                    <h4>6. AXE SPIRITUEL (Al-Qalb) 💚</h4>
+                    <p><strong>La dimension intérieure et verticale</strong></p>
+                    <ul>
+                        <li>Relation à Allah (éloignement, doute)</li>
+                        <li>État du cœur (quel Nafs domine)</li>
+                        <li>Qualités spirituelles touchées (tawakkul, sabr)</li>
+                        <li>Besoin profond non comblé</li>
+                    </ul>
+                    <p class="exemple"><em>Ex: Difficulté à faire confiance à Allah, sentiment d'être seule face au destin</em></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- F. INTERCONNEXION -->
+        <section id="interconnexion">
+            <h2>F. L'interconnexion des axes</h2>
+
+            <p>Ces 6 axes ne fonctionnent pas en isolation. Ils s'enchaînent comme des dominos :</p>
+
+            <div class="cascade-schema">
+                <div class="cascade-item">📍 DÉCLENCHEUR (événement externe)</div>
+                <span class="cascade-arrow">↓</span>
+                <div class="cascade-item">🫀 AXE CORPOREL (le corps réagit EN PREMIER)</div>
+                <span class="cascade-arrow">↓</span>
+                <div class="cascade-item">💔 AXE ÉMOTIONNEL (l'émotion monte)</div>
+                <span class="cascade-arrow">↓</span>
+                <div class="cascade-item">🧠 AXE MENTAL (les pensées automatiques arrivent)</div>
+                <span class="cascade-arrow">↓</span>
+                <div class="cascade-item">🎬 AXE COMPORTEMENTAL (l'action automatique se déclenche)</div>
+                <span class="cascade-arrow">↓</span>
+                <div class="cascade-item">👥 AXE RELATIONNEL (impact sur la relation)</div>
+                <span class="cascade-arrow">↓</span>
+                <div class="cascade-item">💚 AXE SPIRITUEL (éloignement du cœur apaisé)</div>
+            </div>
+
+            <div class="insight-box">
+                <p><strong>💡 Pourquoi c'est important :</strong> Tu remarques que le CORPS réagit avant le MENTAL. C'est pour ça qu'on t'a donné le kit de régulation corporelle. Quand le schéma s'active, si tu arrives à calmer ton corps d'abord, tu peux interrompre la cascade AVANT que les pensées et comportements automatiques ne prennent le dessus.</p>
+            </div>
+        </section>
+
+        <!-- G. EXEMPLE COMPLET -->
+        <section id="exemple-complet">
+            <h2>G. Exemple concret : le schéma d'abandon</h2>
+
+            <p>Voyons comment un schéma se manifeste sur les 6 axes avec un exemple :</p>
+
+            <div class="exemple-complet-box">
+                <h4>📍 Situation déclencheur :</h4>
+                <p>Ton partenaire te dit qu'il a besoin de passer la soirée seul pour se reposer.</p>
+
+                <h4>Manifestation par axe :</h4>
+
+                <div class="axe-manifestation">
+                    <strong>🫀 Corporel :</strong> Cœur qui s'accélère, gorge serrée, tension dans la poitrine, mains qui deviennent moites
+                </div>
+
+                <div class="axe-manifestation">
+                    <strong>💔 Émotionnel :</strong> Anxiété intense (8/10), peur, tristesse, sentiment d'être rejetée
+                </div>
+
+                <div class="axe-manifestation">
+                    <strong>🧠 Mental :</strong> "Il en a marre de moi", "C'est le début de la fin", "Il va me quitter", "Je savais que ça n'allait pas durer"
+                </div>
+
+                <div class="axe-manifestation">
+                    <strong>🎬 Comportemental :</strong> Envoyer plusieurs messages pour vérifier, poser des questions insistantes, ou se fermer et devenir froide
+                </div>
+
+                <div class="axe-manifestation">
+                    <strong>👥 Relationnel :</strong> Créer une tension, lui faire sentir de la culpabilité, ou au contraire, se montrer "trop cool" en cachant sa détresse
+                </div>
+
+                <div class="axe-manifestation">
+                    <strong>💚 Spirituel :</strong> Sentiment d'être seule face à l'épreuve, difficulté à faire confiance à Allah pour la suite, tawakkul fragilisé
+                </div>
+
+                <div class="realite-box">
+                    <h4>La réalité objective :</h4>
+                    <p>Il a juste besoin de repos. C'est une demande normale et saine. Ça ne dit RIEN sur son amour pour toi ni sur l'avenir de la relation.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- H. POURQUOI TRAVAILLER SUR LES 6 AXES -->
+        <section id="pourquoi-6-axes">
+            <h2>H. Pourquoi travailler sur les 6 axes</h2>
+
+            <p>Chaque axe nécessite des outils spécifiques :</p>
+
+            <table class="axes-outils">
+                <tr>
+                    <th>Axe</th>
+                    <th>Type d'intervention</th>
+                </tr>
+                <tr>
+                    <td>Corporel</td>
+                    <td>Techniques de régulation (respiration, grounding)</td>
+                </tr>
+                <tr>
+                    <td>Émotionnel</td>
+                    <td>Accueil des émotions, granularité émotionnelle</td>
+                </tr>
+                <tr>
+                    <td>Mental</td>
+                    <td>Restructuration cognitive, visualisation</td>
+                </tr>
+                <tr>
+                    <td>Comportemental</td>
+                    <td>Actions alternatives, nouveaux comportements</td>
+                </tr>
+                <tr>
+                    <td>Relationnel</td>
+                    <td>Choix conscients, patterns à casser</td>
+                </tr>
+                <tr>
+                    <td>Spirituel</td>
+                    <td>Dhikr, du'a, reconnexion au Cœur</td>
+                </tr>
+            </table>
+
+            <p>C'est pourquoi ta cartographie inclura des protocoles touchant TOUS ces axes.</p>
+        </section>
+
+        <!-- I. CE QU'ON NE FAIT PAS -->
+        <section id="pas-combattre">
+            <h2>I. Pourquoi on ne combat pas un schéma</h2>
+
+            <div class="comparaison">
+                <div class="colonne erreur">
+                    <h4>❌ Ce qui ne marche pas</h4>
+                    <ul>
+                        <li>Se dire "arrête de penser comme ça"</li>
+                        <li>Se forcer à "positiver"</li>
+                        <li>Se culpabiliser de réagir</li>
+                        <li>Réprimer l'émotion</li>
+                    </ul>
+                </div>
+                <div class="colonne succes">
+                    <h4>✅ Ce qui marche</h4>
+                    <ul>
+                        <li>Reconnaître : "ah, c'est mon schéma"</li>
+                        <li>Accueillir : "il a sa raison d'être"</li>
+                        <li>Réguler : calmer le corps d'abord</li>
+                        <li>Choisir : une réponse alternative</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- J. STRATÉGIE -->
+        <section id="strategie">
+            <h2>J. La stratégie : par quoi commencer</h2>
+
+            <p>Transformer un schéma ne se fait pas en un jour. Voici l'ordre recommandé :</p>
+
+            <ol class="strategie-steps">
+                <li>
+                    <strong>CONSCIENCE</strong> : D'abord, tu identifies le schéma. Tu lui donnes un nom. Tu reconnais quand il s'active.
+                </li>
+                <li>
+                    <strong>RÉGULATION</strong> : Tu apprends à calmer ton corps quand le schéma s'active. C'est la base de tout le reste.
+                </li>
+                <li>
+                    <strong>COMPRÉHENSION</strong> : Tu explores l'origine du schéma. D'où vient-il ? Quelle était sa fonction ?
+                </li>
+                <li>
+                    <strong>OBSERVATION</strong> : Tu apprends à voir le schéma EN TEMPS RÉEL, pas juste après coup.
+                </li>
+                <li>
+                    <strong>ALTERNATIVE</strong> : Tu commences à expérimenter de nouvelles réponses. Pas parfaites, juste différentes.
+                </li>
+                <li>
+                    <strong>RÉPÉTITION</strong> : Tu pratiques, tu retombes, tu te relèves, tu pratiques encore. C'est ça, le chemin.
+                </li>
+                <li>
+                    <strong>INTÉGRATION</strong> : Progressivement, les nouvelles réponses deviennent plus naturelles que les anciennes.
+                </li>
+            </ol>
+
+            <div class="insight-box">
+                <p><strong>💡 Ce qu'on ne fait PAS :</strong> On ne "combat" pas le schéma. On ne le rejette pas violemment. On le comprend, on l'accueille avec compassion (il t'a protégée), et on lui offre une alternative. C'est plus doux et plus efficace que la guerre contre soi-même.</p>
+            </div>
+        </section>
+
+        <!-- CONCLUSION -->
+        <section id="conclusion">
+            <h2>En résumé</h2>
+
+            <div class="content-block">
+                Voilà, Rislène. Tu as maintenant le cadre pour comprendre les schémas - ce qu'ils sont, comment ils se forment, pourquoi ils se réactivent, comment ils se manifestent, et surtout, comment ils peuvent se transformer.<br><br>Dans les documents suivants, tu vas découvrir TES schémas spécifiques. Chacun aura sa propre fiche détaillée avec les 6 axes, les origines possibles, les déclencheurs typiques, et les pistes de transformation. Ce sera peut-être intense à lire. Mais souviens-toi : voir, c'est déjà le début de la liberté.<br><br>Tu n'es pas tes schémas. Tu es une femme qui a développé des protections pour survivre. Et maintenant, tu peux apprendre à vivre autrement.
+            </div>
+
+            <div class="transition-box">
+                <p><em>→ Prochain document : Ta Table de Navigation - la vue d'ensemble de TES schémas identifiés.</em></p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>My Muqabala - Cartographie Émotionnelle</p>
+        <p>Document Pédagogique - Comprendre les Schémas</p>
+    </footer>
+
+</body>
+</html>

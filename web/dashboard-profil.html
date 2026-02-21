@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil | Mon Espace My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <style>
+        .profil-header { text-align: center; margin-bottom: 2rem; }
+        .profil-name { font-family: var(--font-display); font-size: 1.8rem; font-weight: 500; color: var(--ink); margin-bottom: 0.25rem; }
+        .profil-client-id { font-size: 0.85rem; color: var(--ink-muted); }
+        .profil-card { margin-bottom: 1.5rem; }
+        .profil-card-title {
+            font-family: var(--font-display); font-size: 1.15rem; font-weight: 500;
+            color: var(--ink); margin-bottom: 1.25rem; padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .profil-field { margin-bottom: 1rem; }
+        .profil-field:last-child { margin-bottom: 0; }
+        .profil-label {
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 0.35rem; display: block;
+        }
+        .profil-input {
+            width: 100%; padding: 0.7rem 1rem; border-radius: var(--radius-xs);
+            border: 1px solid var(--card-border); background: var(--card-bg);
+            font-family: var(--font-body); font-size: 0.9rem; color: var(--ink);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .profil-input:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+        .profil-input[readonly] { background: var(--paper-warm); color: var(--ink-muted); cursor: not-allowed; }
+        .toggle-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.75rem 0; border-bottom: 1px solid var(--card-border);
+        }
+        .toggle-row:last-child { border-bottom: none; }
+        .toggle-label { font-size: 0.9rem; color: var(--ink-soft); }
+        .toggle-switch {
+            position: relative; width: 48px; height: 26px; border-radius: 100px;
+            background: var(--card-border); cursor: pointer; transition: background 0.3s ease;
+            border: none; padding: 0;
+        }
+        .toggle-switch::after {
+            content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
+            border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+        .toggle-switch.active { background: var(--purple); }
+        .toggle-switch.active::after { transform: translateX(22px); }
+        .btn-logout {
+            display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem;
+            border-radius: 100px; background: transparent; color: var(--rose-deep);
+            border: 1px solid var(--rose-deep); font-family: var(--font-body);
+            font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease;
+            width: 100%; justify-content: center;
+        }
+        .btn-logout:hover { background: var(--rose-light); }
+        [data-theme="dark"] .profil-input { background: var(--mm-surface, #1a1a28); border-color: var(--mm-border, rgba(255,255,255,0.06)); color: #e0e0f0; }
+        [data-theme="dark"] .profil-input[readonly] { background: var(--mm-bg-warm, #141420); color: var(--ink-faint); }
+        [data-theme="dark"] .toggle-switch { background: var(--mm-border, rgba(255,255,255,0.1)); }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><a href="dashboard-test.html"><h2>My Muqabala</h2><span>Espace Personnel</span></a></div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="dashboard-test.html"><div class="nav-icon">🏠</div><span>Accueil</span></a>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de soi</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-ressources.html"><div class="nav-icon">🎓</div><span>Ressources Pédagogiques</span></a>
+                    <a class="nav-item" href="dashboard-formulaires.html"><div class="nav-icon">🔍</div><span>Formulaires Exploratoires</span></a>
+                    <a class="nav-item" href="dashboard-cartographie.html"><div class="nav-icon">🧭</div><span>Cartographie Émotionnelle</span></a>
+                </div>
+            </details>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de l'autre</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-compatibilite.html"><div class="nav-icon">💞</div><span>Recherche de Compatibilité</span></a>
+                    <a class="nav-item" href="dashboard-plan-action.html"><div class="nav-icon">🎯</div><span>Plan d'Action</span></a>
+                    <a class="nav-item" href="dashboard-rencontres.html"><div class="nav-icon">💬</div><span>Rencontres en Cours</span></a>
+                    <a class="nav-item" href="dashboard-historique.html"><div class="nav-icon">📋</div><span>Historique des Rencontres</span></a>
+                </div>
+            </details>
+            <a class="nav-item active" href="dashboard-profil.html"><div class="nav-icon">👤</div><span>Profil</span></a>
+        </nav>
+        <div class="sidebar-client"><div class="client-avatar"></div><div><div class="client-name"></div><div class="client-id"></div></div></div>
+    </aside>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+    <main class="main">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                <div><div class="header-greeting">Mon profil</div><div class="header-date"></div></div>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Mode sombre"></button>
+                <a class="notif-bell" href="dashboard-notifications.html"><span class="notif-badge" id="notif-count"></span>🔔</a>
+                <a class="header-btn" title="Aide" href="#">❓</a>
+            </div>
+        </header>
+        <div class="content">
+            <div class="profil-header fade-up">
+                <div class="profile-avatar-wrapper">
+                    <div class="profile-avatar" id="profil-avatar"></div>
+                    <div class="profile-avatar-edit">✏</div>
+                </div>
+                <h2 class="profil-name font-display" id="profil-name"></h2>
+                <div class="profil-client-id" id="profil-client-id"></div>
+            </div>
+
+            <div class="card profil-card fade-up fade-up-1">
+                <div class="profil-card-title">Informations personnelles</div>
+                <div class="profil-field">
+                    <label class="profil-label" for="profil-prenom">Prénom</label>
+                    <input class="profil-input" type="text" id="profil-prenom" readonly>
+                </div>
+                <div class="profil-field">
+                    <label class="profil-label" for="profil-email">Email</label>
+                    <input class="profil-input" type="email" id="profil-email" placeholder="ton.email@exemple.com">
+                </div>
+                <div class="profil-field">
+                    <label class="profil-label" for="profil-telephone">Téléphone</label>
+                    <input class="profil-input" type="tel" id="profil-telephone" readonly>
+                </div>
+            </div>
+
+            <div class="card profil-card fade-up fade-up-2">
+                <div class="profil-card-title">Préférences</div>
+                <div class="toggle-row">
+                    <span class="toggle-label">Notifications push</span>
+                    <button class="toggle-switch" id="toggle-notif" onclick="toggleNotif(this)" aria-label="Activer les notifications push"></button>
+                </div>
+                <div class="toggle-row">
+                    <span class="toggle-label">Mode sombre</span>
+                    <button class="toggle-switch" id="toggle-theme" onclick="toggleTheme(this)" aria-label="Activer le mode sombre"></button>
+                </div>
+            </div>
+
+            <div class="card profil-card fade-up fade-up-3">
+                <div class="profil-card-title">Compte</div>
+                <button class="btn-logout" id="btn-logout" onclick="handleLogout()">Se déconnecter</button>
+            </div>
+
+            <footer class="dashboard-footer"><strong>My Muqabala</strong><p style="margin-top:0.25rem">Accompagnement thérapeutique musulman — Psychologie moderne & Spiritualité islamique</p></footer>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard-app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const ok = await DashboardData.init();
+    if (!ok) return;
+
+    DashboardData.populateCommon();
+
+    const client = DashboardData.client;
+    const prenom = client.prenom || '';
+    const initial = prenom.charAt(0).toUpperCase();
+
+    // Profile avatar
+    const avatarEl = document.getElementById('profil-avatar');
+    if (avatarEl) avatarEl.textContent = initial;
+
+    // Display name + client ID
+    const nameEl = document.getElementById('profil-name');
+    if (nameEl) nameEl.textContent = prenom;
+
+    const idEl = document.getElementById('profil-client-id');
+    if (idEl) idEl.textContent = 'Client N\u00B0 ' + (client.client_id || '');
+
+    // Form fields
+    const prenomInput = document.getElementById('profil-prenom');
+    if (prenomInput) prenomInput.value = prenom;
+
+    const emailInput = document.getElementById('profil-email');
+    if (emailInput) emailInput.value = client.email || '';
+
+    const telInput = document.getElementById('profil-telephone');
+    if (telInput) telInput.value = client.telephone || DashboardData._telephone || '';
+
+    // Theme toggle sync
+    const themeToggle = document.getElementById('toggle-theme');
+    if (themeToggle) {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) themeToggle.classList.add('active');
+    }
+
+    // Notifications toggle restore
+    const notifToggle = document.getElementById('toggle-notif');
+    if (notifToggle) {
+        const notifPref = localStorage.getItem('mymuqabala_notif_push');
+        if (notifPref === 'true') notifToggle.classList.add('active');
+    }
+});
+
+function toggleNotif(btn) {
+    btn.classList.toggle('active');
+    const isActive = btn.classList.contains('active');
+    localStorage.setItem('mymuqabala_notif_push', isActive ? 'true' : 'false');
+}
+
+function toggleTheme(btn) {
+    btn.classList.toggle('active');
+    ThemeManager.toggle();
+}
+
+function handleLogout() {
+    sessionStorage.removeItem('mm_telephone');
+    sessionStorage.removeItem('mm_access_code');
+    sessionStorage.removeItem('mm_uuid');
+    window.location.href = 'dashboard-login.html';
+}
+</script>
+</body>
+</html>

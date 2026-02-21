@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès Cartographie Émotionnelle | My Muqabala</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #D4569C;
+            --primary-deep: #B33D7E;
+            --primary-light: #F5D6E8;
+            --purple: #6B5A9C;
+            --purple-deep: #4A3B6E;
+            --purple-light: #B8AECC;
+            --success: #2C7A7B;
+            --success-light: #E6F7F7;
+            --accent: #D4A373;
+            --cream: #FDFBF7;
+            --cream-dark: #F5F1E8;
+            --text: #1A1A1A;
+            --text-soft: #4A3B6E;
+            --text-muted: #6B6B6B;
+            --error: #DC2626;
+            --vh: 1vh;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+            min-height: 100vh;
+            min-height: calc(var(--vh, 1vh) * 100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 1rem;
+        }
+
+        /* Animated background pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: float 30s linear infinite;
+        }
+
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(-60px); }
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), transparent);
+            animation: orb-float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+
+        @keyframes orb-float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(20px, -20px) scale(1.05); }
+            50% { transform: translate(-10px, 10px) scale(0.95); }
+            75% { transform: translate(-20px, -10px) scale(1.02); }
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 440px;
+            width: 100%;
+            position: relative;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: var(--purple-deep);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 1.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--purple), var(--primary));
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .input-wrapper:focus-within::before {
+            opacity: 0.5;
+        }
+
+        input {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            font-size: 2rem;
+            border: 2px solid var(--purple-light);
+            border-radius: 16px;
+            text-align: center;
+            letter-spacing: 8px;
+            font-weight: 700;
+            color: var(--purple-deep);
+            background: white;
+            transition: all 0.3s ease;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            -webkit-appearance: none;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--purple);
+            box-shadow: 0 8px 24px -4px rgba(107, 90, 156, 0.25);
+        }
+
+        input::placeholder {
+            color: var(--purple-light);
+            letter-spacing: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px -4px rgba(107, 90, 156, 0.4);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px -4px rgba(107, 90, 156, 0.5);
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            color: var(--error);
+            margin-top: 1.25rem;
+            display: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            animation: shake 0.5s ease;
+            background: rgba(220, 38, 38, 0.1);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .hint {
+            margin-top: 1.25rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+            background: var(--cream);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--cream-dark);
+        }
+
+        .hint.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .brand {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+
+        .logo.success {
+            animation: success 0.6s ease;
+        }
+
+        @keyframes success {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 480px) {
+            body {
+                align-items: flex-start;
+                padding-top: 3rem;
+            }
+
+            .login-box {
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo {
+                font-size: 3rem;
+            }
+
+            input {
+                font-size: 1.5rem;
+                letter-spacing: 6px;
+                padding: 1rem;
+            }
+
+            button {
+                padding: 1rem;
+            }
+
+            .orb {
+                display: none;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .login-box {
+                padding: 1.5rem 1rem;
+            }
+
+            h1 {
+                font-size: 1.35rem;
+            }
+
+            input {
+                font-size: 1.25rem;
+                letter-spacing: 4px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button:hover {
+                transform: none;
+            }
+
+            button:active {
+                transform: scale(0.98);
+            }
+
+            input {
+                font-size: 16px;
+            }
+
+            button, input {
+                min-height: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="login-box">
+        <div class="logo" id="logo">🧭</div>
+        <h1>Cartographie Émotionnelle</h1>
+        <p class="subtitle">Entre ton code personnel pour accéder à ta cartographie</p>
+
+        <form id="loginForm">
+            <div class="input-wrapper">
+                <input type="text"
+                       id="code"
+                       placeholder="••••••"
+                       maxlength="6"
+                       required
+                       autocomplete="off"
+                       pattern="[0-9]{6}"
+                       inputmode="numeric">
+            </div>
+            <button type="submit">Accéder à ma cartographie</button>
+            <p class="error" id="error">Code incorrect. Vérifie et réessaie.</p>
+            <p class="hint" id="hint">💡 Code envoyé par WhatsApp</p>
+        </form>
+    </div>
+
+    <div class="brand">My Muqabala - Cartographie Émotionnelle</div>
+
+    <script>
+        // Configuration - sera remplacé par le script Python
+        const expectedCode = "880229";
+        const dashboardUrl = "./dashboard.html";
+
+        const hintElem = document.getElementById('hint');
+        const codeInput = document.getElementById('code');
+        const logoElem = document.getElementById('logo');
+
+        // Afficher l'indice après 3 secondes
+        setTimeout(() => {
+            hintElem.classList.add('visible');
+        }, 3000);
+
+        // Auto-focus sur le champ
+        codeInput.focus();
+
+        // Formater l'input pendant la saisie
+        codeInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Gerer la soumission du formulaire
+        document.getElementById('loginForm').onsubmit = function(e) {
+            e.preventDefault();
+            const code = codeInput.value;
+
+            if (code === expectedCode) {
+                // Animation de succès
+                logoElem.textContent = '✅';
+                logoElem.classList.add('success');
+
+                // Rediriger vers le dashboard après l'animation
+                setTimeout(() => {
+                    window.location.href = dashboardUrl + '?auth=true&t=' + Date.now();
+                }, 600);
+            } else {
+                // Code incorrect
+                const errorElem = document.getElementById('error');
+                errorElem.style.display = 'block';
+                codeInput.value = '';
+
+                // Animation d'erreur
+                logoElem.style.animation = 'none';
+                setTimeout(() => {
+                    logoElem.style.animation = 'shake 0.5s ease';
+                }, 10);
+
+                errorElem.style.animation = 'none';
+                setTimeout(() => {
+                    errorElem.style.animation = 'shake 0.5s ease';
+                }, 10);
+            }
+        };
+
+        // Gerer la hauteur du viewport sur mobile
+        function setViewportHeight() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+        window.addEventListener('orientationchange', setViewportHeight);
+    </script>
+</body>
+</html>

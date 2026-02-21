@@ -43,6 +43,8 @@ abstract final class RouteNames {
   static const blinkDate = 'blink-date';
   static const photoSelection = 'photo-selection';
   static const matchReveal = 'match-reveal';
+  static const photoReveal = 'photo-reveal';
+  static const matchResults = 'match-results';
   static const questionnaire = 'questionnaire';
   static const feedback = 'feedback';
 }

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Mon Espace My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="components.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><a href="dashboard-test.html"><h2>My Muqabala</h2><span>Espace Personnel</span></a></div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="dashboard-test.html"><div class="nav-icon">&#127968;</div><span>Accueil</span></a>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de soi</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-ressources.html"><div class="nav-icon">&#127891;</div><span>Ressources Pédagogiques</span></a>
+                    <a class="nav-item" href="dashboard-formulaires.html"><div class="nav-icon">&#128269;</div><span>Formulaires Exploratoires</span></a>
+                    <a class="nav-item" href="dashboard-cartographie.html"><div class="nav-icon">&#129517;</div><span>Cartographie Émotionnelle</span></a>
+                </div>
+            </details>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de l'autre</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-compatibilite.html"><div class="nav-icon">&#128158;</div><span>Recherche de Compatibilité</span></a>
+                    <a class="nav-item" href="dashboard-plan-action.html"><div class="nav-icon">&#127919;</div><span>Plan d'Action</span></a>
+                    <a class="nav-item" href="dashboard-rencontres.html"><div class="nav-icon">&#128172;</div><span>Rencontres en Cours</span></a>
+                    <a class="nav-item" href="dashboard-historique.html"><div class="nav-icon">&#128203;</div><span>Historique des Rencontres</span></a>
+                </div>
+            </details>
+            <a class="nav-item active" href="dashboard-notifications.html"><div class="nav-icon">&#128276;</div><span>Notifications</span></a>
+        </nav>
+        <div class="sidebar-client"><div class="client-avatar"></div><div><div class="client-name"></div><div class="client-id"></div></div></div>
+    </aside>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+    <main class="main">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+                <div><div class="header-greeting">Bienvenue, <em></em></div><div class="header-date"></div></div>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Mode sombre"></button>
+                <a class="notif-bell" href="dashboard-notifications.html"><span class="notif-badge" id="notif-count"></span>&#128276;</a>
+                <a class="header-btn" title="Aide" href="#">&#10067;</a>
+            </div>
+        </header>
+        <div class="content">
+            <!-- Page Header -->
+            <div class="page-header fade-up">
+                <div style="display:flex;align-items:center;gap:1rem">
+                    <div class="page-title-icon purple">&#128276;</div>
+                    <div>
+                        <h1 class="page-title">Notifications</h1>
+                        <p class="page-subtitle">Tes alertes et mises à jour</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="page-header-row fade-up" style="margin-bottom:1.5rem">
+                <button class="btn-cta-secondary" id="btn-mark-all-read" onclick="markAllRead()">&#10003; Tout marquer comme lu</button>
+                <div class="tabs" style="margin-bottom:0">
+                    <button class="tab-btn active" data-filter="all" onclick="filterNotifs(this, 'all')">Tout</button>
+                    <button class="tab-btn" data-filter="event" onclick="filterNotifs(this, 'event')">Événements</button>
+                    <button class="tab-btn" data-filter="document" onclick="filterNotifs(this, 'document')">Documents</button>
+                    <button class="tab-btn" data-filter="form" onclick="filterNotifs(this, 'form')">Formulaires</button>
+                    <button class="tab-btn" data-filter="coach" onclick="filterNotifs(this, 'coach')">Coach</button>
+                </div>
+            </div>
+
+            <!-- Notifications List -->
+            <div class="card fade-up" id="notif-list" style="padding:0;overflow:hidden">
+                <div class="notif-item unread" data-type="event" onclick="markRead(this)">
+                    <div class="notif-item-icon event">&#128197;</div>
+                    <div class="notif-item-content">
+                        <div class="notif-item-title">Prochain événement Blink Date</div>
+                        <div class="notif-item-desc">Le 15 mars 2026 à 20h. Prépare tes questions !</div>
+                        <div class="notif-item-time">Il y a 2h</div>
+                    </div>
+                </div>
+                <div class="notif-item unread" data-type="document" onclick="markRead(this)">
+                    <div class="notif-item-icon document">&#128196;</div>
+                    <div class="notif-item-content">
+                        <div class="notif-item-title">Nouveau document disponible</div>
+                        <div class="notif-item-desc">DOC_07 — La grammaire de l'amour est prêt à lire.</div>
+                        <div class="notif-item-time">Il y a 5h</div>
+                    </div>
+                </div>
+                <div class="notif-item" data-type="form" onclick="markRead(this)">
+                    <div class="notif-item-icon form">&#128221;</div>
+                    <div class="notif-item-content">
+                        <div class="notif-item-title">Formulaire complété</div>
+                        <div class="notif-item-desc">Ton formulaire F1 Express a bien été enregistré.</div>
+                        <div class="notif-item-time">Hier</div>
+                    </div>
+                </div>
+                <div class="notif-item" data-type="coach" onclick="markRead(this)">
+                    <div class="notif-item-icon coach">&#128172;</div>
+                    <div class="notif-item-content">
+                        <div class="notif-item-title">Message de ton accompagnant</div>
+                        <div class="notif-item-desc">Bravo pour ton avancement cette semaine!</div>
+                        <div class="notif-item-time">Il y a 2 jours</div>
+                    </div>
+                </div>
+                <div class="notif-item" data-type="event" onclick="markRead(this)">
+                    <div class="notif-item-icon event">&#128197;</div>
+                    <div class="notif-item-content">
+                        <div class="notif-item-title">Événement terminé</div>
+                        <div class="notif-item-desc">Le coaching de groupe du 8 mars s'est bien passé.</div>
+                        <div class="notif-item-time">Il y a 5 jours</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State (hidden by default) -->
+            <div class="empty-state" id="notif-empty" style="display:none">
+                <span class="empty-state-icon">&#128276;</span>
+                <p>Aucune notification pour le moment.</p>
+            </div>
+
+            <footer class="dashboard-footer"><strong>My Muqabala</strong><p style="margin-top:0.25rem">Accompagnement thérapeutique musulman — Psychologie moderne & Spiritualité islamique</p></footer>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard-app.js"></script>
+<script>
+/* ─── Notification Filters ─── */
+function filterNotifs(btn, type) {
+    document.querySelectorAll('.tabs .tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var items = document.querySelectorAll('#notif-list .notif-item');
+    var visibleCount = 0;
+    items.forEach(function(item) {
+        if (type === 'all' || item.getAttribute('data-type') === type) {
+            item.style.display = '';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    document.getElementById('notif-list').style.display = visibleCount > 0 ? '' : 'none';
+    document.getElementById('notif-empty').style.display = visibleCount === 0 ? '' : 'none';
+}
+
+/* ─── Mark All Read ─── */
+function markAllRead() {
+    document.querySelectorAll('#notif-list .notif-item.unread').forEach(function(item) {
+        item.classList.remove('unread');
+    });
+    updateBadgeCount();
+}
+
+/* ─── Mark Single Read ─── */
+function markRead(el) {
+    el.classList.remove('unread');
+    updateBadgeCount();
+}
+
+/* ─── Update Badge Count ─── */
+function updateBadgeCount() {
+    var count = document.querySelectorAll('#notif-list .notif-item.unread').length;
+    var badge = document.getElementById('notif-count');
+    if (badge) {
+        badge.textContent = count > 0 ? count : '';
+    }
+}
+
+/* ─── Init ─── */
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof DashboardData !== 'undefined' && DashboardData.init) {
+        DashboardData.init().then(function() {
+            if (typeof populateCommon === 'function') { populateCommon(); }
+            updateBadgeCount();
+        }).catch(function() {
+            updateBadgeCount();
+        });
+    } else {
+        updateBadgeCount();
+    }
+});
+</script>
+</body>
+</html>

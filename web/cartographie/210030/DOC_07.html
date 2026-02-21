@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table de Navigation - My Muqabala</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           CSS VARIABLES
+        ======================================== */
+        :root {
+            /* Couleurs principales */
+            --primary: #D4569C;
+            --purple: #6B5A9C;
+            --gold: #E8B86D;
+            --teal: #4A9B9B;
+
+            /* Couleurs étendues */
+            --primary-light: #E8A4C8;
+            --primary-dark: #A8437A;
+            --purple-light: #9B8BB8;
+            --purple-dark: #4A3A6B;
+
+            /* Texte */
+            --text: #2D3748;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+
+            /* Backgrounds */
+            --bg-main: #FFFFFF;
+            --bg-alt: #F8FAFC;
+            --bg-card: #FFFFFF;
+
+            /* Typographie */
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Inter', sans-serif;
+
+            /* Espacements */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+
+            /* Bordures */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            /* Ombres */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+        }
+
+        /* ========================================
+           RESET & BASE
+        ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text);
+            background: var(--bg-alt);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========================================
+           TYPOGRAPHY
+        ======================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-serif);
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        em {
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        /* ========================================
+           LAYOUT
+        ======================================== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        /* ========================================
+           HERO SECTION
+        ======================================== */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 300;
+            margin-bottom: 0;
+        }
+
+        /* ========================================
+           BADGES
+        ======================================== */
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .badge-purple {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .nombre-schemas-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0 0.3rem;
+            vertical-align: middle;
+            backdrop-filter: blur(10px);
+        }
+
+        /* ========================================
+           CONTENT BLOCKS
+        ======================================== */
+        .content-block {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+        }
+
+        .content-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ========================================
+           TABLES
+        ======================================== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: var(--bg-alt);
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        /* ========================================
+           DOC 7 - STYLES SPÉCIFIQUES
+        ======================================== */
+
+        /* --- Tableau des schémas --- */
+        .schemas-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .schemas-table thead {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        }
+
+        .schemas-table th {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .schemas-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .schemas-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .schemas-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* --- Lignes par priorité --- */
+        .schema-row.priorite-1 {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.08) 0%, transparent 100%);
+        }
+
+        .schema-row.priorite-1 .schema-priorite {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .schema-row.priorite-2 {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, transparent 100%);
+        }
+
+        .schema-row.priorite-2 .schema-priorite {
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        .schema-row.priorite-3 {
+            background: linear-gradient(90deg, rgba(34, 197, 94, 0.08) 0%, transparent 100%);
+        }
+
+        .schema-row.priorite-3 .schema-priorite {
+            color: #16a34a;
+            font-weight: 500;
+        }
+
+        /* --- Cellules du tableau --- */
+        .schema-nom {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .schema-nom strong {
+            color: var(--text);
+        }
+
+        .schema-emoji {
+            font-size: 1.2rem;
+        }
+
+        .schema-intensite {
+            min-width: 120px;
+        }
+
+        .intensite-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.3rem;
+        }
+
+        .intensite-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Couleurs selon intensité */
+        .intensite-fill[style*="width: 10%"],
+        .intensite-fill[style*="width: 20%"],
+        .intensite-fill[style*="width: 30%"] {
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+        }
+
+        .intensite-fill[style*="width: 40%"],
+        .intensite-fill[style*="width: 50%"],
+        .intensite-fill[style*="width: 60%"] {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .intensite-fill[style*="width: 70%"],
+        .intensite-fill[style*="width: 80%"],
+        .intensite-fill[style*="width: 90%"],
+        .intensite-fill[style*="width: 100%"] {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .schema-intensite span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .schema-cout {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            max-width: 250px;
+        }
+
+        .schema-doc {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* --- Légende --- */
+        .legende {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .legende p {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .legende ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .legende li {
+            font-size: 0.9rem;
+        }
+
+        /* --- Schéma visuel interconnexions --- */
+        .schema-visuel {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Ordre recommandé --- */
+        .ordre-recommande {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .ordre-recommande h3 {
+            color: var(--purple);
+            margin-bottom: 1.5rem;
+        }
+
+        .ordre-liste {
+            counter-reset: ordre-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .ordre-liste li {
+            background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 1.5rem 1.5rem 1.5rem 4rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+            counter-increment: ordre-counter;
+            border-left: 4px solid var(--purple);
+        }
+
+        .ordre-liste li::before {
+            content: counter(ordre-counter);
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            background: var(--purple);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .ordre-liste li strong {
+            display: block;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+
+        .ordre-liste li p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- Note box --- */
+        .note-box {
+            background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .note-box p {
+            margin: 0;
+            color: #713f12;
+        }
+
+        /* --- Schéma principal box --- */
+        .schema-principal-box {
+            background: linear-gradient(135deg, #fff 0%, #fdf4ff 100%);
+            border: 2px solid var(--purple);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .schema-principal-box h3 {
+            color: var(--purple);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .schema-principal-box > p:first-of-type {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .apercu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .apercu-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .apercu-item h4 {
+            color: var(--purple);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .apercu-item p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .schema-principal-cta {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .schema-principal-cta strong {
+            color: white;
+        }
+
+        /* --- Conseil box --- */
+        .conseil-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .conseil-box h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .conseil-box ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .conseil-box li {
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        /* --- Mode d'emploi section --- */
+        .mode-emploi-steps {
+            counter-reset: emploi-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .mode-emploi-steps li {
+            padding: 0.8rem 0;
+            padding-left: 3rem;
+            position: relative;
+            counter-increment: emploi-counter;
+        }
+
+        .mode-emploi-steps li::before {
+            content: counter(emploi-counter);
+            position: absolute;
+            left: 0;
+            top: 0.8rem;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* --- Transition box --- */
+        .transition-box {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .transition-box p {
+            margin: 0;
+        }
+
+        .transition-box strong {
+            color: white;
+        }
+
+        /* ========================================
+           FOOTER
+        ======================================== */
+        footer {
+            background: var(--text);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        footer p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ========================================
+           RESPONSIVE
+        ======================================== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+            }
+
+            h3 {
+                font-size: 1.3rem;
+            }
+
+            .content-block {
+                padding: 1.5rem;
+            }
+
+            .schemas-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .schemas-table th,
+            .schemas-table td {
+                padding: 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            .schema-cout {
+                max-width: 150px;
+            }
+
+            .legende ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .apercu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ordre-liste li {
+                padding-left: 3.5rem;
+            }
+
+            .nombre-schemas-badge {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+
+        /* ========================================
+           PRINT STYLES
+        ======================================== */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .hero {
+                background: var(--purple);
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+
+            .schemas-table {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+
+            .schemas-table thead {
+                background: var(--purple) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .content-block,
+            .ordre-recommande,
+            .schema-principal-box {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+
+            .ordre-liste li::before {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            footer {
+                background: var(--text);
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge badge-purple">Document Personnalisé</span>
+            <h1>Ta Table de Navigation</h1>
+            <p class="hero-subtitle">Vue d'ensemble de tes <span class="nombre-schemas-badge"><strong>4 schémas principaux identifiés</strong></span> schémas identifiés</p>
+        </div>
+    </section>
+
+    <!-- CONTAINER -->
+    <div class="container">
+
+        <!-- INTRODUCTION -->
+        <section class="section" id="intro">
+            <h2>Introduction</h2>
+            <div class="content-block">
+                Rislène, voici ta Table de Navigation. C'est la vue d'ensemble de TES schémas - ceux que j'ai identifiés à travers tout ce que tu m'as partagé dans les formulaires, à travers ton histoire, tes réactions, tes patterns relationnels. Ce document est ta carte pour la suite du parcours.<br><br>Tu y trouveras chaque schéma avec son intensité (de 1 à 10), son coût actuel dans ta vie, et le document détaillé associé. Tu peux commencer par le schéma qui te parle le plus, ou suivre l'ordre de priorité que je te recommande. C'est TON parcours. Prends le temps de digérer chaque fiche. Il n'y a pas d'urgence.
+            </div>
+        </section>
+
+        <!-- A. TABLEAU DES SCHÉMAS -->
+        <section class="section" id="tableau">
+            <h2>A. Tes schémas en un coup d'œil</h2>
+
+            <table class="schemas-table">
+                <thead>
+                    <tr>
+                        <th>Schéma</th>
+                        <th>Intensité</th>
+                        <th>Coût actuel</th>
+                        <th>Priorité</th>
+                        <th>Document</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{LIGNES_SCHEMAS}}
+                </tbody>
+            </table>
+
+            <div class="legende">
+                <p><strong>Légende intensité :</strong></p>
+                <ul>
+                    <li>🟢 1-3 : Présent mais gérable</li>
+                    <li>🟡 4-6 : Impact modéré, travail recommandé</li>
+                    <li>🔴 7-10 : Fort impact, prioritaire</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- B. INTERCONNEXIONS -->
+        <section class="section" id="interconnexions">
+            <h2>B. Comment tes schémas interagissent</h2>
+
+            <div class="content-block">
+                ### C. Comment ces schémas s'interconnectent<br><br>Tes 4 schémas ne fonctionnent pas de manière isolée. Ils forment un SYSTÈME qui s'auto-renforce :<br><br><strong>La boucle :</strong><br><br>```
+ABANDON activé
+↓
+"Il va me quitter"
+↓
+MÉFIANCE s'active
+↓
+"Je ne peux pas lui faire confiance, il me ment peut-être"
+↓
+Comportement de surveillance (messages répétés, questions)
+↓
+L'autre se sent étouffé, prend de la distance
+↓
+ABANDON se confirme
+↓
+"Je le savais, ils finissent toujours par partir"
+↓
+Le cycle se répète
+```<br><br><strong>Pendant ce temps :</strong><br><br>- <strong>ABNÉGATION</strong> te pousse à donner énormément pour "mériter" qu'il reste
+- <strong>IMPERFECTION</strong> te murmure "c'est parce que je ne suis pas assez bien qu'il part"<br><br>C'est un système complexe, mais en travaillant sur le schéma racine (ABANDON), tu commenceras à désamorcer toute la chaîne.
+            </div>
+
+            <!-- Schéma visuel optionnel -->
+            <div class="schema-visuel">
+                <p><em>Représentation visuelle des interconnexions entre tes schémas</em></p>
+            </div>
+        </section>
+
+        <!-- C. ORDRE RECOMMANDÉ -->
+        <section class="section" id="ordre">
+            <h2>C. Par où commencer</h2>
+
+            <div class="ordre-recommande">
+                <h3>Mon recommandation pour toi :</h3>
+
+                ### B. Ordre de lecture recommandé<br><br>Je te recommande de commencer par <strong>DOC 8A (Abandon)</strong> car c'est le schéma le plus actif et celui qui cause le plus de souffrance au quotidien dans tes relations. C'est aussi celui qui déclenche les autres (méfiance, abnégation).<br><br><strong>Parcours suggéré :</strong><br><br>1. <strong>DOC 8A - Abandon</strong> (PRIORITÉ 1)
+   - C'est le schéma racine, celui qui explique pourquoi tu as si peur que l'autre parte
+   - Commence ici pour comprendre tes réactions anxieuses<br><br>2. <strong>DOC 8B - Méfiance</strong> (PRIORITÉ 2)
+   - Comprendre pourquoi tu as du mal à faire confiance
+   - Voir comment ce schéma te fait aller "à la pêche aux infos"<br><br>3. <strong>DOC 8C - Abnégation</strong> (PRIORITÉ 3)
+   - Comprendre pourquoi tu donnes tant sans recevoir
+   - Apprendre à exprimer tes besoins sans te fermer<br><br>4. <strong>DOC 8D - Imperfection</strong> (PRIORITÉ 4)
+   - Travailler sur l'acceptation de toi-même
+   - Transformer ta relation à ta maladie<br><br><strong>Important :</strong> Tu n'es pas obligée de tout lire d'un coup. Chaque fiche schéma est dense et peut être émotionnellement intense. Prends le temps. Fais des pauses. Utilise ton kit de régulation.
+
+                <div class="note-box">
+                    <p>💡 Cet ordre est une suggestion. Si un autre schéma t'appelle davantage, commence par celui-là. L'important est d'avancer, pas de suivre un ordre rigide.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- D. FOCUS SCHÉMA PRINCIPAL -->
+        <section class="section" id="focus">
+            <h2>D. Focus sur ton schéma principal</h2>
+
+            {{SCHEMA_PRINCIPAL_DETAILS}}
+        </section>
+
+        <!-- E. MODE D'EMPLOI -->
+        <section class="section" id="mode-emploi">
+            <h2>E. Comment utiliser les Documents Schémas</h2>
+
+            <div class="content-block">
+                <p>Chaque Document Schéma (DOC 8a, 8b...) suit la même structure :</p>
+
+                <ol class="mode-emploi-steps">
+                    <li><strong>COMPRENDRE</strong> : D'où vient ce schéma, comment il fonctionne</li>
+                    <li><strong>RÉGULER</strong> : Kit d'urgence spécifique à ce schéma</li>
+                    <li><strong>TRANSFORMER</strong> : Protocoles pour chaque axe (mental, émotionnel, corporel, relationnel, spirituel)</li>
+                    <li><strong>EXEMPLE</strong> : Une mise en situation concrète</li>
+                </ol>
+
+                <div class="conseil-box">
+                    <h4>💡 Conseils de lecture :</h4>
+                    <ul>
+                        <li>Lis d'abord le document en entier pour avoir la vue d'ensemble</li>
+                        <li>Puis reviens sur les protocoles et pratique-les un par un</li>
+                        <li>Ne cherche pas à tout appliquer en même temps</li>
+                        <li>Choisis 1-2 exercices par semaine et pratique-les vraiment</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONCLUSION -->
+        <section class="section" id="conclusion">
+            <h2>En résumé</h2>
+
+            <div class="content-block">
+                Voilà ta carte, Rislène. Quatre schémas principaux. Chacun avec sa logique, son histoire, ses manifestations. Mais aussi chacun avec ses pistes de transformation.<br><br>Dans les fiches détaillées (DOC 8A, 8B, 8C, 8D), tu vas découvrir :
+- L'origine possible de chaque schéma
+- Comment il se manifeste sur les 6 axes (mental, émotionnel, comportemental, relationnel, corporel, spirituel)
+- Les déclencheurs spécifiques
+- Les protocoles de transformation personnalisés<br><br>Prends ton temps. Ce travail est profond. Mais il en vaut la peine.
+            </div>
+
+            <div class="transition-box">
+                <p><em>→ Prochain document : <strong>DOC 8a - {{NOM_SCHEMA_PRINCIPAL}}</strong> (ton schéma principal)</em></p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>My Muqabala - Cartographie Émotionnelle</p>
+        <p>Document Personnalisé - Table de Navigation</p>
+    </footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

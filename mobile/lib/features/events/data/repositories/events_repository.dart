@@ -338,4 +338,121 @@ class EventsRepository {
       rethrow;
     }
   }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Participation confirmation
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Returns the current user's participation status for a given event.
+  ///
+  /// Returns `null` if the user is not registered for the event.
+  /// Possible values: `'inscrit'`, `'confirme'`, `'present'`, `'absent'`.
+  Future<String?> getMyParticipationStatus(
+    String eventId,
+    String userId,
+  ) async {
+    try {
+      AppLogger.debug(
+        'Checking participation status for user $userId in event $eventId',
+        tag: _tag,
+      );
+
+      final response = await _supabase
+          .from('event_participants')
+          .select('statut')
+          .eq('event_id', eventId)
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      if (response == null) return null;
+
+      final statut = response['statut'] as String?;
+
+      AppLogger.debug(
+        'User $userId participation in event $eventId: $statut',
+        tag: _tag,
+      );
+
+      return statut;
+    } on PostgrestException catch (e, st) {
+      AppLogger.error(
+        'Failed to check participation status',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+  }
+
+  /// Confirms the current user's participation for an event.
+  ///
+  /// Calls the `confirm_event_participation` RPC which updates the
+  /// `event_participants` row to `statut = 'confirme'`.
+  Future<Map<String, dynamic>> confirmParticipation(String eventId) async {
+    try {
+      AppLogger.info(
+        'Confirming participation for event $eventId',
+        tag: _tag,
+      );
+
+      final response = await _supabase.rpc(
+        'confirm_event_participation',
+        params: {'p_event_id': eventId},
+      );
+
+      final result = response as Map<String, dynamic>;
+
+      AppLogger.info(
+        'Confirm result: ${result['success']}',
+        tag: _tag,
+      );
+
+      return result;
+    } on PostgrestException catch (e, st) {
+      AppLogger.error(
+        'Failed to confirm participation for event $eventId',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+  }
+
+  /// Declines the current user's participation for an event.
+  ///
+  /// Calls the `decline_event_participation` RPC which:
+  ///   1. Sets `event_participants.statut = 'absent'`
+  ///   2. Applies a malus: increments `profiles.nb_events_participes` by 1
+  Future<Map<String, dynamic>> declineParticipation(String eventId) async {
+    try {
+      AppLogger.info(
+        'Declining participation for event $eventId',
+        tag: _tag,
+      );
+
+      final response = await _supabase.rpc(
+        'decline_event_participation',
+        params: {'p_event_id': eventId},
+      );
+
+      final result = response as Map<String, dynamic>;
+
+      AppLogger.info(
+        'Decline result: ${result['success']} (malus: ${result['malus_applied']})',
+        tag: _tag,
+      );
+
+      return result;
+    } on PostgrestException catch (e, st) {
+      AppLogger.error(
+        'Failed to decline participation for event $eventId',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+  }
 }

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartographie Émotionnelle | Mon Espace My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><a href="dashboard-test.html"><h2>My Muqabala</h2><span>Espace Personnel</span></a></div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="dashboard-test.html"><div class="nav-icon">🏠</div><span>Accueil</span></a>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de soi</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-ressources.html"><div class="nav-icon">🎓</div><span>Ressources Pédagogiques</span></a>
+                    <a class="nav-item" href="dashboard-formulaires.html"><div class="nav-icon">🔍</div><span>Formulaires Exploratoires</span></a>
+                    <a class="nav-item active" href="dashboard-cartographie.html"><div class="nav-icon">🧭</div><span>Cartographie Émotionnelle</span></a>
+                </div>
+            </details>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de l'autre</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-compatibilite.html"><div class="nav-icon">💞</div><span>Recherche de Compatibilité</span></a>
+                    <a class="nav-item" href="dashboard-plan-action.html"><div class="nav-icon">🎯</div><span>Plan d'Action</span></a>
+                    <a class="nav-item" href="dashboard-rencontres.html"><div class="nav-icon">💬</div><span>Rencontres en Cours</span></a>
+                    <a class="nav-item" href="dashboard-historique.html"><div class="nav-icon">📋</div><span>Historique des Rencontres</span></a>
+                </div>
+            </details>
+        </nav>
+        <div class="sidebar-client"><div class="client-avatar"></div><div><div class="client-name"></div><div class="client-id"></div></div></div>
+    </aside>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+    <main class="main">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                <div><div class="header-greeting">Cartographie Émotionnelle</div><div class="header-date">21 documents personnalisés</div></div>
+            </div>
+            <div class="header-right"><a class="header-btn" href="dashboard-test.html" title="Accueil">🏠</a></div>
+        </header>
+        <div class="content">
+            <div class="progress-header fade-up">
+                <div class="progress-header-text"><span class="progress-count">21/21</span> documents prêts</div>
+                <div class="progress-bar"><div class="progress-fill" data-target="100%" style="width:100%"></div></div>
+                <div class="progress-pct">100%</div>
+            </div>
+
+            <div class="page-header fade-up">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title"><div class="page-title-icon rose">🧭</div> Cartographie Émotionnelle</h1>
+                        <p class="page-subtitle">21 documents personnalisés façonnés par ce que tu as exploré en toi.</p>
+                    </div>
+                    <span class="status-badge prete"><span class="status-dot"></span> Prête</span>
+                </div>
+            </div>
+
+            <!-- ═══ Document Viewer Quick Access Grid ═══ -->
+            <div class="section-group fade-up" id="doc-viewer-grid">
+                <span class="phase-label" style="background:linear-gradient(135deg,var(--purple-light),var(--rose-light));color:var(--purple-deep);">Accès rapide — Lecteur de documents</span>
+                <div class="grid-3">
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_01&carto=210030" data-doc="DOC_01">
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">01</div>
+                            <div class="doc-title">Le Socle Identitaire</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_01" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_02&carto=210030" data-doc="DOC_02">
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">02</div>
+                            <div class="doc-title">Les Blessures Fondatrices</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_02" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_03&carto=210030" data-doc="DOC_03">
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">03</div>
+                            <div class="doc-title">Le Style d'Attachement</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_03" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_04&carto=210030" data-doc="DOC_04">
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">04</div>
+                            <div class="doc-title">Les Patterns Relationnels</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_04" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_05&carto=210030" data-doc="DOC_05">
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">05</div>
+                            <div class="doc-title">Les Mécanismes de Défense</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_05" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_06&carto=210030" data-doc="DOC_06">
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">06</div>
+                            <div class="doc-title">La Carte des Émotions</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_06" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_07&carto=210030" data-doc="DOC_07">
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">07</div>
+                            <div class="doc-title">La Grammaire de l'Amour</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_07" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_08A&carto=210030" data-doc="DOC_08A">
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">8A</div>
+                            <div class="doc-title">Protocole Thérapeutique — A</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_08A" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_08B&carto=210030" data-doc="DOC_08B">
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">8B</div>
+                            <div class="doc-title">Protocole Thérapeutique — B</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_08B" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_08C&carto=210030" data-doc="DOC_08C">
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">8C</div>
+                            <div class="doc-title">Protocole Thérapeutique — C</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_08C" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_08D&carto=210030" data-doc="DOC_08D">
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">8D</div>
+                            <div class="doc-title">Protocole Thérapeutique — D</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_08D" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_09&carto=210030" data-doc="DOC_09">
+                        <div class="doc-card-head">
+                            <div class="doc-num sage">09</div>
+                            <div class="doc-title">Les Forces Intérieures</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_09" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_10&carto=210030" data-doc="DOC_10">
+                        <div class="doc-card-head">
+                            <div class="doc-num sage">10</div>
+                            <div class="doc-title">La Vision du Couple</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_10" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_11&carto=210030" data-doc="DOC_11">
+                        <div class="doc-card-head">
+                            <div class="doc-num sage">11</div>
+                            <div class="doc-title">Les Valeurs Profondes</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_11" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_12&carto=210030" data-doc="DOC_12">
+                        <div class="doc-card-head">
+                            <div class="doc-num gold">12</div>
+                            <div class="doc-title">Le Profil de Compatibilité</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_12" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_13&carto=210030" data-doc="DOC_13">
+                        <div class="doc-card-head">
+                            <div class="doc-num gold">13</div>
+                            <div class="doc-title">La Synthèse Émotionnelle</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_13" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=DOC_14&carto=210030" data-doc="DOC_14">
+                        <div class="doc-card-head">
+                            <div class="doc-num gold">14</div>
+                            <div class="doc-title">Le Plan de Transformation</div>
+                            <span class="form-badge pending doc-badge" data-doc="DOC_14" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=dashboard&carto=210030" data-doc="dashboard">
+                        <div class="doc-card-head">
+                            <div class="doc-num indigo">TB</div>
+                            <div class="doc-title">Tableau de Bord Cartographie</div>
+                            <span class="form-badge pending doc-badge" data-doc="dashboard" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                    <a class="card doc-card" href="document-viewer.html?doc=index&carto=210030" data-doc="index">
+                        <div class="doc-card-head">
+                            <div class="doc-num indigo">VE</div>
+                            <div class="doc-title">Vue d'Ensemble</div>
+                            <span class="form-badge pending doc-badge" data-doc="index" style="display:none;">Nouveau</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Phase 1 -->
+            <div class="section-group fade-up fade-up-1">
+                <span class="phase-label phase-1">Phase 1 — Accueillir</span>
+                <div class="grid-3">
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Le premier pas, c'est de se sentir en sécurité. Ce document crée cet espace pour toi.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">01</div>
+                            <div class="doc-title">Accueil & Intention</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Bienvenue dans ta cartographie. L'espace sécurisé pour commencer.</p>
+                        <div class="doc-tooltip-content">Le premier pas, c'est de se sentir en sécurité. Ce document crée cet espace pour toi.</div>
+                        <div class="doc-tags"><span class="doc-tag">Reconnaissance</span><span class="doc-tag">Validation</span><span class="doc-tag">Glossaire</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Tu vas mettre des mots sur des choses que tu ressentais sans pouvoir les expliquer.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">02</div>
+                            <div class="doc-title">Comprendre ton Monde Intérieur</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Les 3 dimensions : esprit, corps, coeur. Les 3 états de l'âme (Nafs).</p>
+                        <div class="doc-tooltip-content">Tu vas mettre des mots sur des choses que tu ressentais sans pouvoir les expliquer.</div>
+                        <div class="doc-tags"><span class="doc-tag">Esprit-Corps-Coeur</span><span class="doc-tag">Les 3 Nafs</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Tu sauras exactement où tu vas, combien de temps ça prend, et tu auras les outils pour les moments intenses.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num rose">03</div>
+                            <div class="doc-title">Roadmap & Organisation</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Ta feuille de route, ton kit d'urgence, ta phrase d'ancrage.</p>
+                        <div class="doc-tooltip-content">Tu sauras exactement où tu vas, combien de temps ça prend, et tu auras les outils pour les moments intenses.</div>
+                        <div class="doc-tags"><span class="doc-tag">Routine</span><span class="doc-tag">Kit d'urgence</span><span class="doc-tag">Ancrage</span></div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="section-group fade-up fade-up-2">
+                <span class="phase-label phase-2">Phase 2 — Comprendre</span>
+                <div class="grid-3">
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Pour la première fois, quelqu'un retrace ton histoire de façon cohérente, sans minimiser, sans juger, et sans rien oublier.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">04</div>
+                            <div class="doc-title">Ton Histoire</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Ton parcours de vie retracé avec bienveillance et cohérence.</p>
+                        <div class="doc-tooltip-content">Pour la première fois, quelqu'un retrace ton histoire de façon cohérente, sans minimiser, sans juger, et sans rien oublier.</div>
+                        <div class="doc-tags"><span class="doc-tag">Relations parentales</span><span class="doc-tag">Fil rouge</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Certains fils invisibles traversent les générations. Ce document les rend visibles.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">05</div>
+                            <div class="doc-title">Tes Racines Familiales</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Génogramme sur 3 générations. Loyautés invisibles et héritage.</p>
+                        <div class="doc-tooltip-content">Certains fils invisibles traversent les générations. Ce document les rend visibles.</div>
+                        <div class="doc-tags"><span class="doc-tag">Génogramme</span><span class="doc-tag">Schémas précoces</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Le document le plus intense. Et le plus bienveillant. Tes blessures ne te définissent pas, et les mettre en lumière, c'est déjà commencer à s'en libérer.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">06</div>
+                            <div class="doc-title">Tes Blessures</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Blessures fondamentales, masques, lettre à l'enfant intérieur.</p>
+                        <div class="doc-tooltip-content">Le document le plus intense. Et le plus bienveillant. Tes blessures ne te définissent pas, et les mettre en lumière, c'est déjà commencer à s'en libérer.</div>
+                        <div class="doc-tags"><span class="doc-tag">Blessures</span><span class="doc-tag">Masques</span><span class="doc-tag">Guérison</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Pourquoi cette remarque anodine te met dans tous tes états ? Pourquoi tu pleures sans raison apparente ? Ce document te donne les réponses.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">07</div>
+                            <div class="doc-title">Ta Navigation Émotionnelle</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Émotions dominantes, déclencheurs, fenêtre de tolérance.</p>
+                        <div class="doc-tooltip-content">Pourquoi cette remarque anodine te met dans tous tes états ? Pourquoi tu pleures sans raison apparente ? Ce document te donne les réponses.</div>
+                        <div class="doc-tags"><span class="doc-tag">Émotions</span><span class="doc-tag">Déclencheurs</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Pourquoi tu t'accroches à ceux qui te fuient. Pourquoi tu fuis ceux qui restent. Et pourquoi parfois tu fais les deux en même temps.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">08</div>
+                            <div class="doc-title">Ton Style d'Attachement</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Comment tu t'attaches, pourquoi tu réagis ainsi, le chemin vers la sécurité.</p>
+                        <div class="doc-tooltip-content">Pourquoi tu t'accroches à ceux qui te fuient. Pourquoi tu fuis ceux qui restent. Et pourquoi parfois tu fais les deux en même temps.</div>
+                        <div class="doc-tags"><span class="doc-tag">Attachement</span><span class="doc-tag">Relations</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Ton corps parle. Il garde la mémoire de tout ce que tu as vécu, même ce que ton esprit a oublié.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">09</div>
+                            <div class="doc-title">Ton Corps</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Mémoire émotionnelle du corps, système nerveux, réponses au danger.</p>
+                        <div class="doc-tooltip-content">Ton corps parle. Il garde la mémoire de tout ce que tu as vécu, même ce que ton esprit a oublié.</div>
+                        <div class="doc-tags"><span class="doc-tag">Corps</span><span class="doc-tag">Système nerveux</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Qui es-tu quand personne ne regarde ? Et qui te forces-tu à être pour être acceptée ?</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">10</div>
+                            <div class="doc-title">Ton Identité</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Fitrah, vrai-self vs faux-self, estime de soi, authenticité.</p>
+                        <div class="doc-tooltip-content">Qui es-tu quand personne ne regarde ? Et qui te forces-tu à être pour être acceptée ?</div>
+                        <div class="doc-tags"><span class="doc-tag">Fitrah</span><span class="doc-tag">Authenticité</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Ces voix intérieures qui te retiennent ? Elles essayaient de te protéger. On va les remercier, les comprendre, puis les libérer.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num purple">11</div>
+                            <div class="doc-title">Tes Saboteurs Intérieurs</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Critique intérieur, saboteurs, protocole de désactivation.</p>
+                        <div class="doc-tooltip-content">Ces voix intérieures qui te retiennent ? Elles essayaient de te protéger. On va les remercier, les comprendre, puis les libérer.</div>
+                        <div class="doc-tags"><span class="doc-tag">Saboteurs</span><span class="doc-tag">Sage intérieur</span></div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="section-group fade-up fade-up-3">
+                <span class="phase-label phase-3">Phase 3 — Se situer</span>
+                <div class="grid-3">
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Après avoir exploré tes profondeurs, il est temps de célébrer tout ce qui fait ta lumière, et tu en as plus que tu ne le crois.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num sage">12</div>
+                            <div class="doc-title">Tes Forces & Ressources</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Forces de caractère, langages de l'amour, résilience, Amanah.</p>
+                        <div class="doc-tooltip-content">Après avoir exploré tes profondeurs, il est temps de célébrer tout ce qui fait ta lumière, et tu en as plus que tu ne le crois.</div>
+                        <div class="doc-tags"><span class="doc-tag sage">Forces</span><span class="doc-tag sage">Résilience</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Savoir ce que tu veux vraiment. Et enfin savoir dire non à ce qui ne te convient pas, sans culpabilité.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num sage">13</div>
+                            <div class="doc-title">Tes Valeurs & Limites</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Besoins profonds, valeurs, 6 types de limites, non-négociables.</p>
+                        <div class="doc-tooltip-content">Savoir ce que tu veux vraiment. Et enfin savoir dire non à ce qui ne te convient pas, sans culpabilité.</div>
+                        <div class="doc-tags"><span class="doc-tag sage">Valeurs</span><span class="doc-tag sage">Limites</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Parce que ta vie ne se résume pas à une seule question. Ton rapport à l'argent, au travail, à ta famille, à ta communauté... tout compte.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num sage">14</div>
+                            <div class="doc-title">Tes Sphères de Vie</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Argent, travail, famille, communauté, vision du mariage.</p>
+                        <div class="doc-tooltip-content">Parce que ta vie ne se résume pas à une seule question. Ton rapport à l'argent, au travail, à ta famille, à ta communauté... tout compte.</div>
+                        <div class="doc-tags"><span class="doc-tag sage">Sphères</span><span class="doc-tag sage">Mariage</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">La dimension que la psychologie occidentale oublie souvent. Et que l'Islam place au centre de toute guérison.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num sage">15</div>
+                            <div class="doc-title">Ta Spiritualité</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Santé du Qalb, voiles du coeur, stations de l'âme, plan de Tazkiya.</p>
+                        <div class="doc-tooltip-content">La dimension que la psychologie occidentale oublie souvent. Et que l'Islam place au centre de toute guérison.</div>
+                        <div class="doc-tags"><span class="doc-tag sage">Qalb</span><span class="doc-tag sage">Tazkiya</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Pas le prince charmant de tes rêves, mais la personne dont tu as réellement besoin pour guérir, grandir, et construire.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num sage">16</div>
+                            <div class="doc-title">Ton Profil Partenaire Idéal</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Critères, compatibilité profonde, pièges inconscients.</p>
+                        <div class="doc-tooltip-content">Pas le prince charmant de tes rêves, mais la personne dont tu as réellement besoin pour guérir, grandir, et construire.</div>
+                        <div class="doc-tags"><span class="doc-tag sage">Partenaire</span><span class="doc-tag sage">Compatibilité</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Des critères objectifs pour évaluer un partenaire potentiel, sans te laisser piéger par tes blessures ni par la chimie du début.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num sage">17</div>
+                            <div class="doc-title">Green & Red Flags</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Outils de discernement, questions concrètes, Istikhara.</p>
+                        <div class="doc-tooltip-content">Des critères objectifs pour évaluer un partenaire potentiel, sans te laisser piéger par tes blessures ni par la chimie du début.</div>
+                        <div class="doc-tags"><span class="doc-tag sage">Green flags</span><span class="doc-tag sage">Red flags</span></div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="section-group fade-up fade-up-4">
+                <span class="phase-label phase-4">Phase 4 — Agir</span>
+                <div class="grid-3">
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Comprendre ne suffit pas. Ce document te donne les outils concrets pour transformer ce que tu as appris en changement réel.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num gold">18</div>
+                            <div class="doc-title">Exercices & Protocoles</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Protocole d'urgence, 5 axes d'exercices, programme semaine 1.</p>
+                        <div class="doc-tooltip-content">Comprendre ne suffit pas. Ce document te donne les outils concrets pour transformer ce que tu as appris en changement réel.</div>
+                        <div class="doc-tags"><span class="doc-tag gold">Protocole</span><span class="doc-tag gold">Exercices</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Ton itinéraire personnalisé, étape par étape. Pour ne jamais te sentir perdue dans "et maintenant, je fais quoi ?"</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num gold">19</div>
+                            <div class="doc-title">Plan d'Action</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Objectifs personnalisés, étapes concrètes, roadmap réaliste.</p>
+                        <div class="doc-tooltip-content">Ton itinéraire personnalisé, étape par étape. Pour ne jamais te sentir perdue dans "et maintenant, je fais quoi ?"</div>
+                        <div class="doc-tags"><span class="doc-tag gold">Objectifs</span><span class="doc-tag gold">Roadmap</span></div>
+                    </a>
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Le dernier document. Une vue d'ensemble de tout ton voyage. Et une célébration de la femme que tu es en train de devenir.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num gold">20</div>
+                            <div class="doc-title">Synthèse & Transformation</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Vision intégrée, 5 outils essentiels, du'a personnalisée.</p>
+                        <div class="doc-tooltip-content">Le dernier document. Une vue d'ensemble de tout ton voyage. Et une célébration de la femme que tu es en train de devenir.</div>
+                        <div class="doc-tags"><span class="doc-tag gold">Synthèse</span><span class="doc-tag gold">Du'a</span></div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Bonus -->
+            <div class="section-group">
+                <span class="phase-label phase-bonus">Bonus — Protocole de Libération</span>
+                <div class="grid-2">
+                    <a class="card doc-card" href="#">
+                        <div class="doc-tooltip">Pour les émotions profondes qui ont besoin d'être traversées, pas contournées. Un protocole complet pour transformer ce que tu portes en libération.</div>
+                        <div class="doc-card-head">
+                            <div class="doc-num indigo">+</div>
+                            <div class="doc-title">Protocole de Libération Émotionnelle</div>
+                            <button class="doc-tooltip-toggle" aria-label="Info">i</button>
+                        </div>
+                        <p class="doc-desc">Guide complet de guérison : Tazkiya en 3 phases, protocole en 8 étapes, 9 protocoles spécialisés.</p>
+                        <div class="doc-tooltip-content">Pour les émotions profondes qui ont besoin d'être traversées, pas contournées. Un protocole complet pour transformer ce que tu portes en libération.</div>
+                        <div class="doc-tags"><span class="doc-tag indigo">Tazkiya</span><span class="doc-tag indigo">8 étapes</span><span class="doc-tag indigo">9 protocoles</span></div>
+                    </a>
+                </div>
+            </div>
+
+            <footer class="dashboard-footer"><strong>My Muqabala</strong><p style="margin-top:0.25rem">Accompagnement thérapeutique musulman</p></footer>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard-app.js"></script>
+<script>
+/* ─── Doc Viewer Badge Read Status ─── */
+document.addEventListener('DOMContentLoaded', function() {
+    function updateDocBadges() {
+        if (typeof ProgressStore === 'undefined') return;
+        document.querySelectorAll('.doc-badge[data-doc]').forEach(function(badge) {
+            var docId = badge.getAttribute('data-doc');
+            var isRead = ProgressStore.getItem('cartographie', docId);
+            badge.style.display = isRead ? 'none' : 'inline-flex';
+        });
+    }
+    /* Run after DashboardData has had time to init and apply server progress */
+    var attempts = 0;
+    var interval = setInterval(function() {
+        attempts++;
+        if (typeof ProgressStore !== 'undefined') {
+            updateDocBadges();
+        }
+        if (attempts >= 10) clearInterval(interval);
+    }, 300);
+});
+</script>
+</body>
+</html>

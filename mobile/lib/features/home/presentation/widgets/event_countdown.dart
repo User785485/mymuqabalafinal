@@ -14,6 +14,9 @@ import 'package:shimmer/shimmer.dart';
 import 'package:my_muqabala/core/constants/app_colors.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:my_muqabala/core/router/route_names.dart';
 import 'package:my_muqabala/features/home/presentation/providers/home_provider.dart';
 
 /// Card showing the next event the user is registered for, with a live
@@ -219,7 +222,13 @@ class _EventCountdownCardState extends State<_EventCountdownCard> {
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
                         onTap: () {
-                          // Navigate to event detail (to be implemented)
+                          final eventId = widget.event['id'] as String?;
+                          if (eventId != null) {
+                            context.pushNamed(
+                              RouteNames.eventDetail,
+                              pathParameters: {'eventId': eventId},
+                            );
+                          }
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,

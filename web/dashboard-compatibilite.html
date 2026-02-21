@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Compatibilité | Mon Espace My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+<div class="dashboard" data-form-status="pending">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><a href="dashboard-test.html"><h2>My Muqabala</h2><span>Espace Personnel</span></a></div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="dashboard-test.html"><div class="nav-icon">🏠</div><span>Accueil</span></a>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de soi</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-ressources.html"><div class="nav-icon">🎓</div><span>Ressources Pédagogiques</span></a>
+                    <a class="nav-item" href="dashboard-formulaires.html"><div class="nav-icon">🔍</div><span>Formulaires Exploratoires</span></a>
+                    <a class="nav-item" href="dashboard-cartographie.html"><div class="nav-icon">🧭</div><span>Cartographie Émotionnelle</span></a>
+                </div>
+            </details>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de l'autre</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item active" href="dashboard-compatibilite.html"><div class="nav-icon">💞</div><span>Recherche de Compatibilité</span></a>
+                    <a class="nav-item" href="dashboard-plan-action.html"><div class="nav-icon">🎯</div><span>Plan d'Action</span></a>
+                    <a class="nav-item" href="dashboard-rencontres.html"><div class="nav-icon">💬</div><span>Rencontres en Cours</span></a>
+                    <a class="nav-item" href="dashboard-historique.html"><div class="nav-icon">📋</div><span>Historique des Rencontres</span></a>
+                </div>
+            </details>
+        </nav>
+        <div class="sidebar-client"><div class="client-avatar"></div><div><div class="client-name"></div><div class="client-id"></div></div></div>
+    </aside>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+    <main class="main">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                <div><div class="header-greeting">Recherche de Compatibilité</div><div class="header-date">Agence de rencontre</div></div>
+            </div>
+            <div class="header-right"><a class="header-btn" href="dashboard-test.html" title="Accueil">🏠</a></div>
+        </header>
+        <div class="content">
+            <div class="page-header fade-up">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title"><div class="page-title-icon rose">💞</div> Recherche de Compatibilité</h1>
+                        <p class="page-subtitle">Ton accompagnement par l'agence de rencontre My Muqabala.</p>
+                    </div>
+                    <span class="status-badge recherche" id="compat-status"><span class="status-dot"></span> <span id="compat-status-text">Formulaire à remplir</span></span>
+                </div>
+            </div>
+
+            <!-- Etat A: Formulaire NON rempli -->
+            <div id="state-pending" class="fade-up fade-up-1">
+                <div class="compat-form-cta">
+                    <span style="font-size:3rem;display:block;margin-bottom:1rem">💞</span>
+                    <h3>Recherche de Compatibilité</h3>
+                    <p>Avant de lancer la recherche, remplis ton formulaire de compatibilité. Ce formulaire nous permet de comprendre ce que tu recherches en profondeur.</p>
+                    <a class="btn-cta pulse" href="#" target="_blank" rel="noopener" style="font-size:0.95rem;padding:0.75rem 2rem">Remplir mon formulaire de compatibilite</a>
+                </div>
+                <div class="card" style="padding:2rem;margin-bottom:1.5rem">
+                    <h3 style="font-family:var(--font-display);font-size:1.15rem;font-weight:500;color:var(--ink);margin-bottom:1rem;text-align:center">Les 4 criteres analyses</h3>
+                    <div class="agence-features">
+                        <div class="agence-feature"><div class="agence-feature-icon">🧠</div><span>Compatibilité émotionnelle</span></div>
+                        <div class="agence-feature"><div class="agence-feature-icon">🤲</div><span>Compatibilité spirituelle</span></div>
+                        <div class="agence-feature"><div class="agence-feature-icon">🎯</div><span>Vision de vie alignée</span></div>
+                        <div class="agence-feature"><div class="agence-feature-icon">🛡️</div><span>Protection contre les pièges</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Etat B: Formulaire REMPLI (masque par defaut) -->
+            <div id="state-searching" class="fade-up fade-up-1" style="display:none">
+                <div class="compat-searching">
+                    <div class="pulse-ring"><span style="font-size:2rem">💕</span></div>
+                    <h3 style="font-family:var(--font-display);font-size:1.4rem;font-weight:500;color:var(--ink);margin-bottom:0.5rem">Nous recherchons tes compatibilites</h3>
+                    <p style="font-size:0.88rem;color:var(--ink-muted);max-width:450px;margin:0 auto 1.5rem">Notre équipe analyse les profils en fonction de ta cartographie émotionnelle pour trouver des compatibilités profondes — pas juste des critères de surface.</p>
+                    <div class="agence-features">
+                        <div class="agence-feature"><div class="agence-feature-icon">🧠</div><span>Compatibilité émotionnelle</span></div>
+                        <div class="agence-feature"><div class="agence-feature-icon">🤲</div><span>Compatibilité spirituelle</span></div>
+                        <div class="agence-feature"><div class="agence-feature-icon">🎯</div><span>Vision de vie alignée</span></div>
+                        <div class="agence-feature"><div class="agence-feature-icon">🛡️</div><span>Protection contre les pièges</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verset-card fade-up fade-up-2">
+                <p class="verset-arabic">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً</p>
+                <p class="verset-translation">"Et parmi Ses signes, Il a créé de vous, pour vous, des épouses pour que vous viviez en tranquillité avec elles et Il a mis entre vous de l'affection et de la bonté."</p>
+                <p class="verset-ref">Sourate Ar-Rum, 30:21</p>
+            </div>
+            <footer class="dashboard-footer"><strong>My Muqabala</strong><p style="margin-top:0.25rem">Accompagnement thérapeutique musulman</p></footer>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard-app.js"></script>
+</body>
+</html>

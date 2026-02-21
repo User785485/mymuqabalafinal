@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOC 12 - Indicateurs de Transformation | Rislène</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    /* ==========================================
+       MY MUQABALA - CSS DE BASE COMPLET
+       DOC 12 : Indicateurs de Transformation
+       Version 1.0 - 22/12/2024
+    ========================================== */
+
+    /* ==================== VARIABLES CSS ==================== */
+    :root {
+        --primary: #D4569C;
+        --primary-deep: #B33D7E;
+        --primary-light: #F5D6E8;
+        --purple: #6B5A9C;
+        --purple-deep: #4A3B6E;
+        --purple-light: #B8AECC;
+        --success: #2C7A7B;
+        --success-light: #E6F7F7;
+        --danger: #D4569C;
+        --danger-light: #F5D6E8;
+        --accent: #D4A373;
+        --accent-deep: #B8895E;
+        --accent-light: #F0E5D8;
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-1: #FDFBF7;
+        --gray-2: #F5F1E8;
+        --gray-3: #E8E2D5;
+        --text: #1A1A1A;
+        --text-soft: #4A3B6E;
+        --text-muted: #6B6B6B;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --shadow-sm: 0 3px 12px rgba(107, 90, 156, 0.12);
+        --shadow-md: 0 6px 24px rgba(107, 90, 156, 0.18);
+        --shadow-lg: 0 12px 48px rgba(107, 90, 156, 0.25);
+        --shadow-accent: 0 16px 64px rgba(212, 163, 115, 0.35);
+    }
+
+    /* ==================== RESET & BASE ==================== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        overflow-x: hidden !important;
+        max-width: 100vw;
+        width: 100%;
+        position: relative;
+    }
+
+    body {
+        font-family: var(--font-body);
+        color: var(--text);
+        line-height: 1.7;
+        background: linear-gradient(135deg, #FDFBF7 0%, #F8F4ED 50%, #F5F1E8 100%);
+        -webkit-font-smoothing: antialiased;
+        font-weight: 400;
+        overflow-x: hidden !important;
+        overflow-y: auto;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    /* ==================== TYPOGRAPHY ==================== */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-body);
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text);
+        margin-bottom: var(--space-md);
+        letter-spacing: -0.02em;
+    }
+
+    h1 {
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        font-family: var(--font-display);
+    }
+    h2 {
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        font-weight: 700;
+        font-family: var(--font-display);
+    }
+    h3 {
+        font-size: clamp(1.5rem, 3vw, 2.25rem);
+        font-weight: 700;
+    }
+    h4 {
+        font-size: 1.35rem;
+        font-weight: 700;
+    }
+
+    p {
+        margin-bottom: var(--space-md);
+        line-height: 1.8;
+        font-weight: 400;
+    }
+
+    strong {
+        font-weight: 700;
+        color: var(--primary-deep);
+    }
+
+    .italic { font-style: italic; }
+
+    /* ==================== LAYOUT ==================== */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 var(--space-lg);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    section {
+        padding: var(--space-2xl) 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+    }
+
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+        text-align: center;
+        padding: var(--space-xl) 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(212, 86, 156, 0.12) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(20px, 20px) rotate(180deg); }
+    }
+
+    .hero-title {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.75rem, 6vw, 4.5rem);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        line-height: 1.1;
+        font-family: var(--font-display);
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-soft);
+        margin-bottom: var(--space-xl);
+    }
+
+    /* ==================== BADGES ==================== */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 2rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: var(--font-body);
+    }
+
+    .badge-date {
+        background: rgba(253, 251, 247, 0.95);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(212, 86, 156, 0.25);
+        color: var(--text-soft);
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* ==================== CARDS ==================== */
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin-bottom: var(--space-lg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(107, 90, 156, 0.08);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* ==================== TABLES ==================== */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: var(--space-lg) 0;
+        overflow-x: auto;
+        display: block;
+    }
+
+    table tbody, table thead {
+        display: table;
+        width: 100%;
+    }
+
+    th, td {
+        padding: var(--space-md);
+        text-align: left;
+        border-bottom: 1px solid var(--gray-3);
+    }
+
+    th {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 100%);
+        color: white;
+        font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+        background: var(--gray-1);
+    }
+
+    tr:hover {
+        background: var(--primary-light);
+    }
+
+    .indicateurs-table {
+        margin-top: var(--space-lg);
+    }
+
+    /* ==================== DOC 12 - CSS SPÉCIFIQUE ==================== */
+
+    /* Indicateurs globaux */
+    .indicateurs-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-lg);
+        margin-top: var(--space-xl);
+    }
+
+    .indicateur-item {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        box-shadow: var(--shadow-sm);
+        border-left: 5px solid var(--success);
+        transition: all 0.3s ease;
+    }
+
+    .indicateur-item:hover {
+        transform: translateX(8px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .indicateur-item h4 {
+        color: var(--purple-deep);
+        margin-bottom: var(--space-md);
+        font-size: 1.15rem;
+    }
+
+    .indicateur-item p {
+        margin-bottom: var(--space-sm);
+        font-size: 0.95rem;
+    }
+
+    .niveau {
+        display: inline-block;
+        margin-top: var(--space-sm);
+        padding: var(--space-sm) var(--space-md);
+        background: var(--gray-1);
+        border-radius: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-soft);
+    }
+
+    /* Progression box */
+    .progression-box {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-left: 4px solid var(--success);
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin-top: var(--space-xl);
+    }
+
+    .progression-box h4 {
+        color: var(--success);
+        margin-bottom: var(--space-md);
+    }
+
+    /* Evolution list */
+    .evolution-list {
+        margin-top: var(--space-lg);
+    }
+
+    .evolution-list ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .evolution-list li {
+        padding: var(--space-md);
+        margin-bottom: var(--space-sm);
+        border-radius: 0.75rem;
+        background: var(--gray-1);
+        border-left: 3px solid var(--primary);
+        position: relative;
+        padding-left: 2.5rem;
+    }
+
+    .evolution-list li::before {
+        content: '✓';
+        position: absolute;
+        left: var(--space-md);
+        color: var(--success);
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    /* Pièges */
+    .piege-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-lg);
+        margin-top: var(--space-xl);
+    }
+
+    .piege-item {
+        background: linear-gradient(135deg, var(--danger-light) 0%, white 100%);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        border-left: 5px solid var(--danger);
+    }
+
+    .piege-item h4 {
+        color: var(--danger);
+        margin-bottom: var(--space-md);
+    }
+
+    /* Check-up form */
+    .check-up-form {
+        background: white;
+        padding: var(--space-xl);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-sm);
+        margin-top: var(--space-lg);
+    }
+
+    .check-up-form h4 {
+        color: var(--purple-deep);
+        margin-top: var(--space-lg);
+        margin-bottom: var(--space-md);
+    }
+
+    .check-up-form h4:first-child {
+        margin-top: 0;
+    }
+
+    .check-up-form ul {
+        list-style: none;
+        padding: 0;
+        margin: var(--space-md) 0;
+    }
+
+    .check-up-form li {
+        padding: var(--space-sm) 0;
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .check-up-form p {
+        border-bottom: 2px solid var(--gray-3);
+        padding-bottom: var(--space-xs);
+        margin-bottom: var(--space-md);
+    }
+
+    /* Aide professionnelle */
+    .aide-pro-list {
+        list-style: none;
+        padding: 0;
+        margin-top: var(--space-lg);
+    }
+
+    .aide-pro-list li {
+        padding: var(--space-md);
+        margin-bottom: var(--space-sm);
+        border-radius: 0.75rem;
+        background: var(--gray-1);
+        border-left: 3px solid var(--accent);
+        position: relative;
+        padding-left: 2.5rem;
+    }
+
+    .aide-pro-list li::before {
+        content: '→';
+        position: absolute;
+        left: var(--space-md);
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    /* Boxes utilitaires */
+    .rappel-box, .conseil-box, .note-box {
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin-top: var(--space-xl);
+    }
+
+    .rappel-box {
+        background: linear-gradient(135deg, var(--accent-light) 0%, white 100%);
+        border-left: 4px solid var(--accent);
+    }
+
+    .conseil-box {
+        background: linear-gradient(135deg, var(--purple-light) 0%, white 100%);
+        border-left: 4px solid var(--purple);
+    }
+
+    .note-box {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border-left: 4px solid var(--success);
+    }
+
+    /* Verset box */
+    .verset-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 100%);
+        color: white;
+        padding: var(--space-xl);
+        border-radius: 1rem;
+        text-align: center;
+        margin: var(--space-2xl) 0;
+    }
+
+    .verset {
+        font-size: 1.25rem;
+        font-style: italic;
+        line-height: 1.8;
+        margin-bottom: var(--space-md);
+        font-family: var(--font-display);
+    }
+
+    .reference {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        font-weight: 600;
+    }
+
+    /* Transition box */
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin-top: var(--space-2xl);
+    }
+
+    .transition-box p {
+        color: white;
+        margin: 0;
+    }
+
+    .transition-box em {
+        color: rgba(255,255,255,0.9);
+    }
+
+    /* ==================== UTILITIES ==================== */
+    .text-center { text-align: center; }
+    .mb-lg { margin-bottom: var(--space-lg); }
+    .mt-xl { margin-top: var(--space-xl); }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+        color: white;
+        margin-top: var(--space-2xl);
+    }
+
+    footer p {
+        margin-bottom: var(--space-sm);
+        opacity: 0.9;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        :root {
+            --space-xl: 1.5rem;
+            --space-2xl: 2rem;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+            width: 100%;
+        }
+
+        .container {
+            padding: 0 var(--space-md);
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        section {
+            padding: var(--space-xl) 0;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .card {
+            padding: var(--space-lg);
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .hero-title {
+            font-size: 2.25rem;
+        }
+
+        table {
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: var(--space-sm);
+        }
+    }
+
+    /* ==================== PRINT ==================== */
+    @media print {
+        body {
+            background: white;
+        }
+
+        section {
+            page-break-inside: avoid;
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+
+        .hero::before {
+            display: none;
+        }
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="badge badge-date mb-lg">
+            <span>📅</span>
+            <span>Document préparé le 23 décembre 2024</span>
+        </div>
+
+        <h1 class="hero-title">Tes Indicateurs de Transformation</h1>
+        <p class="hero-subtitle">Comment savoir que tu avances, Rislène</p>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section id="intro">
+        <div class="card">
+            Rislène, une question va probablement te traverser l'esprit dans les semaines qui viennent : "Est-ce que je progresse vraiment ?" C'est une question légitime. Et ce document est là pour y répondre.<br><br>Le changement intérieur n'est pas toujours visible. Il ne se mesure pas comme une perte de poids ou un compte en banque. Mais il existe des SIGNES concrets que quelque chose bouge. Ce document te donne TES indicateurs personnels — ceux qui correspondent à TES schémas.<br><br>Important : la transformation n'est pas linéaire. Tu auras des jours "avec" et des jours "sans". Des avancées et des reculs apparents. C'est normal. L'indicateur clé n'est pas l'absence de difficultés, c'est ta CONSCIENCE face à elles.
+        </div>
+    </section>
+
+    <!-- SECTION A : INDICATEURS GLOBAUX -->
+    <section id="indicateurs-globaux">
+        <h2>A. Les signes universels de transformation</h2>
+
+        <p>Ces indicateurs s'appliquent à toute personne en chemin de transformation :</p>
+
+        <div class="indicateurs-list">
+            <div class="indicateur-item">
+                <h4>1. Tu REMARQUES tes schémas en temps réel</h4>
+                <p>Avant : tu réagissais automatiquement, sans voir le pattern.</p>
+                <p>Maintenant : tu te dis "Ah, c'est mon schéma de [X] qui s'active".</p>
+                <p class="niveau">🟢 Premier niveau de conscience - Fondamental</p>
+            </div>
+
+            <div class="indicateur-item">
+                <h4>2. Le délai entre déclencheur et réaction s'allonge</h4>
+                <p>Avant : réaction immédiate, automatique.</p>
+                <p>Maintenant : tu ressens le déclencheur mais tu as quelques secondes/minutes avant de réagir.</p>
+                <p class="niveau">🟢 Deuxième niveau - Régulation émergente</p>
+            </div>
+
+            <div class="indicateur-item">
+                <h4>3. Tu choisis parfois une réponse différente</h4>
+                <p>Avant : toujours la même réaction (fuite, attaque, figement...).</p>
+                <p>Maintenant : parfois tu arrives à répondre autrement.</p>
+                <p class="niveau">🟡 Troisième niveau - Flexibilité naissante</p>
+            </div>
+
+            <div class="indicateur-item">
+                <h4>4. L'intensité émotionnelle diminue</h4>
+                <p>Avant : submergée, incapable de penser.</p>
+                <p>Maintenant : émotion présente mais gérable.</p>
+                <p class="niveau">🟡 Quatrième niveau - Régulation installée</p>
+            </div>
+
+            <div class="indicateur-item">
+                <h4>5. Tu récupères plus vite après une activation</h4>
+                <p>Avant : des heures ou des jours pour "t'en remettre".</p>
+                <p>Maintenant : tu reviens à l'équilibre plus rapidement.</p>
+                <p class="niveau">🔵 Cinquième niveau - Résilience</p>
+            </div>
+
+            <div class="indicateur-item">
+                <h4>6. Ta relation avec toi-même change</h4>
+                <p>Avant : autocritique, honte après une réaction.</p>
+                <p>Maintenant : compréhension, auto-compassion.</p>
+                <p class="niveau">🔵 Sixième niveau - Intégration</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION B : INDICATEURS SCHEMA PRINCIPAL -->
+    <section id="schema-principal">
+        <h2>B. Indicateurs pour ton schéma principal : Abandon / Instabilité</h2>
+
+        <p>Voici les signes spécifiques qui montreront que ce schéma perd de son emprise :</p>
+
+        <table class="indicateurs-table">
+            <thead>
+                <tr>
+                    <th>Domaine</th>
+                    <th>AVANT (schéma actif)</th>
+                    <th>APRÈS (transformation)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ```html
+<tr>
+    <td><strong>Pensées</strong></td>
+    <td>"Il ne m'a pas répondu depuis 2h → Il ne tient plus à moi"<br>"Il est distant → Il a rencontré quelqu'un d'autre"<br>"Lorsque je n'ai pas de nouvelles, qu'on ne me répond pas à mes messages ou appels qu'on me lâche des vues je ne le supporte pas car je me fais des films à me dire qu'il est avec une autre"</td>
+    <td>"Un silence ne signifie pas forcément un abandon"<br>"Je peux observer sans conclure immédiatement"<br>"L'absence de réponse rapide ne veut pas dire qu'il me quitte"</td>
+</tr>
+<tr>
+    <td><strong>Émotions</strong></td>
+    <td>Panique quand il ne répond pas<br>Palpitations cardiaques<br>Lourdeur dans la tête<br>Cogitation intense pendant des heures</td>
+    <td>Inconfort gérable quand il ne répond pas tout de suite<br>Capacité à respirer profondément<br>Retour au calme en quelques minutes au lieu de plusieurs heures</td>
+</tr>
+<tr>
+    <td><strong>Comportements</strong></td>
+    <td>Envoyer plusieurs messages pour avoir une réponse<br>Vérifier constamment les "vues"<br>S'accrocher par peur qu'il parte</td>
+    <td>Capacité à attendre une réponse sans relancer frénétiquement<br>Envoyer UN message et laisser respirer<br>Tolérer un silence de 24h sans paniquer</td>
+</tr>
+<tr>
+    <td><strong>Relations</strong></td>
+    <td>"Je donne beaucoup trop vite"<br>"Tout donner pour avoir l'amour de quelqu'un"<br>Peur qu'il trouve mieux ailleurs</td>
+    <td>Donner progressivement selon la réciprocité observée<br>Demander directement ce dont tu as besoin au lieu de sur-donner<br>Reconnaître ta valeur indépendamment de lui</td>
+</tr>
+<tr>
+    <td><strong>Corps</strong></td>
+    <td>Tension dans la poitrine permanente<br>Cœur qui palpite<br>Nœud à l'estomac quand il tarde à répondre</td>
+    <td>Tensions ponctuelles qui se dissipent après quelques respirations<br>Cœur qui bat normalement même sans nouvelles<br>Capacité à détendre la poitrine consciemment</td>
+</tr>
+```
+            </tbody>
+        </table>
+
+        <div class="progression-box">
+            <h4>Où tu en es probablement maintenant :</h4>
+            <p>Où tu en es probablement maintenant :<br><br>Tu as commencé à VOIR ce schéma en action. Quand il ne répond pas, tu remarques désormais cette panique qui monte — "Ah, c'est mon schéma d'abandon qui s'active." C'est déjà énorme. Avant, tu réagissais automatiquement sans comprendre pourquoi.<br><br>Peut-être que parfois, tu arrives à attendre 30 minutes au lieu de relancer immédiatement. Ou à te dire "Attends, je respire avant d'envoyer 5 messages." C'est ça, le début de la transformation. Pas l'absence de peur — la CONSCIENCE de la peur, et la capacité de créer un petit espace avant de réagir.<br><br>Les jours où tu arrives à laisser passer une demi-journée sans nouvelles sans catastrophiser ? Ce sont des victoires. Même si ça ne dure pas encore, même si le lendemain tu replonges. C'est normal. Le chemin se fait par petites touches.</p>
+        </div>
+    </section>
+
+    <!-- SECTION C : INDICATEURS SCHEMA 2 (optionnel) -->
+    <section id="schema-secondaire" style="display: none;">
+        <h2>C. Indicateurs pour ton second schéma : Méfiance / Abus</h2>
+
+        <p>Voici les signes spécifiques pour ce second schéma :</p>
+
+        <table class="indicateurs-table">
+            <thead>
+                <tr>
+                    <th>Domaine</th>
+                    <th>AVANT (schéma actif)</th>
+                    <th>APRÈS (transformation)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ```html
+<tr>
+    <td><strong>Pensées</strong></td>
+    <td>"Il ne me dit pas les choses et c'est frustrant car je suis obligée d'aller à la pêche aux infos"<br>"Le mensonge est souvent là et je le découvre après rupture"<br>"J'ai du mal à faire confiance"</td>
+    <td>"Je peux observer avant de conclure qu'il ment"<br>"Certaines personnes disent la vérité — je peux les reconnaître"<br>"La confiance se construit progressivement avec des preuves"</td>
+</tr>
+<tr>
+    <td><strong>Émotions</strong></td>
+    <td>Suspicion permanente<br>Frustration quand je dois "enquêter"<br>Sentiment d'être bête quand je découvre un mensonge après coup</td>
+    <td>Confiance progressive avec les actes cohérents<br>Capacité à poser des questions directement au lieu d'enquêter<br>Auto-compassion quand je me suis trompée ("j'ai appris, pas échoué")</td>
+</tr>
+<tr>
+    <td><strong>Comportements</strong></td>
+    <td>"Aller à la pêche aux infos"<br>Vérifier, surveiller<br>Me braque vite si je sens un mensonge</td>
+    <td>Communiquer mes doutes directement ("J'ai besoin de clarté sur...")<br>Observer les actes plutôt que de fouiller<br>Poser des limites claires ("Si tu me mens, je pars")</td>
+</tr>
+<tr>
+    <td><strong>Relations</strong></td>
+    <td>Garder une distance de sécurité<br>Ne pas m'ouvrir de peur d'être trahie<br>Choisir inconsciemment des hommes qui confirment ma méfiance</td>
+    <td>M'ouvrir progressivement avec les hommes qui prouvent leur fiabilité<br>Reconnaître les hommes DIGNES de confiance<br>Ne plus donner de chances répétées aux menteurs</td>
+</tr>
+<tr>
+    <td><strong>Corps</strong></td>
+    <td>Toujours sur le qui-vive<br>Tension dans les épaules<br>Vigilance permanente</td>
+    <td>Moments de détente en présence d'un homme fiable<br>Épaules relâchées<br>Sentiment de sécurité corporelle ponctuel</td>
+</tr>
+```
+            </tbody>
+        </table>
+
+        <div class="progression-box">
+            <h4>Où tu en es probablement maintenant :</h4>
+            <p>Où tu en es probablement maintenant :<br><br>Tu as identifié ce pattern : "J'ai du mal à faire confiance." Et tu as raison de te protéger — les mensonges découverts après rupture ont créé cette vigilance. Ce n'est pas de la paranoïa, c'est une protection intelligente.<br><br>Mais maintenant, tu commences peut-être à voir la différence entre :
+- Un homme qui ment (à éviter immédiatement)
+- Un homme qui est juste distant ou réservé (pas forcément un menteur)<br><br>Le progrès ici, c'est de ne plus "aller à la pêche aux infos" mais de DEMANDER directement. "J'ai besoin de savoir où tu en es. Dis-moi clairement." Et si la réponse est floue ou évasive — tu pars. Tu ne cherches plus à comprendre quelqu'un qui refuse la transparence.</p>
+        </div>
+    </section>
+
+    <!-- SECTION D : ÉVOLUTION ATTACHEMENT -->
+    <section id="attachement">
+        <h2>D. Évolution de ton style d'attachement</h2>
+
+        <p>Ton style est Anxieux-Préoccupé. Voici les signes d'évolution vers un attachement plus sécure :</p>
+
+        <div class="evolution-list">
+            ```html
+<ul>
+    <li>Tu tolères mieux les silences sans catastrophiser ("Il ne m'a pas répondu → il va me quitter" devient "Il ne m'a pas répondu → il est peut-être occupé")</li>
+    <li>Tu peux passer une journée sans nouvelles sans paniquer complètement (même si l'inconfort est encore là)</li>
+    <li>Tu exprimes tes besoins au lieu de tester l'autre ("J'ai besoin de tes nouvelles régulièrement" au lieu d'attendre qu'il devine)</li>
+    <li>Tu distingues une vraie alerte (il est vraiment distant depuis des jours) d'une fausse alarme (2h sans réponse)</li>
+    <li>Tu t'apaises toi-même avant de chercher la réassurance externe (respirer, écrire, prier avant d'envoyer 5 messages)</li>
+    <li>Tu ne fais plus passer ses besoins systématiquement avant les tiens (tu ne te tais plus juste pour "maintenir la paix")</li>
+    <li>Tu reconnais que ton "Je m'attache trop vite" vient d'un besoin de sécurité — et tu peux ralentir consciemment</li>
+</ul>
+```
+        </div>
+
+        <div class="rappel-box">
+            <p><strong>Rappel :</strong> L'objectif n'est pas de devenir "parfaitement sécure" mais de tendre vers un "earned secure" - une sécurité acquise par le travail conscient.</p>
+        </div>
+    </section>
+
+    <!-- SECTION E : PIÈGES -->
+    <section id="pieges">
+        <h2>E. Les pièges de l'auto-évaluation</h2>
+
+        <p>Attention à ces erreurs fréquentes quand on évalue sa progression :</p>
+
+        <div class="piege-list">
+            <div class="piege-item">
+                <h4>❌ Piège 1 : Confondre "rechute" et "test"</h4>
+                <p>Retomber dans un ancien pattern n'est pas un échec. C'est une occasion de voir où tu en es VRAIMENT. La différence ? Tu le VOIS maintenant.</p>
+            </div>
+
+            <div class="piege-item">
+                <h4>❌ Piège 2 : Attendre une transformation spectaculaire</h4>
+                <p>Le changement est souvent subtil. Un jour tu réalises : "Tiens, avant j'aurais réagi différemment." C'est ça le progrès.</p>
+            </div>
+
+            <div class="piege-item">
+                <h4>❌ Piège 3 : Se comparer aux autres</h4>
+                <p>Ton chemin est unique. Ta vitesse de progression aussi. Compare-toi à toi-même d'il y a 3 mois, pas aux autres.</p>
+            </div>
+
+            <div class="piege-item">
+                <h4>❌ Piège 4 : Utiliser tes schémas pour t'évaluer</h4>
+                <p>Si ton schéma est "imperfection", tu vas évaluer ta progression avec des lunettes perfectionnistes. Attention à ce biais.</p>
+            </div>
+
+            <div class="piege-item">
+                <h4>❌ Piège 5 : Confondre "je sais" et "je pratique"</h4>
+                <p>Comprendre intellectuellement n'est pas transformer. Le changement vient de la PRATIQUE répétée.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION F : AUTO-ÉVALUATION -->
+    <section id="auto-eval">
+        <h2>F. Ton check-up mensuel</h2>
+
+        <p>Une fois par mois, prends 15 minutes pour faire ce bilan :</p>
+
+        <div class="check-up-form">
+            <h4>1. Sur une échelle de 0-10, cette dernière période :</h4>
+            <ul>
+                <li>Mon schéma de Abandon / Instabilité s'est activé à quelle fréquence ? ___/10</li>
+                <li>Quand il s'est activé, à quelle intensité ? ___/10</li>
+                <li>Ma capacité à le réguler ? ___/10</li>
+            </ul>
+
+            <h4>2. Mes victoires ce mois (même petites) :</h4>
+            <p>__________________________________________________</p>
+            <p>__________________________________________________</p>
+            <p>__________________________________________________</p>
+
+            <h4>3. Mes moments difficiles (sans jugement) :</h4>
+            <p>__________________________________________________</p>
+            <p>__________________________________________________</p>
+
+            <h4>4. Ce que j'ai appris sur moi :</h4>
+            <p>__________________________________________________</p>
+
+            <h4>5. Mon intention pour le mois prochain :</h4>
+            <p>__________________________________________________</p>
+        </div>
+
+        <div class="conseil-box">
+            <p>💡 <strong>Conseil :</strong> Garde ces check-ups. Dans 6 mois, relis le premier. Tu seras surprise du chemin parcouru.</p>
+        </div>
+    </section>
+
+    <!-- SECTION G : QUAND CONSULTER -->
+    <section id="aide-pro">
+        <h2>G. Quand envisager un accompagnement professionnel</h2>
+
+        <p>Cette cartographie est un outil puissant, mais elle ne remplace pas un accompagnement thérapeutique si nécessaire. Considère de consulter si :</p>
+
+        <ul class="aide-pro-list">
+            <li>Tu te sens submergée malgré les exercices de régulation</li>
+            <li>Des souvenirs traumatiques remontent de façon envahissante</li>
+            <li>Tu as des pensées d'auto-dévalorisation sévères ou de découragement profond</li>
+            <li>Tes relations se détériorent malgré tes efforts</li>
+            <li>Tu sens que tu as besoin d'être accompagnée, pas seule</li>
+            <li>Des symptômes physiques persistent (insomnie, troubles alimentaires...)</li>
+        </ul>
+
+        <div class="note-box">
+            <p><strong>Ce n'est pas un échec.</strong> Consulter un professionnel, c'est simplement choisir le bon outil pour le bon besoin. Certains travaux se font mieux accompagnée.</p>
+        </div>
+    </section>
+
+    <!-- CITATION INSPIRANTE -->
+    <section id="citation">
+        <div class="verset-box">
+            <p class="verset">"En vérité, avec la difficulté il y a une facilité. Oui, avec la difficulté il y a une facilité."</p>
+            <p class="reference">— Sourate Ash-Sharh, 94:5-6</p>
+        </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section id="conclusion">
+        <div class="card">
+            Rislène, tu as maintenant une boussole pour mesurer ton chemin. Ces indicateurs ne sont pas là pour te juger, mais pour te montrer que le changement est RÉEL, même quand tu ne le vois pas clairement.<br><br>Rappelle-toi : le simple fait que tu te poses la question "est-ce que je progresse ?" est DÉJÀ un signe de conscience. L'ancienne version de toi fonctionnait en automatique, sans même se demander pourquoi tu réagissais ainsi.<br><br>La transformation est un processus, pas un événement. Chaque jour où tu VOIS ton schéma, même si tu ne le maîtrises pas encore parfaitement, est un jour de victoire. Tu es sur le chemin. Continue.
+        </div>
+
+        <div class="transition-box">
+            <p><em>→ Prochain document : La transformation est un chemin - perspective sur ton parcours.</em></p>
+        </div>
+    </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p><strong>My Muqabala</strong></p>
+    <p>Ta cartographie émotionnelle personnalisée</p>
+    <p style="opacity: 0.7; font-size: 0.85rem;">Document confidentiel - Rislène - 23 décembre 2024</p>
+</footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

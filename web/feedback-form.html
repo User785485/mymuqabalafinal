@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ton ressenti | Mon Espace My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><a href="dashboard-test.html"><h2>My Muqabala</h2><span>Espace Personnel</span></a></div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="dashboard-test.html"><div class="nav-icon">🏠</div><span>Accueil</span></a>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de soi</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-ressources.html"><div class="nav-icon">🎓</div><span>Ressources Pédagogiques</span></a>
+                    <a class="nav-item" href="dashboard-formulaires.html"><div class="nav-icon">🔍</div><span>Formulaires Exploratoires</span></a>
+                    <a class="nav-item" href="dashboard-cartographie.html"><div class="nav-icon">🧭</div><span>Cartographie Émotionnelle</span></a>
+                </div>
+            </details>
+            <details class="nav-group" open>
+                <summary><div class="nav-group-label">Aller à la rencontre de l'autre</div></summary>
+                <div class="nav-group-items">
+                    <a class="nav-item" href="dashboard-compatibilite.html"><div class="nav-icon">💞</div><span>Recherche de Compatibilité</span></a>
+                    <a class="nav-item" href="dashboard-plan-action.html"><div class="nav-icon">🎯</div><span>Plan d'Action</span></a>
+                    <a class="nav-item active" href="dashboard-rencontres.html"><div class="nav-icon">💬</div><span>Rencontres en Cours</span></a>
+                    <a class="nav-item" href="dashboard-historique.html"><div class="nav-icon">📋</div><span>Historique des Rencontres</span></a>
+                </div>
+            </details>
+        </nav>
+        <div class="sidebar-client"><div class="client-avatar"></div><div><div class="client-name"></div><div class="client-id"></div></div></div>
+    </aside>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+    <main class="main">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                <div><div class="header-greeting">Bienvenue, <em></em></div><div class="header-date"></div></div>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Mode sombre"></button>
+                <a class="notif-bell" href="dashboard-notifications.html"><span class="notif-badge" id="notif-count"></span>🔔</a>
+                <a class="header-btn" title="Aide" href="#">❓</a>
+            </div>
+        </header>
+        <div class="content">
+            <!-- ═══ Page Header ═══ -->
+            <div class="page-header fade-up">
+                <div class="page-title"><div class="page-title-icon gold">✨</div>Ton ressenti</div>
+                <div class="page-subtitle">Comment s'est passée cette rencontre ?</div>
+            </div>
+
+            <!-- ═══ Feedback Form ═══ -->
+            <div id="feedback-form">
+                <!-- Card 1: Emoji feeling -->
+                <div class="card fade-up" style="margin-bottom:1.25rem;">
+                    <div style="font-family:var(--font-display); font-size:1.1rem; font-weight:500; color:var(--ink); margin-bottom:0.5rem;">Comment te sens-tu après cet échange ?</div>
+                    <div class="feedback-emoji-row" id="emoji-row">
+                        <div class="feedback-emoji" onclick="selectEmoji(this, 'tres_bien')" data-value="tres_bien" title="Très bien">😊</div>
+                        <div class="feedback-emoji" onclick="selectEmoji(this, 'bien')" data-value="bien" title="Bien">🙂</div>
+                        <div class="feedback-emoji" onclick="selectEmoji(this, 'neutre')" data-value="neutre" title="Neutre">😐</div>
+                        <div class="feedback-emoji" onclick="selectEmoji(this, 'mitige')" data-value="mitige" title="Mitigé">😕</div>
+                        <div class="feedback-emoji" onclick="selectEmoji(this, 'difficile')" data-value="difficile" title="Difficile">😔</div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Textarea -->
+                <div class="card fade-up fade-up-1" style="margin-bottom:1.25rem;">
+                    <div style="font-family:var(--font-display); font-size:1.1rem; font-weight:500; color:var(--ink); margin-bottom:0.75rem;">Un mot pour décrire cette expérience ?</div>
+                    <textarea id="feedback-text" placeholder="Écris librement ton ressenti..."
+                        style="width:100%; border-radius:var(--radius-sm); border:1px solid var(--card-border); padding:1rem; font-family:var(--font-body); font-size:0.9rem; min-height:100px; resize:vertical; color:var(--ink-soft); background:var(--card-bg); outline:none; transition:border-color 0.2s ease;"
+                        onfocus="this.style.borderColor='var(--purple)'" onblur="this.style.borderColor='var(--card-border)'"></textarea>
+                </div>
+
+                <!-- Card 3: Revoir -->
+                <div class="card fade-up fade-up-2" style="margin-bottom:1.5rem;">
+                    <div style="font-family:var(--font-display); font-size:1.1rem; font-weight:500; color:var(--ink); margin-bottom:0.75rem;">Souhaites-tu revoir cette personne ?</div>
+                    <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;" id="revoir-row">
+                        <button class="btn-cta revoir-btn" style="background:var(--sage);" onclick="selectRevoir(this, 'oui')">Oui</button>
+                        <button class="btn-cta revoir-btn" style="background:var(--gold);" onclick="selectRevoir(this, 'peut-etre')">Peut-être</button>
+                        <button class="btn-cta revoir-btn" style="background:var(--rose-deep);" onclick="selectRevoir(this, 'non')">Non</button>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div style="text-align:center; margin-top:1.5rem;" class="fade-up fade-up-3">
+                    <button class="btn-cta" style="width:100%; max-width:300px;" onclick="submitFeedback()">Envoyer mon retour</button>
+                </div>
+            </div>
+
+            <!-- ═══ Success Message (hidden by default) ═══ -->
+            <div class="card fade-up" id="feedback-success" style="display:none; text-align:center; padding:3rem 2rem;">
+                <div style="font-size:3rem; margin-bottom:1rem;">✅</div>
+                <div style="font-family:var(--font-display); font-size:1.4rem; font-weight:500; color:var(--ink); margin-bottom:0.75rem;">Merci pour ton retour !</div>
+                <p style="font-size:0.9rem; color:var(--ink-muted); max-width:450px; margin:0 auto 1.5rem; line-height:1.7;">Ton accompagnant en prendra connaissance.</p>
+                <a href="dashboard-test.html" class="btn-cta">Retour à l'accueil</a>
+            </div>
+
+            <footer class="dashboard-footer"><strong>My Muqabala</strong><p style="margin-top:0.25rem">Accompagnement thérapeutique musulman — Psychologie moderne & Spiritualité islamique</p></footer>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard-app.js"></script>
+<script>
+let feedbackData = { feeling: null, text: '', revoir: null };
+
+function selectEmoji(el, value) {
+    document.querySelectorAll('#emoji-row .feedback-emoji').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    feedbackData.feeling = value;
+}
+
+function selectRevoir(el, value) {
+    document.querySelectorAll('.revoir-btn').forEach(btn => {
+        btn.style.opacity = '0.5';
+        btn.style.transform = 'scale(1)';
+        btn.style.boxShadow = 'none';
+    });
+    el.style.opacity = '1';
+    el.style.transform = 'scale(1.05)';
+    el.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.2)';
+    feedbackData.revoir = value;
+}
+
+function submitFeedback() {
+    feedbackData.text = document.getElementById('feedback-text').value;
+
+    if (!feedbackData.feeling) {
+        alert('Sélectionne un emoji pour indiquer ton ressenti.');
+        return;
+    }
+    if (!feedbackData.revoir) {
+        alert('Indique si tu souhaites revoir cette personne.');
+        return;
+    }
+
+    document.getElementById('feedback-form').style.display = 'none';
+    document.getElementById('feedback-success').style.display = 'block';
+}
+</script>
+</body>
+</html>

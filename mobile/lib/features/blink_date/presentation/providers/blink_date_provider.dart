@@ -3,7 +3,13 @@
 /// Uses Riverpod [StateNotifier] to manage the full lifecycle of a
 /// Blink Date session: loading round data, connecting to the audio room,
 /// running the countdown timer, handling mute/unmute, and submitting
-/// post-call feedback.
+/// post-call binary feedback.
+///
+/// Supports the multi-partner event workflow:
+/// 1. Load all rounds for the event (each with a different partner)
+/// 2. Start each round sequentially (connect LiveKit, countdown)
+/// 3. After each round: binary feedback ("J'aimerais aller plus loin")
+/// 4. After all rounds: navigate to photo reveal phase
 library;
 
 import 'dart:async';
@@ -24,36 +30,35 @@ import 'package:my_muqabala/features/blink_date/data/repositories/blink_date_rep
 /// Immutable state for the Blink Date session.
 class BlinkDateState {
   const BlinkDateState({
-    this.blinkDateId,
-    this.matchId,
-    this.currentRound = 1,
-    this.totalRounds = 3,
+    this.eventId,
+    this.allRounds = const [],
+    this.currentRound,
+    this.currentRoundIndex = 0,
     this.timeRemaining = 600,
     this.totalDuration = 600,
     this.isMuted = false,
     this.isConnected = false,
     this.isConnecting = false,
     this.showFeedback = false,
+    this.showPhotoPhase = false,
     this.isComplete = false,
     this.isLoading = false,
     this.isFeedbackSubmitting = false,
-    this.prompts = const [],
-    this.partnerName,
+    this.feedbackByRound = const {},
     this.errorMessage,
-    this.blinkDates = const [],
   });
 
-  /// Current Blink Date round ID.
-  final String? blinkDateId;
+  /// Event ID for the current session.
+  final String? eventId;
 
-  /// Parent match ID.
-  final String? matchId;
+  /// All blink date rounds for this user in this event.
+  final List<BlinkDateModel> allRounds;
 
-  /// Current round number (1-based).
-  final int currentRound;
+  /// The currently active round.
+  final BlinkDateModel? currentRound;
 
-  /// Total number of rounds for this match.
-  final int totalRounds;
+  /// Index of the current round in [allRounds] (0-based).
+  final int currentRoundIndex;
 
   /// Seconds remaining in the current round.
   final int timeRemaining;
@@ -73,7 +78,10 @@ class BlinkDateState {
   /// Whether the feedback form should be displayed.
   final bool showFeedback;
 
-  /// Whether all rounds are complete.
+  /// Whether all rounds are done and it's time for photo selection.
+  final bool showPhotoPhase;
+
+  /// Whether everything is complete.
   final bool isComplete;
 
   /// Whether data is being loaded from the server.
@@ -82,56 +90,63 @@ class BlinkDateState {
   /// Whether feedback is currently being submitted.
   final bool isFeedbackSubmitting;
 
-  /// Conversation prompts for the current round.
-  final List<String> prompts;
-
-  /// Name of the conversation partner (if available).
-  final String? partnerName;
+  /// Feedback submitted per round: blinkDateId → wantsToContinue.
+  final Map<String, bool> feedbackByRound;
 
   /// Error message to display (if any).
   final String? errorMessage;
 
-  /// All Blink Date rounds loaded for this match.
-  final List<BlinkDateModel> blinkDates;
+  /// Convenience: total number of rounds.
+  int get totalRounds => allRounds.length;
+
+  /// Convenience: current round display number (1-based).
+  int get roundDisplayNumber => currentRoundIndex + 1;
+
+  /// Convenience: partner name for current round.
+  String? get partnerName => currentRound?.partnerPrenom;
+
+  /// Convenience: partner photo URL for current round.
+  String? get partnerPhotoUrl => currentRound?.partnerPhotoFloueUrl;
+
+  /// Convenience: conversation prompts for current round.
+  List<String> get prompts => currentRound?.sujetsPoposes ?? [];
 
   /// Create a copy with selected fields overridden.
   BlinkDateState copyWith({
-    String? blinkDateId,
-    String? matchId,
-    int? currentRound,
-    int? totalRounds,
+    String? eventId,
+    List<BlinkDateModel>? allRounds,
+    BlinkDateModel? currentRound,
+    int? currentRoundIndex,
     int? timeRemaining,
     int? totalDuration,
     bool? isMuted,
     bool? isConnected,
     bool? isConnecting,
     bool? showFeedback,
+    bool? showPhotoPhase,
     bool? isComplete,
     bool? isLoading,
     bool? isFeedbackSubmitting,
-    List<String>? prompts,
-    String? partnerName,
+    Map<String, bool>? feedbackByRound,
     String? errorMessage,
-    List<BlinkDateModel>? blinkDates,
   }) {
     return BlinkDateState(
-      blinkDateId: blinkDateId ?? this.blinkDateId,
-      matchId: matchId ?? this.matchId,
+      eventId: eventId ?? this.eventId,
+      allRounds: allRounds ?? this.allRounds,
       currentRound: currentRound ?? this.currentRound,
-      totalRounds: totalRounds ?? this.totalRounds,
+      currentRoundIndex: currentRoundIndex ?? this.currentRoundIndex,
       timeRemaining: timeRemaining ?? this.timeRemaining,
       totalDuration: totalDuration ?? this.totalDuration,
       isMuted: isMuted ?? this.isMuted,
       isConnected: isConnected ?? this.isConnected,
       isConnecting: isConnecting ?? this.isConnecting,
       showFeedback: showFeedback ?? this.showFeedback,
+      showPhotoPhase: showPhotoPhase ?? this.showPhotoPhase,
       isComplete: isComplete ?? this.isComplete,
       isLoading: isLoading ?? this.isLoading,
       isFeedbackSubmitting: isFeedbackSubmitting ?? this.isFeedbackSubmitting,
-      prompts: prompts ?? this.prompts,
-      partnerName: partnerName ?? this.partnerName,
+      feedbackByRound: feedbackByRound ?? this.feedbackByRound,
       errorMessage: errorMessage ?? this.errorMessage,
-      blinkDates: blinkDates ?? this.blinkDates,
     );
   }
 }
@@ -159,9 +174,59 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
 
   // ── Public API ─────────────────────────────────────────────────────────
 
-  /// Load all rounds for a match and prepare the first (or next pending) round.
+  /// Load all rounds for an event and prepare the first round.
+  Future<void> loadBlinkDatesForEvent(String eventId) async {
+    state = state.copyWith(isLoading: true, eventId: eventId, errorMessage: null);
+
+    try {
+      final rounds = await _repository.getBlinkDatesForEvent(eventId);
+
+      if (rounds.isEmpty) {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: 'Aucun Blink Date trouv\u00e9 pour cet \u00e9v\u00e9nement.',
+        );
+        return;
+      }
+
+      // Find the first round that is not yet completed.
+      final nextIndex = rounds.indexWhere(
+        (r) => r.statut == 'planifie' || r.statut == 'en_cours',
+      );
+
+      final isAlreadyComplete =
+          rounds.every((r) => r.statut == 'termine' || r.statut == 'annule');
+
+      final effectiveIndex = nextIndex >= 0 ? nextIndex : rounds.length - 1;
+
+      state = state.copyWith(
+        isLoading: false,
+        allRounds: rounds,
+        currentRound: rounds[effectiveIndex],
+        currentRoundIndex: effectiveIndex,
+        totalDuration: rounds[effectiveIndex].dureeSecondes,
+        timeRemaining: rounds[effectiveIndex].dureeSecondes,
+        isComplete: isAlreadyComplete,
+        showPhotoPhase: isAlreadyComplete,
+      );
+    } catch (e, st) {
+      AppLogger.error(
+        'Failed to load Blink Date rounds',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage:
+            'Impossible de charger les donn\u00e9es. Veuillez r\u00e9essayer.',
+      );
+    }
+  }
+
+  /// Load all rounds for a match (legacy compatibility).
   Future<void> loadRoundsForMatch(String matchId) async {
-    state = state.copyWith(isLoading: true, matchId: matchId, errorMessage: null);
+    state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
       final rounds = await _repository.getBlinkDatesForMatch(matchId);
@@ -174,24 +239,22 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
         return;
       }
 
-      // Find the first round that is not yet completed.
-      final nextRound = rounds.firstWhere(
-        (r) => r.statut == 'en_attente' || r.statut == 'en_cours',
-        orElse: () => rounds.last,
+      final nextIndex = rounds.indexWhere(
+        (r) => r.statut == 'planifie' || r.statut == 'en_cours',
       );
 
       final isAlreadyComplete =
           rounds.every((r) => r.statut == 'termine' || r.statut == 'annule');
 
+      final effectiveIndex = nextIndex >= 0 ? nextIndex : rounds.length - 1;
+
       state = state.copyWith(
         isLoading: false,
-        blinkDates: rounds,
-        blinkDateId: nextRound.id,
-        currentRound: nextRound.ordre,
-        totalRounds: rounds.length,
-        totalDuration: nextRound.dureeSecondes,
-        timeRemaining: nextRound.dureeSecondes,
-        prompts: nextRound.sujetsPoposes,
+        allRounds: rounds,
+        currentRound: rounds[effectiveIndex],
+        currentRoundIndex: effectiveIndex,
+        totalDuration: rounds[effectiveIndex].dureeSecondes,
+        timeRemaining: rounds[effectiveIndex].dureeSecondes,
         isComplete: isAlreadyComplete,
       );
     } catch (e, st) {
@@ -209,70 +272,28 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
     }
   }
 
-  /// Load a specific Blink Date round by its ID.
-  Future<void> loadRound(String blinkDateId) async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
-
-    try {
-      final blinkDate = await _repository.getBlinkDate(blinkDateId);
-
-      if (blinkDate == null) {
-        state = state.copyWith(
-          isLoading: false,
-          errorMessage: 'Blink Date introuvable.',
-        );
-        return;
-      }
-
-      state = state.copyWith(
-        isLoading: false,
-        blinkDateId: blinkDate.id,
-        matchId: blinkDate.matchId,
-        currentRound: blinkDate.ordre,
-        totalDuration: blinkDate.dureeSecondes,
-        timeRemaining: blinkDate.dureeSecondes,
-        prompts: blinkDate.sujetsPoposes,
-      );
-    } catch (e, st) {
-      AppLogger.error(
-        'Failed to load BlinkDate $blinkDateId',
-        tag: _tag,
-        error: e,
-        stackTrace: st,
-      );
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage:
-            'Impossible de charger les donn\u00e9es. Veuillez r\u00e9essayer.',
-      );
-    }
-  }
-
   /// Connect to the audio room and start the countdown timer.
   Future<void> startCall() async {
-    final blinkDateId = state.blinkDateId;
-    if (blinkDateId == null) {
-      AppLogger.warning('Cannot start call: no blinkDateId set', tag: _tag);
+    final current = state.currentRound;
+    if (current == null) {
+      AppLogger.warning('Cannot start call: no current round', tag: _tag);
       return;
     }
 
     state = state.copyWith(isConnecting: true, errorMessage: null);
 
     try {
-      // Generate room name from match + round for uniqueness.
-      final roomName = 'blink-date-${state.matchId ?? blinkDateId}'
-          '-round-${state.currentRound}';
+      // Use room name from RPC if available, otherwise construct it.
+      final roomName = current.roomName ??
+          'blink-date-${current.matchId}-round-${current.ordre}';
 
-      // Request a LiveKit token.
       final tokenData = await _repository.getLivekitToken(roomName);
       final token = tokenData['token'] as String;
       final wsUrl = tokenData['ws_url'] as String? ?? EnvConfig.livekitWsUrl;
 
-      // Connect to the audio room.
       await _audioProvider.connect(wsUrl, token);
 
-      // Update the Blink Date status to 'en_cours'.
-      await _repository.updateBlinkDateStatus(blinkDateId, 'en_cours');
+      await _repository.updateBlinkDateStatus(current.id, 'en_cours');
 
       state = state.copyWith(
         isConnecting: false,
@@ -280,11 +301,10 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
         isMuted: false,
       );
 
-      // Start countdown.
       _startTimer();
 
       AppLogger.info(
-        'Blink Date call started (round ${state.currentRound})',
+        'Blink Date call started (round ${state.roundDisplayNumber})',
         tag: _tag,
       );
     } catch (e, st) {
@@ -327,13 +347,12 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
       AppLogger.warning('Error disconnecting audio', tag: _tag, error: e);
     }
 
-    // Mark current round as done.
-    final blinkDateId = state.blinkDateId;
-    if (blinkDateId != null) {
+    final current = state.currentRound;
+    if (current != null) {
       try {
-        await _repository.updateBlinkDateStatus(blinkDateId, 'termine');
+        await _repository.updateBlinkDateStatus(current.id, 'termine');
       } catch (_) {
-        // Best effort — feedback is more important.
+        // Best effort.
       }
     }
 
@@ -343,31 +362,23 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
     );
 
     AppLogger.info(
-      'Blink Date call ended (round ${state.currentRound})',
+      'Blink Date call ended (round ${state.roundDisplayNumber})',
       tag: _tag,
     );
   }
 
-  /// Submit feedback and advance to the next round or mark complete.
-  Future<void> submitFeedback(Map<String, dynamic> answers) async {
-    final blinkDateId = state.blinkDateId;
-    final userId = Supabase.instance.client.auth.currentUser?.id;
-
-    if (blinkDateId == null || userId == null) {
-      AppLogger.warning(
-        'Cannot submit feedback: missing blinkDateId or userId',
-        tag: _tag,
-      );
-      return;
-    }
+  /// Submit binary feedback and advance to the next round or photo phase.
+  Future<void> submitFeedback(bool wantsToContinue) async {
+    final current = state.currentRound;
+    if (current == null) return;
 
     state = state.copyWith(isFeedbackSubmitting: true);
 
     try {
-      await _repository.submitFeedback(blinkDateId, userId, answers);
+      await _repository.submitBlinkDateFeedback(current.id, wantsToContinue);
 
       AppLogger.info(
-        'Feedback submitted for round ${state.currentRound}',
+        'Feedback submitted for round ${state.roundDisplayNumber}: $wantsToContinue',
         tag: _tag,
       );
     } catch (e, st) {
@@ -377,30 +388,58 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
         error: e,
         stackTrace: st,
       );
-      // Continue to next round even if feedback save fails.
     }
+
+    final updatedFeedback = Map<String, bool>.from(state.feedbackByRound);
+    updatedFeedback[current.id] = wantsToContinue;
 
     state = state.copyWith(
       isFeedbackSubmitting: false,
       showFeedback: false,
+      feedbackByRound: updatedFeedback,
     );
 
-    // Check if there are more rounds.
-    if (state.currentRound < state.totalRounds) {
+    // Advance to next round or complete.
+    if (state.currentRoundIndex < state.allRounds.length - 1) {
       _advanceToNextRound();
     } else {
-      state = state.copyWith(isComplete: true);
+      // All rounds done → photo phase.
+      state = state.copyWith(showPhotoPhase: true, isComplete: true);
     }
   }
 
-  /// Skip feedback and proceed to the next round or completion.
+  /// Submit legacy feedback (star rating format) — kept for compatibility.
+  Future<void> submitLegacyFeedback(Map<String, dynamic> answers) async {
+    final current = state.currentRound;
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+
+    if (current == null || userId == null) return;
+
+    state = state.copyWith(isFeedbackSubmitting: true);
+
+    try {
+      await _repository.submitFeedback(current.id, userId, answers);
+    } catch (e, st) {
+      AppLogger.error('Failed to submit legacy feedback', tag: _tag, error: e, stackTrace: st);
+    }
+
+    state = state.copyWith(isFeedbackSubmitting: false, showFeedback: false);
+
+    if (state.currentRoundIndex < state.allRounds.length - 1) {
+      _advanceToNextRound();
+    } else {
+      state = state.copyWith(showPhotoPhase: true, isComplete: true);
+    }
+  }
+
+  /// Skip feedback and proceed.
   void skipFeedback() {
     state = state.copyWith(showFeedback: false);
 
-    if (state.currentRound < state.totalRounds) {
+    if (state.currentRoundIndex < state.allRounds.length - 1) {
       _advanceToNextRound();
     } else {
-      state = state.copyWith(isComplete: true);
+      state = state.copyWith(showPhotoPhase: true, isComplete: true);
     }
   }
 
@@ -421,7 +460,6 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
 
   void _tick() {
     if (state.timeRemaining <= 1) {
-      // Time is up — automatically end the call.
       endCall();
       return;
     }
@@ -432,15 +470,14 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
   // ── Round advancement ──────────────────────────────────────────────────
 
   void _advanceToNextRound() {
-    final nextRoundIndex = state.currentRound; // 0-indexed is currentRound
-    if (nextRoundIndex < state.blinkDates.length) {
-      final nextBlinkDate = state.blinkDates[nextRoundIndex];
+    final nextIndex = state.currentRoundIndex + 1;
+    if (nextIndex < state.allRounds.length) {
+      final nextRound = state.allRounds[nextIndex];
       state = state.copyWith(
-        blinkDateId: nextBlinkDate.id,
-        currentRound: nextBlinkDate.ordre,
-        totalDuration: nextBlinkDate.dureeSecondes,
-        timeRemaining: nextBlinkDate.dureeSecondes,
-        prompts: nextBlinkDate.sujetsPoposes,
+        currentRound: nextRound,
+        currentRoundIndex: nextIndex,
+        totalDuration: nextRound.dureeSecondes,
+        timeRemaining: nextRound.dureeSecondes,
         isConnected: false,
         isMuted: false,
       );
@@ -470,12 +507,8 @@ class BlinkDateNotifier extends StateNotifier<BlinkDateState> {
       }
     });
 
-    _participantsSub = _audioProvider.participantsStream.listen((participants) {
-      // Find the remote participant's name (if any).
-      final remote = participants.where((p) => p.id != 'local').toList();
-      if (remote.isNotEmpty) {
-        state = state.copyWith(partnerName: remote.first.name);
-      }
+    _participantsSub = _audioProvider.participantsStream.listen((_) {
+      // Partner name is now provided by the RPC data.
     });
   }
 

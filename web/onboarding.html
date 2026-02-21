@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue | My Muqabala</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <style>
+        body {
+            display: flex; align-items: center; justify-content: center;
+            min-height: 100vh; background: var(--paper);
+        }
+        body::before { display: block; }
+        .onboarding-container {
+            width: 100%; max-width: 480px; padding: 2rem;
+            display: flex; flex-direction: column; align-items: center;
+            position: relative; z-index: 1;
+        }
+        .onboarding-slide {
+            display: none; flex-direction: column; align-items: center;
+            text-align: center; padding: 2rem 0;
+        }
+        .onboarding-slide.active { display: flex; }
+        .onboarding-illustration {
+            width: 160px; height: 160px; border-radius: 50%; margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--purple-light), var(--rose-light));
+            display: flex; align-items: center; justify-content: center; font-size: 4rem;
+            animation: fadeUp 0.5s var(--ease-luxe) both;
+        }
+        .onboarding-title {
+            font-family: var(--font-display); font-size: 1.8rem;
+            font-weight: 500; color: var(--ink); margin-bottom: 0.75rem;
+        }
+        .onboarding-text {
+            font-size: 0.95rem; color: var(--ink-muted); max-width: 400px;
+            line-height: 1.7; margin-bottom: 2rem;
+        }
+        .onboarding-nav {
+            display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+            width: 100%;
+        }
+        .onboarding-dots {
+            display: flex; gap: 0.5rem;
+        }
+        .onboarding-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--card-border); transition: all 0.3s ease;
+        }
+        .onboarding-dot.active {
+            width: 24px; border-radius: 100px; background: var(--purple);
+        }
+        .onboarding-buttons {
+            display: flex; gap: 0.75rem; width: 100%; max-width: 320px;
+        }
+        .onboarding-btn {
+            flex: 1; padding: 0.75rem 1.5rem; border-radius: 100px;
+            font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+            cursor: pointer; transition: all 0.25s ease; border: none;
+        }
+        .onboarding-btn.primary {
+            background: var(--purple); color: #fff;
+        }
+        .onboarding-btn.primary:hover {
+            background: var(--purple-deep); transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        .onboarding-btn.secondary {
+            background: transparent; color: var(--ink-muted);
+            border: 1px solid var(--card-border);
+        }
+        .onboarding-btn.secondary:hover {
+            border-color: var(--purple); color: var(--purple);
+        }
+        .onboarding-logo {
+            font-family: var(--font-display); font-size: 1.2rem; font-weight: 500;
+            color: var(--purple-deep); margin-bottom: 1rem; letter-spacing: -0.02em;
+        }
+        @media (max-width: 480px) {
+            .onboarding-container { padding: 1.5rem; }
+            .onboarding-illustration { width: 130px; height: 130px; font-size: 3.2rem; }
+            .onboarding-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="onboarding-container">
+    <div class="onboarding-logo">My Muqabala</div>
+
+    <div class="onboarding-slide active" data-slide="0">
+        <div class="onboarding-illustration">🌙</div>
+        <h1 class="onboarding-title">Bienvenue sur My Muqabala</h1>
+        <p class="onboarding-text">Une plateforme d'accompagnement au mariage musulman, conçue avec bienveillance et respect de ta foi.</p>
+    </div>
+
+    <div class="onboarding-slide" data-slide="1">
+        <div class="onboarding-illustration">🧭</div>
+        <h1 class="onboarding-title">Ton parcours personnel</h1>
+        <p class="onboarding-text">Formulaires exploratoires, cartographie émotionnelle, ressources pédagogiques — tout est là pour t'aider à mieux te connaître.</p>
+    </div>
+
+    <div class="onboarding-slide" data-slide="2">
+        <div class="onboarding-illustration">👥</div>
+        <h1 class="onboarding-title">Ton accompagnant</h1>
+        <p class="onboarding-text">Un coach dédié t'accompagne à chaque étape. Tu n'es jamais seul(e) dans ce parcours.</p>
+    </div>
+
+    <div class="onboarding-slide" data-slide="3">
+        <div class="onboarding-illustration">🔐</div>
+        <h1 class="onboarding-title">Le Mahram Numérique</h1>
+        <p class="onboarding-text">Toutes les conversations sont supervisées par ton accompagnant. Un cadre respectueux et sécurisé.</p>
+    </div>
+
+    <div class="onboarding-nav">
+        <div class="onboarding-dots">
+            <div class="onboarding-dot active" data-dot="0"></div>
+            <div class="onboarding-dot" data-dot="1"></div>
+            <div class="onboarding-dot" data-dot="2"></div>
+            <div class="onboarding-dot" data-dot="3"></div>
+        </div>
+        <div class="onboarding-buttons">
+            <button class="onboarding-btn secondary" id="btn-prev" style="display:none" onclick="prevSlide()">Précédent</button>
+            <button class="onboarding-btn primary" id="btn-next" onclick="nextSlide()">Suivant</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // Check if already onboarded
+    if (localStorage.getItem('mymuqabala_onboarded') === 'true') {
+        window.location.href = 'dashboard-test.html';
+        return;
+    }
+
+    let current = 0;
+    const totalSlides = 4;
+    const slides = document.querySelectorAll('.onboarding-slide');
+    const dots = document.querySelectorAll('.onboarding-dot');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    function goToSlide(index) {
+        current = index;
+
+        // Update slides
+        slides.forEach(s => s.classList.remove('active'));
+        slides[current].classList.add('active');
+
+        // Update dots
+        dots.forEach(d => d.classList.remove('active'));
+        dots[current].classList.add('active');
+
+        // Update buttons
+        btnPrev.style.display = current === 0 ? 'none' : 'inline-flex';
+
+        if (current === totalSlides - 1) {
+            btnNext.textContent = 'Commencer';
+        } else {
+            btnNext.textContent = 'Suivant';
+        }
+    }
+
+    window.nextSlide = function() {
+        if (current === totalSlides - 1) {
+            // Last slide — mark as onboarded and redirect
+            localStorage.setItem('mymuqabala_onboarded', 'true');
+            window.location.href = 'dashboard-test.html';
+        } else {
+            goToSlide(current + 1);
+        }
+    };
+
+    window.prevSlide = function() {
+        if (current > 0) {
+            goToSlide(current - 1);
+        }
+    };
+
+    // Initialize first slide
+    goToSlide(0);
+})();
+</script>
+</body>
+</html>

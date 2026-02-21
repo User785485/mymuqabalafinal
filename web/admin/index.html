@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!-- deploy-v5 -->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration | My Muqabala</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --purple: #7c3aed; --purple-deep: #6b5a9c;
+            --font-display: 'Cormorant', Georgia, serif;
+            --font-body: 'Outfit', system-ui, sans-serif;
+        }
+        body {
+            font-family: var(--font-body); min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background: #0f0f1a; color: #fff; position: relative;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none;
+            background: radial-gradient(ellipse at 30% 20%, rgba(124,58,237,0.12) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(232,180,184,0.08) 0%, transparent 50%);
+        }
+        .login-container { position: relative; z-index: 2; width: 100%; max-width: 400px; padding: 1.5rem; }
+        .login-card {
+            background: rgba(255,255,255,0.04); backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 24px;
+            padding: 3rem 2.5rem; text-align: center;
+        }
+        .login-logo { font-family: var(--font-display); font-size: 2rem; font-weight: 500; margin-bottom: 0.25rem; }
+        .login-subtitle {
+            font-size: 0.78rem; color: rgba(255,255,255,0.4); text-transform: uppercase;
+            letter-spacing: 0.1em; margin-bottom: 2.5rem;
+        }
+        .login-field { margin-bottom: 1.25rem; text-align: left; }
+        .login-label {
+            display: block; font-size: 0.78rem; font-weight: 500;
+            color: rgba(255,255,255,0.5); margin-bottom: 0.5rem;
+        }
+        .login-input {
+            width: 100%; padding: 0.85rem 1.25rem; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.06);
+            color: #fff; font-family: var(--font-body); font-size: 0.95rem;
+            transition: all 0.3s ease; outline: none;
+        }
+        .login-input:focus {
+            border-color: var(--purple); background: rgba(124,58,237,0.08);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+        }
+        .login-btn {
+            width: 100%; padding: 0.85rem; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, var(--purple), var(--purple-deep));
+            color: #fff; font-family: var(--font-body); font-size: 0.95rem;
+            font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 0.5rem;
+        }
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .login-btn .spinner {
+            display: none; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; margin: 0 auto;
+        }
+        .login-btn.loading .btn-text { display: none; }
+        .login-btn.loading .spinner { display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .login-error { color: #ef4444; font-size: 0.82rem; margin-top: 1rem; min-height: 1.2em; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <h1 class="login-logo">My Muqabala</h1>
+            <p class="login-subtitle">Administration</p>
+            <form id="admin-login-form" autocomplete="off">
+                <div class="login-field">
+                    <label class="login-label" for="admin-email">Email</label>
+                    <input class="login-input" id="admin-email" name="admin-email-field" type="email" autocomplete="new-password" placeholder="Email administrateur" required>
+                </div>
+                <div class="login-field">
+                    <label class="login-label" for="admin-password">Mot de passe</label>
+                    <input class="login-input" id="admin-password" name="admin-password-field" type="password" autocomplete="new-password" placeholder="Mot de passe" required>
+                </div>
+                <button class="login-btn" type="submit" id="admin-login-btn">
+                    <span class="btn-text">Se connecter</span>
+                    <span class="spinner"></span>
+                </button>
+                <p class="login-error" id="admin-error"></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../supabase-config.js"></script>
+    <script>
+    (async function() {
+        // Check if already logged in (server-side validation)
+        const { data: { user }, error: userErr } = await sb.auth.getUser();
+        if (user && !userErr) { window.location.href = '/admin/panel.html'; return; }
+
+        const form = document.getElementById('admin-login-form');
+        const btn = document.getElementById('admin-login-btn');
+        const errorEl = document.getElementById('admin-error');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorEl.textContent = '';
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            const email = document.getElementById('admin-email').value.trim();
+            const password = document.getElementById('admin-password').value;
+
+            const { error } = await sb.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                errorEl.textContent = 'Email ou mot de passe incorrect.';
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                return;
+            }
+
+            window.location.href = '/admin/panel.html';
+        });
+    })();
+    </script>
+</body>
+</html>

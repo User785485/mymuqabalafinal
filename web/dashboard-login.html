@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion | Mon Espace My Muqabala</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --purple: #7c3aed; --purple-deep: #6b5a9c; --rose: #e8b4b8;
+            --sage: #7d9a8c; --gold: #c9a962; --ink: #1a1a1a;
+            --ink-soft: #3d3d3d; --ink-muted: #6b6b6b; --ink-faint: #9a9a9a;
+            --font-display: 'Cormorant', Georgia, serif;
+            --font-body: 'Outfit', system-ui, sans-serif;
+        }
+        body {
+            font-family: var(--font-body); min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background: #0f0f1a; color: #fff; overflow: hidden; position: relative;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none;
+            background: radial-gradient(ellipse at 30% 20%, rgba(124,58,237,0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(232,180,184,0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 50%, rgba(201,169,98,0.08) 0%, transparent 40%);
+        }
+        .login-container {
+            position: relative; z-index: 2; width: 100%; max-width: 420px; padding: 1.5rem;
+        }
+        .login-card {
+            background: rgba(255,255,255,0.04); backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 24px;
+            padding: 3rem 2.5rem; text-align: center;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+        }
+        .login-logo { font-family: var(--font-display); font-size: 2rem; font-weight: 500; margin-bottom: 0.25rem; }
+        .login-subtitle {
+            font-size: 0.78rem; color: rgba(255,255,255,0.4); text-transform: uppercase;
+            letter-spacing: 0.1em; margin-bottom: 2.5rem;
+        }
+        .login-field { margin-bottom: 1.25rem; text-align: left; }
+        .login-label {
+            display: block; font-size: 0.78rem; font-weight: 500;
+            color: rgba(255,255,255,0.5); margin-bottom: 0.5rem; letter-spacing: 0.02em;
+        }
+        .login-input {
+            width: 100%; padding: 0.9rem 1.25rem; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.06);
+            color: #fff; font-family: var(--font-body); font-size: 1.1rem;
+            letter-spacing: 0.15em; text-align: center; transition: all 0.3s ease;
+            outline: none;
+        }
+        .login-input::placeholder { color: rgba(255,255,255,0.2); letter-spacing: 0.1em; }
+        .login-input:focus {
+            border-color: var(--purple); background: rgba(124,58,237,0.08);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+        }
+        .login-input.error { border-color: #ef4444; background: rgba(239,68,68,0.08); }
+        .login-btn {
+            width: 100%; padding: 0.9rem; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, var(--purple), var(--purple-deep));
+            color: #fff; font-family: var(--font-body); font-size: 0.95rem;
+            font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            margin-top: 0.75rem; position: relative; overflow: hidden;
+        }
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+        .login-btn:active { transform: translateY(0); }
+        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .login-btn .spinner {
+            display: none; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite;
+            margin: 0 auto;
+        }
+        .login-btn.loading .btn-text { display: none; }
+        .login-btn.loading .spinner { display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .login-error {
+            color: #ef4444; font-size: 0.82rem; margin-top: 1rem;
+            min-height: 1.2em; transition: opacity 0.3s ease;
+        }
+        .login-footer {
+            margin-top: 2rem; font-size: 0.72rem; color: rgba(255,255,255,0.25);
+        }
+        .login-footer strong {
+            font-family: var(--font-display); font-size: 0.9rem;
+            color: rgba(255,255,255,0.4); font-weight: 500;
+        }
+        @media (max-width: 480px) {
+            .login-card { padding: 2.5rem 1.75rem; }
+        }
+    </style>
+</head>
+<body data-schema="v2">
+    <div class="login-container">
+        <div class="login-card">
+            <h1 class="login-logo">My Muqabala</h1>
+            <p class="login-subtitle">Espace Personnel</p>
+
+            <form id="login-form" autocomplete="off">
+                <div class="login-field">
+                    <label class="login-label" for="client-tel">Votre numéro de téléphone</label>
+                    <input class="login-input" id="client-tel" name="client-tel-field" type="tel" placeholder="+33 6 12 34 56 78" required autocomplete="tel" style="letter-spacing:0.03em;text-align:left">
+                </div>
+                <div class="login-field">
+                    <label class="login-label" for="access-code">Votre code d'accès</label>
+                    <input class="login-input" id="access-code" name="client-access-code" type="text" inputmode="numeric" maxlength="6" placeholder="------" required autocomplete="one-time-code">
+                </div>
+                <button class="login-btn" type="submit" id="login-btn">
+                    <span class="btn-text">Accéder à mon espace</span>
+                    <span class="spinner"></span>
+                </button>
+                <p class="login-error" id="login-error"></p>
+            </form>
+
+            <div class="login-footer">
+                <strong>My Muqabala</strong>
+                <p style="margin-top:0.25rem">Accompagnement thérapeutique musulman</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+    (function() {
+        const form = document.getElementById('login-form');
+        const telInput = document.getElementById('client-tel');
+        const codeInput = document.getElementById('access-code');
+        const btn = document.getElementById('login-btn');
+        const errorEl = document.getElementById('login-error');
+
+        // Show session expired message if redirected by timeout
+        if (new URLSearchParams(window.location.search).get('expired') === '1') {
+            errorEl.textContent = 'Votre session a expiré par inactivité. Veuillez vous reconnecter.';
+            errorEl.style.color = '#f59e0b';
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorEl.textContent = '';
+            telInput.classList.remove('error');
+            codeInput.classList.remove('error');
+
+            const tel = telInput.value.trim();
+            const code = codeInput.value.trim();
+
+            if (!tel || tel.length < 8 || !code || code.length < 4) {
+                errorEl.textContent = 'Veuillez remplir votre téléphone et votre code d\'accès.';
+                if (!tel || tel.length < 8) telInput.classList.add('error');
+                if (!code || code.length < 4) codeInput.classList.add('error');
+                return;
+            }
+
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                const { data, error } = await sb.rpc('verify_client_access', {
+                    p_telephone: tel,
+                    p_code: code
+                });
+
+                if (error || !data) {
+                    errorEl.textContent = 'Téléphone ou code incorrect.';
+                    telInput.classList.add('error');
+                    codeInput.classList.add('error');
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Store session
+                sessionStorage.setItem('mm_telephone', tel);
+                sessionStorage.setItem('mm_access_code', code);
+                sessionStorage.setItem('mm_uuid', data);
+
+                // Redirect to dashboard
+                window.location.href = 'dashboard-test.html?tel=' + encodeURIComponent(tel) + '&code=' + encodeURIComponent(code);
+
+            } catch (err) {
+                errorEl.textContent = 'Erreur de connexion. Réessayez.';
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

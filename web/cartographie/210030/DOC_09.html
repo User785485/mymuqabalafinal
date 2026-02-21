@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOC 9 - Comprendre l'Attachement | Rislène</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    /* ==========================================
+       MY MUQABALA - CSS DE BASE COMPLET
+       DOC 9 : Comprendre l'Attachement
+       Version 1.0 - 22/12/2024
+    ========================================== */
+
+    /* ==================== VARIABLES CSS ==================== */
+    :root {
+        --primary: #D4569C;
+        --primary-deep: #B33D7E;
+        --primary-light: #F5D6E8;
+        --purple: #6B5A9C;
+        --purple-deep: #4A3B6E;
+        --purple-light: #B8AECC;
+        --success: #2C7A7B;
+        --success-light: #E6F7F7;
+        --danger: #D4569C;
+        --danger-light: #F5D6E8;
+        --accent: #D4A373;
+        --accent-deep: #B8895E;
+        --accent-light: #F0E5D8;
+        --cream: #FDFBF7;
+        --cream-dark: #F5F1E8;
+        --gray-1: #FDFBF7;
+        --gray-2: #F5F1E8;
+        --gray-3: #E8E2D5;
+        --text: #1A1A1A;
+        --text-soft: #4A3B6E;
+        --text-muted: #6B6B6B;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --shadow-sm: 0 3px 12px rgba(107, 90, 156, 0.12);
+        --shadow-md: 0 6px 24px rgba(107, 90, 156, 0.18);
+        --shadow-lg: 0 12px 48px rgba(107, 90, 156, 0.25);
+        --shadow-accent: 0 16px 64px rgba(212, 163, 115, 0.35);
+    }
+
+    /* ==================== RESET & BASE ==================== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        overflow-x: hidden !important;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    body {
+        font-family: var(--font-body);
+        color: var(--text);
+        line-height: 1.7;
+        background: linear-gradient(135deg, #FDFBF7 0%, #F8F4ED 50%, #F5F1E8 100%);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden !important;
+        overflow-y: auto;
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    /* ==================== TYPOGRAPHY ==================== */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-body);
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text);
+        margin-bottom: var(--space-md);
+        letter-spacing: -0.02em;
+    }
+
+    h1 {
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-family: var(--font-display);
+    }
+    h2 {
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        font-family: var(--font-display);
+    }
+    h3 {
+        font-size: clamp(1.5rem, 3vw, 2.25rem);
+    }
+    h4 {
+        font-size: 1.35rem;
+    }
+
+    p {
+        margin-bottom: var(--space-md);
+        line-height: 1.8;
+    }
+
+    strong {
+        font-weight: 700;
+        color: var(--primary-deep);
+    }
+
+    /* ==================== LAYOUT ==================== */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 var(--space-lg);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    section {
+        padding: var(--space-2xl) 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+        text-align: center;
+        padding: var(--space-xl) 0;
+    }
+
+    .hero-title {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.75rem, 6vw, 4.5rem);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        line-height: 1.1;
+        font-family: var(--font-display);
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        color: var(--text-soft);
+        margin-bottom: var(--space-xl);
+    }
+
+    /* ==================== CARDS ==================== */
+    .card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-md);
+        margin-bottom: var(--space-lg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(107, 90, 156, 0.08);
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* ==================== MESSAGES ==================== */
+    .insight-box {
+        background: linear-gradient(135deg, rgba(107, 90, 156, 0.12) 0%, white 100%);
+        border-left: 5px solid var(--purple);
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-lg) 0;
+    }
+
+    /* ==================== DOC 9 - STYLES SPÉCIFIQUES ==================== */
+
+    /* Styles d'attachement */
+    .style-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+        box-shadow: var(--shadow-md);
+        border-top: 5px solid var(--purple);
+    }
+
+    .style-secure {
+        border-top-color: var(--success);
+    }
+
+    .style-anxieux {
+        border-top-color: #F59E0B;
+    }
+
+    .style-evitant {
+        border-top-color: #3B82F6;
+    }
+
+    .style-desorganise {
+        border-top-color: var(--danger);
+    }
+
+    .style-card h3 {
+        margin-bottom: var(--space-lg);
+        font-size: 1.5rem;
+    }
+
+    .style-formation,
+    .style-croyance,
+    .style-comportement {
+        background: var(--gray-1);
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        margin: var(--space-md) 0;
+    }
+
+    .style-formation h4,
+    .style-croyance h4,
+    .style-comportement h4 {
+        color: var(--purple-deep);
+        font-size: 1.1rem;
+        margin-bottom: var(--space-sm);
+    }
+
+    .style-note {
+        font-style: italic;
+        color: var(--text-soft);
+        margin-top: var(--space-md);
+    }
+
+    /* Process de formation */
+    .formation-process {
+        display: grid;
+        gap: var(--space-md);
+        margin: var(--space-lg) 0;
+    }
+
+    .etape {
+        background: white;
+        border-radius: 1rem;
+        padding: var(--space-lg);
+        border-left: 4px solid var(--accent);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .etape h4 {
+        color: var(--text);
+        margin-bottom: var(--space-xs);
+        font-size: 1.1rem;
+    }
+
+    /* Combinaisons d'attachement */
+    .combinations-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: var(--space-xl) 0;
+    }
+
+    .combinations-table th,
+    .combinations-table td {
+        padding: var(--space-md);
+        text-align: left;
+        border-bottom: 1px solid var(--gray-3);
+    }
+
+    .combinations-table th {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 100%);
+        color: white;
+        font-weight: 700;
+    }
+
+    .combinations-table tr:nth-child(even) {
+        background: var(--gray-1);
+    }
+
+    .combinations-table tr:hover {
+        background: var(--primary-light);
+    }
+
+    /* Hope box */
+    .hope-box {
+        background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
+        border: 3px solid var(--success);
+        border-radius: 1.5rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+    }
+
+    .hope-box h3 {
+        color: var(--success);
+        margin-bottom: var(--space-lg);
+    }
+
+    .verset-box {
+        background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
+        border-left: 5px solid var(--primary);
+        padding: var(--space-lg);
+        border-radius: 1rem;
+        margin: var(--space-xl) 0;
+    }
+
+    .verset {
+        font-size: 1.2rem;
+        font-style: italic;
+        margin-bottom: var(--space-sm);
+        color: var(--text);
+    }
+
+    .reference {
+        text-align: right;
+        color: var(--text-soft);
+        font-weight: 600;
+    }
+
+    /* Mon style aperçu */
+    .mon-style-apercu {
+        background: linear-gradient(135deg, var(--accent-light) 0%, white 100%);
+        border: 2px dashed var(--accent);
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        margin: var(--space-xl) 0;
+    }
+
+    .mon-style-apercu h3 {
+        color: var(--accent-deep);
+        margin-bottom: var(--space-md);
+    }
+
+    /* Transition box */
+    .transition-box {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--primary) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: var(--space-xl);
+        text-align: center;
+        margin-top: var(--space-2xl);
+    }
+
+    .transition-box p {
+        color: white;
+        margin: 0;
+    }
+
+    /* ==================== LISTS ==================== */
+    ul {
+        margin-left: var(--space-xl);
+    }
+
+    li {
+        margin-bottom: var(--space-sm);
+        line-height: 1.6;
+    }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+        text-align: center;
+        padding: var(--space-2xl) var(--space-lg);
+        background: linear-gradient(135deg, var(--purple-deep) 0%, var(--primary-deep) 100%);
+        color: white;
+        margin-top: var(--space-2xl);
+    }
+
+    footer p {
+        margin-bottom: var(--space-sm);
+        opacity: 0.9;
+        color: white;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        :root {
+            --space-xl: 1.5rem;
+            --space-2xl: 2rem;
+        }
+
+        .container {
+            padding: 0 var(--space-md);
+        }
+
+        .hero-title {
+            font-size: 2.25rem;
+        }
+
+        .combinations-table {
+            font-size: 0.9rem;
+        }
+
+        .combinations-table th,
+        .combinations-table td {
+            padding: var(--space-sm);
+        }
+    }
+
+    /* ==================== PRINT ==================== */
+    @media print {
+        body {
+            background: white;
+        }
+
+        .card, .style-card {
+            box-shadow: none;
+            border: 1px solid #ddd;
+            page-break-inside: avoid;
+        }
+
+        section {
+            page-break-inside: avoid;
+        }
+
+        footer {
+            page-break-before: always;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- EN-TÊTE -->
+        <header class="hero">
+            <h1 class="hero-title">Comprendre l'attachement</h1>
+            <p class="subtitle">Comment tu te lies aux autres - et comment ça peut évoluer</p>
+        </header>
+
+        <!-- INTRODUCTION -->
+        <section id="intro">
+            <div class="card">
+                Rislène, tu as maintenant une vision claire de tes schémas — abandon, méfiance, abnégation, imperfection — et des outils pour commencer à les transformer. Mais il y a une autre dimension qui influence profondément tes relations, une dimension qui explique pourquoi certaines dynamiques se répètent encore et encore : ton <strong>style d'attachement</strong>.<br><br>Ce concept, issu de décennies de recherche en psychologie, explique COMMENT tu te lies aux autres — particulièrement dans les relations intimes. Il révèle les patterns invisibles qui guident tes choix, tes réactions, tes peurs. Comprendre ton style d'attachement, c'est comprendre pourquoi tu réagis comme tu réagis quand l'autre ne répond pas, pourquoi tu as besoin de tant de réassurance, pourquoi tu te fermes parfois alors que tu voudrais t'ouvrir. Et surtout : comment faire évoluer ces patterns pour construire des relations plus saines.
+            </div>
+        </section>
+
+        <!-- SECTIONS A-E -->
+        ```html
+<section id="definition">
+    <h2>A. C'est quoi l'attachement ?</h2><br><br>    <p>L'attachement, c'est le <strong>système biologique</strong> qui gère ta façon de créer et maintenir des liens affectifs. Ce n'est pas quelque chose que tu "choisis" — c'est un programme qui s'est installé très tôt, dans les premières années de ta vie, à travers des milliers d'interactions avec tes figures d'attachement (généralement tes parents).</p><br><br>    <p>Ce système répond à une question fondamentale : <strong>"Puis-je compter sur les autres quand j'ai besoin d'eux ?"</strong></p><br><br>    <p>La réponse que tu as reçue enfant — à travers les comportements de tes figures d'attachement — a façonné ton "modèle interne opérant". Ce modèle te dit :</p><br><br>    <ul>
+        <li><strong>Si les autres sont fiables ou non</strong> ("Quand j'exprime un besoin, est-ce qu'on répond ?")</li>
+        <li><strong>Si tu mérites d'être aimée ou non</strong> ("Est-ce que mes besoins comptent autant que ceux des autres ?")</li>
+        <li><strong>Comment te comporter pour maintenir le lien</strong> ("Qu'est-ce que je dois faire pour ne pas être abandonnée ?")</li>
+    </ul><br><br>    <div class="insight-box">
+        <p><strong>💡 Important :</strong> Ton style d'attachement n'est pas une "étiquette" définitive. C'est une tendance, un pattern par défaut qui s'active surtout dans les moments de stress relationnel. Et comme tous les patterns, il peut évoluer. Ce que tu fais maintenant — prendre conscience, comprendre, travailler sur toi — c'est exactement le chemin pour le transformer.</p>
+    </div>
+</section>
+```
+        ```html
+<section id="quatre-styles">
+    <h2>B. Les 4 styles d'attachement</h2><br><br>    <p>La recherche a identifié 4 styles principaux. Lis-les tous, même si tu penses déjà savoir lequel te correspond. Tu vas probablement te reconnaître dans plusieurs à différents degrés. C'est normal — beaucoup de personnes ont un style "mixte" ou évoluent d'un style à l'autre selon les contextes.</p><br><br>    <!-- STYLE 1 : SÉCURE -->
+    <div class="style-card style-secure">
+        <h3>🟢 Style SÉCURE (Secure)</h3><br><br>        <div class="style-formation">
+            <h4>Comment il se forme :</h4>
+            <p>Figures d'attachement généralement disponibles, prévisibles, répondant aux besoins de l'enfant de façon cohérente. L'enfant a appris : <em>"Je peux compter sur les autres. Quand j'exprime un besoin, on y répond. Je mérite d'être aimé(e) pour qui je suis."</em></p>
+        </div><br><br>        <div class="style-croyance">
+            <h4>Croyance centrale :</h4>
+            <p><strong>"Je suis digne d'amour et les autres sont généralement fiables."</strong></p>
+        </div><br><br>        <div class="style-comportement">
+            <h4>En relation :</h4>
+            <ul>
+                <li>À l'aise avec l'intimité ET l'autonomie (pas besoin de fusionner ni de fuir)</li>
+                <li>Communique ses besoins clairement sans peur excessive du rejet</li>
+                <li>Gère les conflits sans catastrophiser ("un désaccord ne signifie pas la fin")</li>
+                <li>Fait confiance progressivement, sans hypervigilance ni naïveté</li>
+                <li>Peut se détendre dans la relation et profiter du moment présent</li>
+            </ul>
+        </div><br><br>        <p class="style-note"><strong>~50-60%</strong> de la population a un style sécure. C'est le style qui cause le moins de souffrance relationnelle — mais il peut être "acquis" même si on ne l'a pas eu naturellement enfant.</p>
+    </div><br><br>    <!-- STYLE 2 : ANXIEUX -->
+    <div class="style-card style-anxieux">
+        <h3>🟡 Style ANXIEUX (Anxious-Preoccupied)</h3><br><br>        <div class="style-formation">
+            <h4>Comment il se forme :</h4>
+            <p>Figures d'attachement <strong>inconsistantes</strong> — parfois très présentes, parfois absentes ou non disponibles émotionnellement. Peut-être que ta mère était là physiquement mais préoccupée, stressée, ou incapable de vraiment écouter tes tracas. L'enfant a appris : <em>"L'amour est imprévisible. Parfois il est là, parfois non. Je dois surveiller constamment pour ne pas le perdre."</em></p>
+        </div><br><br>        <div class="style-croyance">
+            <h4>Croyance centrale :</h4>
+            <p><strong>"Je ne suis pas sûr(e) de mériter l'amour. Les autres peuvent partir à tout moment. Je dois tout donner pour les retenir."</strong></p>
+        </div><br><br>        <div class="style-comportement">
+            <h4>En relation :</h4>
+            <ul>
+                <li><strong>Besoin élevé de réassurance</strong> ("Dis-moi que tu tiens à moi")</li>
+                <li><strong>Hypervigilance aux signaux</strong> (distance, silence, "vu" sans réponse...)</li>
+                <li><strong>Tendance à s'accrocher ou à tester l'autre</strong> (messages répétés, questions pour vérifier)</li>
+                <li><strong>Peur de l'abandon qui peut créer ce qu'on redoute</strong> (plus tu t'accroches, plus l'autre prend de la distance)</li>
+                <li><strong>Difficulté à se détendre</strong> dans la relation (toujours en alerte)</li>
+                <li><strong>Donner énormément</strong> pour "mériter" qu'il reste</li>
+            </ul>
+        </div><br><br>        <p class="style-note"><strong>~15-20%</strong> de la population. C'est très probablement ton style dominant, Rislène, au vu de ce que tu as partagé sur tes patterns relationnels.</p>
+    </div><br><br>    <!-- STYLE 3 : ÉVITANT -->
+    <div class="style-card style-evitant">
+        <h3>🔵 Style ÉVITANT (Dismissive-Avoidant)</h3><br><br>        <div class="style-formation">
+            <h4>Comment il se forme :</h4>
+            <p>Figures d'attachement émotionnellement indisponibles, valorisant l'indépendance, minimisant les émotions. "Arrête de pleurer", "Tu n'as besoin de personne", "Sois fort(e)". L'enfant a appris : <em>"Je ne peux compter que sur moi. Montrer mes besoins est dangereux. Les émotions sont une faiblesse."</em></p>
+        </div><br><br>        <div class="style-croyance">
+            <h4>Croyance centrale :</h4>
+            <p><strong>"Je n'ai pas besoin des autres. L'intimité est menaçante. Rester indépendant(e) est plus sûr."</strong></p>
+        </div><br><br>        <div class="style-comportement">
+            <h4>En relation :</h4>
+            <ul>
+                <li>Valorise l'indépendance, parfois à l'extrême ("Je me débrouille seul(e)")</li>
+                <li>Mal à l'aise avec trop d'intimité émotionnelle</li>
+                <li>Tendance à se retirer face aux émotions fortes ou aux demandes affectives</li>
+                <li>Minimise l'importance des relations ("Je n'ai pas vraiment besoin de quelqu'un")</li>
+                <li>Perçu comme distant, froid, ou "inaccessible émotionnellement"</li>
+            </ul>
+        </div><br><br>        <p class="style-note"><strong>~20-25%</strong> de la population. Ce n'est probablement pas ton style principal — mais tu as peut-être attiré des partenaires évitants par le passé (c'est très courant dans la dynamique anxieux-évitant).</p>
+    </div><br><br>    <!-- STYLE 4 : DÉSORGANISÉ -->
+    <div class="style-card style-desorganise">
+        <h3>🔴 Style DÉSORGANISÉ (Fearful-Avoidant)</h3><br><br>        <div class="style-formation">
+            <h4>Comment il se forme :</h4>
+            <p>Figures d'attachement qui sont à la fois source de <strong>peur ET de réconfort</strong>. Situations de maltraitance, négligence sévère, ou parent lui-même traumatisé qui ne peut pas réguler ses propres émotions. L'enfant a appris : <em>"J'ai besoin des autres mais ils me font peur. L'intimité est terrifiante mais la solitude aussi."</em></p>
+        </div><br><br>        <div class="style-croyance">
+            <h4>Croyance centrale :</h4>
+            <p><strong>"Je veux l'intimité mais elle me terrifie. Je ne mérite pas l'amour et les autres sont dangereux."</strong></p>
+        </div><br><br>        <div class="style-comportement">
+            <h4>En relation :</h4>
+            <ul>
+                <li><strong>Oscillation entre recherche d'intimité et fuite</strong> ("Viens ici, va-t'en")</li>
+                <li><strong>Comportements contradictoires</strong> qui déroutent le partenaire</li>
+                <li><strong>Difficulté extrême à réguler les émotions</strong> (passage rapide de 0 à 100)</li>
+                <li><strong>Relations souvent chaotiques</strong> avec des ruptures/réconciliations répétées</li>
+                <li>Sentiment profond de ne pas mériter l'amour</li>
+            </ul>
+        </div><br><br>        <p class="style-note"><strong>~5-10%</strong> de la population. Souvent lié à des traumatismes relationnels précoces. Nécessite généralement un accompagnement thérapeutique spécialisé.</p>
+    </div><br><br>    <!-- MON STYLE APERÇU -->
+    <div class="mon-style-apercu">
+        <h3>💭 Et toi, Rislène ?</h3>
+        <p>En lisant ces descriptions, tu t'es probablement reconnue fortement dans le <strong>style anxieux</strong> — et c'est cohérent avec tout ce que tu as partagé :</p>
+        <ul>
+            <li>Ta peur intense de l'abandon (schéma #1)</li>
+            <li>Ton besoin de réassurance constante ("Il ne répond pas → il va me quitter")</li>
+            <li>Ta tendance à donner énormément pour "mériter" qu'il reste</li>
+            <li>Ton hypervigilance ("aller à la pêche aux infos")</li>
+            <li>Ta difficulté à te détendre dans une relation</li>
+        </ul>
+        <p>Il se pourrait aussi que tu aies des touches de <strong>style désorganisé</strong> si tu as vécu des moments où les figures d'attachement étaient à la fois sources de réconfort et de peur. Mais le cœur de ton pattern semble être l'attachement anxieux-préoccupé.</p>
+        <p><em>On va approfondir ton style spécifique dans le document suivant (DOC 10), avec des pistes concrètes adaptées à TOI.</em></p>
+    </div><br><br></section>
+```
+        ```html
+<section id="formation">
+    <h2>C. Comment ça se forme — Le processus invisible</h2><br><br>    <p>Ton style d'attachement s'est formé dans les <strong>premières années de ta vie</strong>, à travers des milliers d'interactions avec tes figures d'attachement (généralement les parents, mais parfois d'autres personnes significatives).</p><br><br>    <p>Voici le processus qui s'est répété encore et encore, jusqu'à créer ton "modèle interne" :</p><br><br>    <div class="formation-process">
+        <div class="etape">
+            <h4>1. Tu exprimes un besoin</h4>
+            <p>Bébé, tu pleures quand tu as faim, peur, ou besoin de réconfort. Enfant, tu viens voir ta mère quand tu es triste ou que quelque chose te tracasse. Tu tends les bras, tu cherches le contact, la sécurité.</p>
+        </div>
+        <div class="etape">
+            <h4>2. La figure d'attachement répond (ou pas)</h4>
+            <p>Soit elle répond de façon <strong>prévisible et chaleureuse</strong> (→ attachement sécure), soit elle répond de façon <strong>inconsistante</strong> (→ attachement anxieux), soit elle ne répond <strong>pas vraiment</strong> ou minimise (→ attachement évitant), soit elle répond de façon <strong>effrayante ou imprévisible</strong> (→ attachement désorganisé).</p>
+        </div>
+        <div class="etape">
+            <h4>3. Tu tires une conclusion inconsciente</h4>
+            <p>Ton cerveau d'enfant analyse : "Qu'est-ce que cette réponse (ou absence de réponse) me dit sur moi et sur les autres ?" Si ta mère est parfois présente, parfois absente émotionnellement, tu conclus : <em>"L'amour est imprévisible. Je ne peux pas compter dessus."</em></p>
+        </div>
+        <div class="etape">
+            <h4>4. Tu adaptes ta stratégie de survie</h4>
+            <p>Pour maximiser tes chances d'obtenir de l'amour, tu développes une stratégie : soit tu exprimes PLUS fort (anxieux), soit tu n'exprimes PLUS du tout (évitant), soit tu oscilles entre les deux (désorganisé). Cette stratégie devient ton "mode par défaut".</p>
+        </div>
+        <div class="etape">
+            <h4>5. Le pattern s'ancre profondément</h4>
+            <p>Après des milliers de répétitions sur plusieurs années, ce pattern devient automatique. Il se grave dans tes circuits neuronaux, dans ta mémoire corporelle. Et il se réactive automatiquement dans tes relations adultes — surtout quand tu es stressée ou vulnérable.</p>
+        </div>
+    </div><br><br>    <div class="insight-box">
+        <p><strong>💡 Ce n'est pas une question de "bons" ou "mauvais" parents.</strong></p>
+        <p>Même des parents aimants peuvent créer un attachement insécure s'ils sont eux-mêmes aux prises avec leurs propres blessures, stress, limitations, ou traumatismes non résolus. Une mère peut t'aimer profondément ET être inconsistante émotionnellement parce qu'elle-même porte des schémas lourds. Ce qui compte maintenant, ce n'est pas de blâmer — c'est de <strong>comprendre pour transformer</strong>.</p>
+    </div><br><br>    <p>Rislène, quand tu dis que tu ne te sens pas toujours écoutée par ta mère, que tu t'énerves puis te fermes, que tu gardes tes tracas pour toi — ce sont des indices possibles d'une disponibilité émotionnelle inconsistante dans l'enfance. Pas par méchanceté. Mais peut-être parce qu'elle-même ne savait pas comment répondre à ta sensibilité. Et cette inconsistance a pu créer ton attachement anxieux : <em>"Je dois surveiller, m'accrocher, donner énormément — sinon l'amour disparaît."</em></p>
+</section>
+```
+        ```html
+<section id="impact">
+    <h2>D. Comment ça impacte tes relations aujourd'hui</h2><br><br>    <p>Ton style d'attachement ne reste pas dans le passé. Il influence <strong>activement</strong> tes relations présentes, de manière souvent invisible. Voici comment :</p><br><br>    <ul>
+        <li><strong>Qui t'attire (et qui tu attires)</strong> → Les personnes avec un attachement anxieux sont souvent attirées par des partenaires évitants (et vice versa), créant la fameuse "danse anxieux-évitant"</li>
+        <li><strong>Comment tu te comportes dans l'intimité</strong> → Besoin de fusion vs besoin d'espace, capacité à exprimer tes besoins vs les garder pour toi</li>
+        <li><strong>Ce qui te déclenche émotionnellement</strong> → Silence, distance, retard de réponse... ou au contraire trop de proximité si tu es évitante</li>
+        <li><strong>Comment tu gères les conflits</strong> → Catastrophiser vs minimiser, poursuivre vs fuir, paniquer vs se fermer</li>
+        <li><strong>Ta capacité à faire confiance</strong> → Hypervigilance vs confiance aveugle vs confiance progressive</li>
+        <li><strong>Ta façon de vivre la solitude</strong> → Angoissante (anxieux) vs apaisante (évitant)</li>
+    </ul><br><br>    <h3>Les combinaisons courantes (et leurs dynamiques)</h3><br><br>    <table class="combinations-table">
+        <tr>
+            <th>Ton style</th>
+            <th>Son style</th>
+            <th>Dynamique typique</th>
+        </tr>
+        <tr>
+            <td><strong>Anxieux</strong></td>
+            <td><strong>Évitant</strong></td>
+            <td>Le "piège anxieux-évitant" : plus tu cherches le contact et la réassurance, plus il se sent étouffé et prend de la distance. Plus il prend de la distance, plus ton anxiété d'abandon s'active et plus tu cherches le contact. <strong>Cercle vicieux épuisant.</strong> C'est probablement ce que tu as vécu plusieurs fois, Rislène.</td>
+        </tr>
+        <tr>
+            <td><strong>Anxieux</strong></td>
+            <td><strong>Anxieux</strong></td>
+            <td>Intensité émotionnelle très forte. Beaucoup de connexion, de passion, mais aussi beaucoup de conflits, de jalousie mutuelle, et de "drame". Les deux ont peur d'être abandonnés, donc se rassurent mutuellement... jusqu'à ce que l'un des deux ressente le besoin d'espace et déclenche l'autre.</td>
+        </tr>
+        <tr>
+            <td><strong>Anxieux</strong></td>
+            <td><strong>Sécure</strong></td>
+            <td>Le partenaire sécure peut t'aider à te stabiliser progressivement. Il te rassure sans te juger, pose des limites claires sans te rejeter, et reste présent même dans tes moments d'anxiété. MAIS : si ton anxiété est trop intense et constante, même un sécure peut s'épuiser. <strong>C'est le partenaire idéal pour toi si tu travailles sur ton attachement en parallèle.</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Évitant</strong></td>
+            <td><strong>Évitant</strong></td>
+            <td>Cohabitation "paisible" mais manque de profondeur émotionnelle. Chacun reste dans sa bulle. Peu de conflits, mais peu de vraie intimité. Relations qui durent mais restent superficielles.</td>
+        </tr>
+        <tr>
+            <td><strong>Désorganisé</strong></td>
+            <td>N'importe quel style</td>
+            <td>Relations chaotiques avec des oscillations imprévisibles. Besoin d'aide thérapeutique pour stabiliser avant de pouvoir construire une relation saine.</td>
+        </tr>
+    </table><br><br>    <div class="insight-box">
+        <p><strong>💡 Le piège invisible :</strong> On attire souvent le style qui <strong>confirme</strong> notre croyance profonde.</p>
+        <p>Si tu crois "l'amour est imprévisible, les gens partent", tu seras inconsciemment attirée par des hommes émotionnellement indisponibles ou évitants — parce que c'est <strong>familier</strong>. Ton système d'attachement reconnaît ce pattern et dit "ah oui, je connais ça". Résultat : tu reproduis exactement ce que tu as vécu enfant.</p>
+        <p>Briser ce cycle demande de choisir <strong>consciemment</strong> des partenaires qui sont disponibles et sécures — même si au début, ça peut te sembler "trop facile" ou "pas assez intense".</p>
+    </div>
+</section>
+```
+        ```html
+<section id="espoir">
+    <h2>E. La bonne nouvelle : l'attachement peut évoluer</h2><br><br>    <div class="hope-box">
+        <h3>🌟 Le concept d'"Earned Secure" (Sécurité Acquise)</h3><br><br>        <p>Voici une vérité qui change tout : tu n'es <strong>pas condamnée</strong> à vivre avec un attachement anxieux pour toujours.</p><br><br>        <p>La recherche montre que des personnes avec un attachement insécure (anxieux, évitant, désorganisé) peuvent développer un attachement <strong>sécure acquis</strong> (earned secure). Ce n'est pas exactement le même que le sécure "naturel" qu'ont les personnes qui ont eu des figures d'attachement stables dès le départ — mais les <strong>bénéfices sont similaires</strong>.</p><br><br>        <p><strong>Comment ça se développe (le chemin que tu es en train de prendre) :</strong></p>
+        <ul>
+            <li><strong>Prise de conscience de ton style</strong> (ce que tu fais maintenant en lisant ce document)</li>
+            <li><strong>Travail thérapeutique ou de développement personnel approfondi</strong> (ce parcours My Muqabala)</li>
+            <li><strong>Expériences relationnelles réparatrices</strong> (relations avec des personnes sécures qui te montrent qu'on peut compter sur elles)</li>
+            <li><strong>Relation amoureuse avec un partenaire sécure et patient</strong> (qui ne fuit pas ton anxiété mais te rassure de façon cohérente)</li>
+            <li><strong>Pratique consciente de nouveaux comportements</strong> (réguler ton anxiété au lieu de réagir impulsivement, exprimer tes besoins clairement au lieu de "bouder", etc.)</li>
+            <li><strong>Reconstruction spirituelle</strong> (apprendre à faire tawakkul, à placer ta sécurité ultime en Allah plutôt qu'en un homme)</li>
+        </ul><br><br>        <p>Ce chemin prend du temps — souvent plusieurs années. Mais chaque petit pas compte. Chaque fois que tu <strong>vois</strong> ton schéma d'abandon s'activer avant de réagir, tu crées un espace de liberté. Chaque fois que tu <strong>régules</strong> ton anxiété au lieu de fusionner avec elle, tu reconfigures ton système nerveux. Chaque fois que tu <strong>choisis</strong> consciemment un comportement différent, tu graves un nouveau pattern.</p>
+    </div><br><br>    <p>Ce que tu fais avec cette cartographie, Rislène, c'est exactement ce chemin vers la sécurité acquise. Tu prends conscience. Tu comprends les mécanismes. Tu pratiques de nouvelles réponses. Et progressivement, ton système d'attachement se reconfigure. Tu n'effaceras jamais complètement les traces de ton enfance — mais tu peux transformer leur impact sur ta vie présente.</p><br><br>    <div class="verset-box">
+        <p class="verset">"Allah ne change pas la condition d'un peuple tant qu'ils ne changent pas ce qui est en eux-mêmes."</p>
+        <p class="reference">— Sourate Ar-Ra'd, 13:11</p>
+    </div><br><br>    <p>Le changement vient de l'intérieur. Et tu as déjà commencé. Chaque document que tu lis, chaque exercice que tu fais, chaque fois que tu choisis consciemment de ne pas envoyer ces 5 messages paniqués — c'est un pas vers la sécurité acquise.</p><br><br>    <p>Il se pourrait qu'un jour, tu te retrouves dans une relation où tu n'as plus besoin de surveiller constamment, où tu peux te détendre et faire confiance, où l'amour est stable et prévisible. Ce jour-là, tu auras transformé ton attachement. Et tu sauras que cette paix, tu l'as construite toi-même, pierre par pierre.</p>
+</section>
+```
+
+        <!-- CONCLUSION -->
+        <section id="conclusion">
+            <div class="card">
+                Tu comprends maintenant ce qu'est l'attachement, comment il se forme dans l'enfance, comment il influence tes relations adultes, et surtout — qu'il peut évoluer. Ce n'est pas une fatalité. C'est un pattern qui peut se transformer.<br><br>Dans le prochain document, on va passer à l'<strong>ACTION concrète</strong>. Tu vas recevoir ta <strong>Fiche Passage à l'Action</strong> — un guide très pratique qui va te donner :<br><br>- Une analyse détaillée de TON style d'attachement spécifique (anxieux-préoccupé)
+- Ce que ça implique concrètement dans tes rencontres
+- Quel type de partenaire serait le plus compatible avec toi
+- Les <strong>red flags</strong> personnalisés (signaux d'alerte à surveiller chez un homme)
+- Les <strong>green flags</strong> personnalisés (signaux positifs qui indiquent qu'il est sain pour toi)
+- Des conseils pratiques pour gérer ton anxiété relationnelle au quotidien<br><br>C'est un document d'action. Concret. Personnalisé. Prêt à être utilisé dès ta prochaine rencontre.
+            </div>
+
+            <div class="transition-box">
+                <p><em>→ Prochain document : Ta Fiche Passage à l'Action - le concret pour tes rencontres.</em></p>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p><strong>My Muqabala</strong></p>
+        <p>Accompagnement thérapeutique musulman</p>
+        <p>Document confidentiel généré pour Rislène</p>
+    </footer>
+
+<!-- SCRIPTS OPTIONNELS - Animations avancées -->
+<script>
+// ===========================================
+// SCRIPTS OPTIONNELS - À ACTIVER SI BESOIN
+// ===========================================
+
+// 1. Animation au scroll (IntersectionObserver)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+// 2. Animation des statistiques (si présentes)
+const animateValue = (el, end) => {
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(progress * end);
+        el.textContent = value + '%';
+
+        if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.animated) {
+            entry.target.animated = true;
+            animateValue(entry.target, parseInt(entry.target.textContent));
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-number').forEach(stat => statsObserver.observe(stat));
+
+// 3. Toggle FAQ (si présent)
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        if (!isOpen) answer.style.display = 'block';
+    });
+});
+
+// 4. Smooth scroll pour les liens d'ancrage
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

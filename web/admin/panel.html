@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<!-- deploy-v5 -->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panneau d'Administration | My Muqabala</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <h2>My Muqabala</h2>
+                <span>Administration</span>
+            </div>
+            <nav class="admin-sidebar-nav">
+                <button class="admin-nav-item active" id="nav-clients" onclick="AdminApp.showSection('clients')">
+                    <span class="admin-nav-icon">👥</span><span>Clients</span>
+                </button>
+                <button class="admin-nav-item" id="nav-nouveau" onclick="AdminApp.showNewClientForm()">
+                    <span class="admin-nav-icon">➕</span><span>Nouveau client</span>
+                </button>
+                <button class="admin-nav-item" id="nav-events" onclick="AdminApp.showSection('events')">
+                    <span class="admin-nav-icon">📅</span><span>Événements</span>
+                </button>
+                <button class="admin-nav-item" id="nav-invitations" onclick="AdminApp.showSection('invitations')">
+                    <span class="admin-nav-icon">📨</span><span>Invitations</span>
+                </button>
+                <button class="admin-nav-item" id="nav-matching" onclick="AdminApp.showSection('matching')">
+                    <span class="admin-nav-icon">💞</span><span>Matching</span>
+                </button>
+                <button class="admin-nav-item" id="nav-exports" onclick="AdminApp.showSection('exports')">
+                    <span class="admin-nav-icon">📊</span><span>Exports</span>
+                </button>
+                <button class="admin-nav-item" id="nav-mahram" onclick="AdminApp.showSection('mahram')">
+                    <span class="admin-nav-icon">🔐</span><span>Mahram</span>
+                </button>
+                <button class="admin-nav-item" id="nav-documents" onclick="AdminApp.showSection('documents')">
+                    <span class="admin-nav-icon">📄</span><span>Documents</span>
+                </button>
+            </nav>
+            <div class="admin-sidebar-footer">
+                <button class="admin-nav-item" onclick="AdminApp.logout()">
+                    <span class="admin-nav-icon">↩️</span><span>Déconnexion</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="admin-main">
+            <!-- HEADER -->
+            <header class="admin-header">
+                <button class="admin-hamburger" onclick="document.getElementById('admin-sidebar').classList.toggle('open')">☰</button>
+                <div class="admin-search-wrapper">
+                    <input type="text" class="admin-search" id="search-input" placeholder="Rechercher par prénom, email, téléphone ou ID..." oninput="AdminApp.search(this.value)">
+                </div>
+                <div class="admin-header-info" id="admin-user-info"></div>
+            </header>
+
+            <!-- CONTENT -->
+            <div class="admin-content">
+                <!-- CLIENT LIST + DETAIL SPLIT VIEW -->
+                <div class="admin-split" id="section-clients">
+                    <!-- LEFT: Client List -->
+                    <div class="admin-list-panel" id="client-list-panel">
+                        <div class="admin-list-header">
+                            <h3>Clients <span class="admin-badge" id="client-count">0</span></h3>
+                        </div>
+                        <div class="admin-list" id="client-list">
+                            <div class="admin-list-empty">Chargement...</div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Client Detail -->
+                    <div class="admin-detail-panel" id="client-detail-panel">
+                        <div class="admin-detail-empty" id="detail-empty">
+                            <span style="font-size:3rem;display:block;margin-bottom:1rem;opacity:0.4">👤</span>
+                            <p>Sélectionne un client dans la liste pour voir ses détails.</p>
+                        </div>
+                        <div id="detail-content" style="display:none">
+                            <!-- Client Header -->
+                            <div class="admin-detail-header">
+                                <div class="admin-detail-avatar" id="detail-avatar"></div>
+                                <div>
+                                    <h2 id="detail-name"></h2>
+                                    <p class="admin-detail-id">N° <span id="detail-client-id"></span></p>
+                                </div>
+                                <div class="admin-detail-actions">
+                                    <a class="admin-btn admin-btn-sm" id="detail-preview-link" href="#" target="_blank">Aperçu dashboard</a>
+                                </div>
+                            </div>
+
+                            <!-- Identifiants de connexion -->
+                            <div class="admin-credentials-box" id="credentials-box">
+                                <div class="admin-credentials-title">Identifiants de connexion</div>
+                                <div class="admin-credentials-row">
+                                    <span class="admin-credentials-label">Téléphone</span>
+                                    <span class="admin-credentials-value" id="detail-telephone"></span>
+                                </div>
+                                <div class="admin-credentials-row">
+                                    <span class="admin-credentials-label">Mot de passe</span>
+                                    <div style="display:flex;align-items:center;gap:0.5rem">
+                                        <span class="admin-credentials-value" id="detail-password" style="font-family:monospace;letter-spacing:0.05em">●●●●●●●●●●●●</span>
+                                        <button type="button" class="admin-btn admin-btn-sm" onclick="AdminApp.toggleDetailPassword()" title="Afficher/masquer" style="padding:0.2rem 0.4rem;min-width:auto;font-size:0.8rem">
+                                            <span id="detail-pwd-eye">👁</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="admin-btn admin-btn-sm" onclick="AdminApp.copyCredentials()" style="margin-top:0.5rem;width:100%">Copier les identifiants</button>
+                            </div>
+
+                            <!-- Matching & High Ticket info -->
+                            <div style="display:flex;gap:0.75rem;margin-top:0.75rem;flex-wrap:wrap">
+                                <div style="flex:1;min-width:120px;background:rgba(124,58,237,0.04);border:1px solid rgba(124,58,237,0.08);border-radius:10px;padding:0.75rem;text-align:center">
+                                    <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-muted,#6b7280);margin-bottom:0.25rem">Matchings</div>
+                                    <div style="font-size:1.3rem;font-weight:700;color:var(--purple,#7C3AED)" id="detail-matching-count">0</div>
+                                </div>
+                                <div style="flex:1;min-width:120px;background:rgba(124,58,237,0.04);border:1px solid rgba(124,58,237,0.08);border-radius:10px;padding:0.75rem;text-align:center">
+                                    <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-muted,#6b7280);margin-bottom:0.25rem">Événements</div>
+                                    <div style="font-size:1.3rem;font-weight:700;color:var(--purple,#7C3AED)" id="detail-events-count">0</div>
+                                </div>
+                                <div style="flex:1;min-width:120px;background:rgba(201,169,98,0.06);border:1px solid rgba(201,169,98,0.15);border-radius:10px;padding:0.75rem;text-align:center;cursor:pointer" onclick="AdminApp.toggleHighTicket()" id="high-ticket-box">
+                                    <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-muted,#6b7280);margin-bottom:0.25rem">High Ticket</div>
+                                    <div style="font-size:1.1rem;font-weight:700" id="detail-high-ticket">Non</div>
+                                </div>
+                            </div>
+
+                            <!-- Tabs -->
+                            <div class="admin-tabs">
+                                <button class="admin-tab active" onclick="AdminApp.switchTab('infos')">Infos</button>
+                                <button class="admin-tab" onclick="AdminApp.switchTab('sections')">Sections</button>
+                                <button class="admin-tab" onclick="AdminApp.switchTab('rencontres')">Rencontres</button>
+                                <button class="admin-tab" onclick="AdminApp.switchTab('plan-action')">Plan Action</button>
+                                <button class="admin-tab" onclick="AdminApp.switchTab('historique')">Historique</button>
+                                <button class="admin-tab" onclick="AdminApp.switchTab('progression')">Progression</button>
+                                <button class="admin-tab" onclick="AdminApp.switchTab('scoring')">Scoring 147Q</button>
+                            </div>
+
+                            <!-- Tab: Infos -->
+                            <div class="admin-tab-content active" id="tab-infos">
+                                <form id="form-infos" onsubmit="AdminApp.saveInfos(event)">
+                                    <div class="admin-form-grid">
+                                        <div class="admin-form-field">
+                                            <label>Prénom</label>
+                                            <input type="text" id="field-prenom" required>
+                                        </div>
+                                        <div class="admin-form-field">
+                                            <label>Nom</label>
+                                            <input type="text" id="field-nom">
+                                        </div>
+                                        <div class="admin-form-field">
+                                            <label>Email</label>
+                                            <input type="email" id="field-email">
+                                        </div>
+                                        <div class="admin-form-field">
+                                            <label>Téléphone</label>
+                                            <input type="text" id="field-telephone">
+                                        </div>
+                                        <div class="admin-form-field">
+                                            <label>Phase du parcours</label>
+                                            <select id="field-statut-parcours">
+                                                <option value="inscription">Inscription</option>
+                                                <option value="formulaire_en_cours">Formulaire en cours</option>
+                                                <option value="formation">Formation</option>
+                                                <option value="matching_pool">Pool de matching</option>
+                                                <option value="phase_1_matching">Phase 1 — Matching</option>
+                                                <option value="phase_2_decouverte">Phase 2 — Découverte</option>
+                                                <option value="phase_3_approfondie">Phase 3 — Approfondissement</option>
+                                                <option value="phase_4_engagement">Phase 4 — Engagement</option>
+                                                <option value="termine">Terminé</option>
+                                                <option value="desactive">Désactivé</option>
+                                            </select>
+                                        </div>
+                                        <div class="admin-form-field">
+                                            <label>Compte-Rendu ID</label>
+                                            <input type="text" id="field-compte-rendu-id" maxlength="6" placeholder="ex: 151567">
+                                        </div>
+                                        <div class="admin-form-field">
+                                            <label>Plan Action ID</label>
+                                            <input type="text" id="field-plan-action-id" maxlength="6" placeholder="ex: 234567">
+                                        </div>
+                                        <div class="admin-form-field">
+                                            <label>Cartographie ID</label>
+                                            <input type="text" id="field-cartographie-id" maxlength="6" placeholder="ex: 345678">
+                                        </div>
+                                    </div>
+                                    <div class="admin-form-field" style="margin-top:1rem">
+                                        <label>Notes internes</label>
+                                        <textarea id="field-notes" rows="4" placeholder="Notes privées..."></textarea>
+                                    </div>
+                                    <div class="admin-form-actions">
+                                        <button type="submit" class="admin-btn admin-btn-primary">Enregistrer</button>
+                                        <span class="admin-save-status" id="save-status-infos"></span>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Tab: Sections -->
+                            <div class="admin-tab-content" id="tab-sections">
+                                <p class="admin-tab-desc">Active ou désactive les sections du dashboard client. Les modifications sont visibles instantanément.</p>
+                                <div class="admin-toggles" id="section-toggles"></div>
+                            </div>
+
+                            <!-- Tab: Rencontres en Cours -->
+                            <div class="admin-tab-content" id="tab-rencontres">
+                                <div class="admin-tab-header">
+                                    <h3>Retours hebdomadaires</h3>
+                                    <button class="admin-btn admin-btn-sm admin-btn-primary" onclick="AdminApp.addRetour()">+ Ajouter un retour</button>
+                                </div>
+                                <div id="retours-list"></div>
+                                <div id="retour-editor" style="display:none">
+                                    <div class="admin-editor-card">
+                                        <div class="admin-form-grid">
+                                            <div class="admin-form-field">
+                                                <label>Semaine N°</label>
+                                                <input type="number" id="retour-semaine" min="1" required>
+                                            </div>
+                                            <div class="admin-form-field">
+                                                <label>Date</label>
+                                                <input type="text" id="retour-date" placeholder="ex: 12 février 2026">
+                                            </div>
+                                        </div>
+                                        <div class="admin-form-field" style="margin-top:1rem">
+                                            <label>Contenu (HTML autorisé)</label>
+                                            <textarea id="retour-contenu" rows="8" placeholder="Écris le retour personnalisé ici..."></textarea>
+                                        </div>
+                                        <div class="admin-form-field" style="margin-top:0.5rem">
+                                            <label>Statut</label>
+                                            <select id="retour-statut">
+                                                <option value="en_attente">En attente</option>
+                                                <option value="redige">Rédigé</option>
+                                            </select>
+                                        </div>
+                                        <div class="admin-form-actions">
+                                            <button class="admin-btn admin-btn-primary" onclick="AdminApp.saveRetour()">Sauvegarder</button>
+                                            <button class="admin-btn" onclick="AdminApp.cancelRetourEdit()">Annuler</button>
+                                            <button class="admin-btn admin-btn-danger" id="btn-delete-retour" onclick="AdminApp.deleteRetour()" style="display:none">Supprimer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Plan Action -->
+                            <div class="admin-tab-content" id="tab-plan-action">
+                                <p class="admin-tab-desc">3 bilans mensuels, créés automatiquement pour chaque client.</p>
+                                <div id="bilans-list"></div>
+                            </div>
+
+                            <!-- Tab: Progression -->
+                            <div class="admin-tab-content" id="tab-progression">
+                                <p class="admin-tab-desc">Coche ou décoche manuellement les formulaires et ressources complétées par la cliente.</p>
+                                <div id="progression-content"></div>
+                            </div>
+
+                            <!-- Tab: Historique -->
+                            <div class="admin-tab-content" id="tab-historique">
+                                <div class="admin-tab-header">
+                                    <h3>Rencontres passées</h3>
+                                    <button class="admin-btn admin-btn-sm admin-btn-primary" onclick="AdminApp.addRencontre()">+ Ajouter</button>
+                                </div>
+                                <div id="rencontres-list"></div>
+                                <div id="rencontre-editor" style="display:none">
+                                    <div class="admin-editor-card">
+                                        <div class="admin-form-grid">
+                                            <div class="admin-form-field">
+                                                <label>Rencontre N°</label>
+                                                <input type="number" id="rencontre-numero" min="1" required>
+                                            </div>
+                                            <div class="admin-form-field">
+                                                <label>Date</label>
+                                                <input type="text" id="rencontre-date" placeholder="ex: Janvier 2026">
+                                            </div>
+                                        </div>
+                                        <div class="admin-form-field" style="margin-top:1rem">
+                                            <label>Titre</label>
+                                            <input type="text" id="rencontre-titre" placeholder="ex: Rencontre #1 — Janvier 2026">
+                                        </div>
+                                        <div class="admin-form-field" style="margin-top:0.75rem">
+                                            <label>Analyse (HTML autorisé)</label>
+                                            <textarea id="rencontre-analyse" rows="8" placeholder="L'analyse de la rencontre..."></textarea>
+                                        </div>
+                                        <div class="admin-form-field" style="margin-top:0.5rem">
+                                            <label>Statut</label>
+                                            <select id="rencontre-statut">
+                                                <option value="en_attente">En attente d'analyse</option>
+                                                <option value="analyse_disponible">Analyse disponible</option>
+                                            </select>
+                                        </div>
+                                        <div class="admin-form-actions">
+                                            <button class="admin-btn admin-btn-primary" onclick="AdminApp.saveRencontre()">Sauvegarder</button>
+                                            <button class="admin-btn" onclick="AdminApp.cancelRencontreEdit()">Annuler</button>
+                                            <button class="admin-btn admin-btn-danger" id="btn-delete-rencontre" onclick="AdminApp.deleteRencontre()" style="display:none">Supprimer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Scoring 147Q -->
+                            <div class="admin-tab-content" id="tab-scoring">
+                                <h3 style="font-family:'Cormorant',serif;font-size:1.15rem;margin-bottom:1rem">Profil de Scoring — 147 Questions</h3>
+                                <div id="scoring-content"><div class="admin-list-empty">Aucune donnée de scoring disponible.</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EVENTS SECTION -->
+                <div id="section-events" style="display:none" class="admin-section-full">
+                    <div class="admin-section-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+                        <h2 style="font-family:'Cormorant',serif;font-size:1.6rem">Événements <span class="admin-badge" id="event-count">0</span></h2>
+                        <button class="admin-btn" onclick="EventManager.showForm()">+ Créer un événement</button>
+                    </div>
+                    <!-- Event editor (hidden by default) -->
+                    <div id="event-editor" style="display:none;background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:1.5rem;margin-bottom:1.5rem">
+                        <h3 style="font-family:'Cormorant',serif;font-size:1.15rem;margin-bottom:1rem">Détails de l'événement</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
+                            <div class="admin-form-field"><label>Titre</label><input id="evt-title" required></div>
+                            <div class="admin-form-field"><label>Date</label><input id="evt-date" type="date"></div>
+                            <div class="admin-form-field"><label>Type</label>
+                                <select id="evt-type">
+                                    <option value="matching">Matching</option>
+                                    <option value="coaching_groupe">Coaching de groupe</option>
+                                    <option value="blink_date">Blink Date</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-field"><label>Statut</label>
+                                <select id="evt-status">
+                                    <option value="planifie">Planifié</option>
+                                    <option value="en_cours">En cours</option>
+                                    <option value="termine">Terminé</option>
+                                    <option value="annule">Annulé</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="admin-form-field" style="margin-bottom:1rem"><label>Description</label><textarea id="evt-description" rows="3"></textarea></div>
+                        <div style="display:flex;gap:0.5rem">
+                            <button class="admin-btn" onclick="EventManager.save()">Sauvegarder</button>
+                            <button class="admin-btn admin-btn-sm" onclick="EventManager.cancelEdit()">Annuler</button>
+                            <button class="admin-btn admin-btn-sm" id="btn-delete-event" style="display:none;color:var(--rose-deep)" onclick="EventManager.remove()">Supprimer</button>
+                        </div>
+                    </div>
+                    <!-- Events list -->
+                    <div id="events-list" style="display:flex;flex-direction:column;gap:0.75rem">
+                        <div class="admin-list-empty">Chargement...</div>
+                    </div>
+                </div>
+
+                <!-- MATCHING SECTION -->
+                <div id="section-matching" style="display:none" class="admin-section-full">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+                        <div>
+                            <h2 style="font-family:'Cormorant',serif;font-size:1.6rem">Matching Pool <span class="admin-badge" id="pool-count">0</span></h2>
+                            <div id="gender-balance" style="font-size:0.82rem;color:var(--ink-muted);margin-top:0.25rem"></div>
+                        </div>
+                        <div id="event-selector-container"></div>
+                    </div>
+
+                    <!-- Workflow 3 steps -->
+                    <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap">
+                        <button class="admin-btn" onclick="MatchingManager.runPreMatching()" style="flex:1;min-width:180px">
+                            <span style="font-size:0.82rem">&#x2460;</span> Pr&eacute;-matching
+                        </button>
+                        <button class="admin-btn" id="btn-notify" onclick="MatchingManager.notifyParticipants()" style="flex:1;min-width:180px;opacity:0.4" disabled>
+                            <span style="font-size:0.82rem">&#x2461;</span> Notifier les participants
+                        </button>
+                        <button class="admin-btn" id="btn-definitive" onclick="MatchingManager.runDefinitiveMatching()" style="flex:1;min-width:180px;opacity:0.4" disabled>
+                            <span style="font-size:0.82rem">&#x2462;</span> Matching d&eacute;finitif
+                        </button>
+                    </div>
+
+                    <!-- Steps 4-6: Blink Date Workflow -->
+                    <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap">
+                        <button class="admin-btn" id="btn-prepare-blink" onclick="MatchingManager.prepareBlinkDates()" style="flex:1;min-width:180px;opacity:0.4" disabled>
+                            <span style="font-size:0.82rem">&#x2463;</span> Pr&eacute;parer les Blink Dates
+                        </button>
+                        <button class="admin-btn" id="btn-launch-event" onclick="MatchingManager.launchEvent()" style="flex:1;min-width:180px;opacity:0.4" disabled>
+                            <span style="font-size:0.82rem">&#x2464;</span> Lancer l&rsquo;&eacute;v&eacute;nement
+                        </button>
+                        <button class="admin-btn" id="btn-resolve" onclick="MatchingManager.resolveMatches()" style="flex:1;min-width:180px;opacity:0.4" disabled>
+                            <span style="font-size:0.82rem">&#x2465;</span> R&eacute;soudre les matchs
+                        </button>
+                    </div>
+
+                    <!-- Confirmation tracker -->
+                    <div id="confirmation-tracker"></div>
+
+                    <!-- Confirmed matches table -->
+                    <div id="confirmed-matches-section" style="display:none;margin-bottom:1.5rem">
+                        <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:0.75rem">Matchs confirm&eacute;s</h3>
+                        <div id="confirmed-matches-table" style="display:flex;flex-direction:column;gap:0.5rem"></div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+                        <div>
+                            <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:0.75rem">Pool des &eacute;ligibles</h3>
+                            <div id="matching-pool" style="max-height:500px;overflow-y:auto;display:flex;flex-direction:column;gap:0.5rem"></div>
+                        </div>
+                        <div>
+                            <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:0.75rem">R&eacute;sultats</h3>
+                            <div id="matching-results" style="max-height:500px;overflow-y:auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPORTS SECTION -->
+                <div id="section-exports" style="display:none" class="admin-section-full">
+                    <h2 style="font-family:'Cormorant',serif;font-size:1.6rem;margin-bottom:1.5rem">Exports</h2>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+                        <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:2rem;text-align:center;cursor:pointer" onclick="MatchingManager.exportCSV()">
+                            <div style="font-size:2.5rem;margin-bottom:0.75rem">📋</div>
+                            <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.25rem">Export CSV</div>
+                            <div style="font-size:0.8rem;color:var(--ink-muted)">Clients, scores, statuts</div>
+                        </div>
+                        <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:2rem;text-align:center;cursor:pointer" onclick="MatchingManager.exportJSON()">
+                            <div style="font-size:2.5rem;margin-bottom:0.75rem">🔗</div>
+                            <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.25rem">Export JSON</div>
+                            <div style="font-size:0.8rem;color:var(--ink-muted)">Structure complète</div>
+                        </div>
+                        <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:2rem;text-align:center;opacity:0.5">
+                            <div style="font-size:2.5rem;margin-bottom:0.75rem">📄</div>
+                            <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.25rem">Export PDF</div>
+                            <div style="font-size:0.8rem;color:var(--ink-muted)">Bientôt disponible</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAHRAM NUMERIQUE SECTION -->
+                <div id="section-mahram" style="display:none" class="admin-section-full">
+                    <h2 style="font-family:'Cormorant',serif;font-size:1.6rem;margin-bottom:1.5rem">Mahram Numérique <span class="admin-badge" id="channel-count">0</span></h2>
+                    <div style="display:grid;grid-template-columns:300px 1fr;gap:1.5rem;min-height:500px">
+                        <div>
+                            <h3 style="font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-muted);margin-bottom:0.75rem">Conversations</h3>
+                            <div id="mahram-channels" style="display:flex;flex-direction:column;gap:0.5rem;max-height:500px;overflow-y:auto"></div>
+                        </div>
+                        <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);display:flex;flex-direction:column">
+                            <div style="padding:1rem 1.25rem;border-bottom:1px solid rgba(107,90,156,0.08);font-weight:600;font-size:0.9rem">Messages</div>
+                            <div id="mahram-messages" style="flex:1;padding:1rem 1.25rem;overflow-y:auto;display:flex;flex-direction:column;min-height:350px">
+                                <div class="admin-list-empty" style="margin:auto">S&#233;lectionne une conversation.</div>
+                            </div>
+                            <div id="admin-chat-input-area" style="display:none;padding:0.75rem 1rem;border-top:1px solid rgba(107,90,156,0.08);gap:0.5rem;align-items:flex-end">
+                                <textarea id="admin-chat-input" rows="1" placeholder="Votre message..." style="flex:1;resize:none;border:1px solid rgba(107,90,156,0.12);border-radius:10px;padding:0.6rem 0.8rem;font-size:0.88rem;font-family:inherit;outline:none;min-height:38px;max-height:120px" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+                                <button id="admin-chat-send" type="button" style="background:var(--purple,#7C3AED);color:#fff;border:none;border-radius:10px;padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap">Envoyer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOCUMENTS DISTRIBUTION SECTION -->
+                <div id="section-documents" style="display:none" class="admin-section-full">
+                    <h2 style="font-family:'Cormorant',serif;font-size:1.6rem;margin-bottom:1.5rem">Distribution de Documents</h2>
+                    <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:1.5rem;margin-bottom:1.5rem">
+                        <h3 style="font-family:'Cormorant',serif;font-size:1.1rem;margin-bottom:1rem">Envoyer un document</h3>
+                        <form onsubmit="DocDistribution.send(event)">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
+                                <div class="admin-form-field"><label>Client</label><select id="doc-client-select"></select></div>
+                                <div class="admin-form-field"><label>Nom du document</label><input id="doc-name-input" placeholder="Ex: DOC_07 — La grammaire de l'amour" required></div>
+                            </div>
+                            <button type="submit" class="admin-btn">Envoyer le document</button>
+                        </form>
+                    </div>
+                    <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:0.75rem">Historique des envois</h3>
+                    <div id="doc-dist-history" style="display:flex;flex-direction:column;gap:0.5rem"></div>
+                </div>
+
+                <!-- NEW CLIENT FORM (hidden by default) -->
+                <div id="section-new-client" style="display:none">
+                    <div class="admin-new-client-card">
+                        <h2>Nouveau Client</h2>
+                        <form id="form-new-client" onsubmit="AdminApp.createClient(event)">
+                            <div class="admin-form-grid">
+                                <div class="admin-form-field">
+                                    <label>Prénom *</label>
+                                    <input type="text" id="new-prenom" required>
+                                </div>
+                                <div class="admin-form-field">
+                                    <label>Nom</label>
+                                    <input type="text" id="new-nom">
+                                </div>
+                                <div class="admin-form-field">
+                                    <label>Téléphone * (identifiant de connexion)</label>
+                                    <input type="tel" id="new-telephone" placeholder="+33612345678" required>
+                                </div>
+                                <div class="admin-form-field">
+                                    <label>Email</label>
+                                    <input type="email" id="new-email">
+                                </div>
+                                <div class="admin-form-field">
+                                    <label>Genre *</label>
+                                    <select id="new-genre" required>
+                                        <option value="">-- Choisir --</option>
+                                        <option value="femme">Femme</option>
+                                        <option value="homme">Homme</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="admin-form-actions" style="margin-top:1.5rem">
+                                <button type="submit" class="admin-btn admin-btn-primary">Créer le client</button>
+                                <button type="button" class="admin-btn" onclick="AdminApp.showSection('clients')">Annuler</button>
+                            </div>
+                        </form>
+
+                        <!-- Generated credentials card (hidden by default) -->
+                        <div id="generated-credentials" style="display:none;margin-top:1.5rem">
+                            <div class="admin-credentials-box" style="background:rgba(124,58,237,0.04);border:1px solid rgba(124,58,237,0.15);border-radius:12px;padding:1.25rem">
+                                <div style="font-family:'Cormorant',serif;font-size:1.1rem;font-weight:600;margin-bottom:1rem;color:var(--purple,#7C3AED)">Identifiants générés</div>
+                                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(0,0,0,0.06)">
+                                    <span style="font-size:0.82rem;color:var(--ink-muted,#6b7280)">Téléphone</span>
+                                    <span style="font-weight:600;font-size:0.9rem" id="gen-telephone"></span>
+                                </div>
+                                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;margin-top:0.25rem">
+                                    <span style="font-size:0.82rem;color:var(--ink-muted,#6b7280)">Mot de passe</span>
+                                    <div style="display:flex;align-items:center;gap:0.5rem">
+                                        <span style="font-weight:600;font-size:0.9rem;font-family:monospace;letter-spacing:0.05em" id="gen-password">&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</span>
+                                        <button type="button" class="admin-btn admin-btn-sm" onclick="AdminApp.toggleGenPassword()" title="Afficher/masquer" style="padding:0.3rem 0.5rem;min-width:auto">
+                                            <span id="gen-eye-icon">&#128065;</span>
+                                        </button>
+                                        <button type="button" class="admin-btn admin-btn-sm" onclick="AdminApp.copyGenCredentials()" title="Copier" style="padding:0.3rem 0.5rem;min-width:auto">&#128203;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INVITATIONS SECTION -->
+                <div id="section-invitations" style="display:none" class="admin-section-full">
+                    <div class="admin-section-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+                        <h2 style="font-family:'Cormorant',serif;font-size:1.6rem">Invitations <span class="admin-badge" id="invitation-count">0</span></h2>
+                        <div style="display:flex;gap:0.5rem">
+                            <button class="admin-btn admin-btn-sm" onclick="InvitationManager.importCSV()">Import CSV</button>
+                        </div>
+                    </div>
+                    <!-- Create invitation form -->
+                    <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:1.5rem;margin-bottom:1.5rem">
+                        <h3 style="font-family:'Cormorant',serif;font-size:1.15rem;margin-bottom:1rem">Nouvelle invitation</h3>
+                        <form onsubmit="InvitationManager.create(event)">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
+                                <div class="admin-form-field"><label>Prénom</label><input id="inv-prenom" required></div>
+                                <div class="admin-form-field"><label>Nom</label><input id="inv-nom"></div>
+                                <div class="admin-form-field"><label>Téléphone</label><input id="inv-telephone" required></div>
+                                <div class="admin-form-field"><label>Email</label><input id="inv-email" type="email"></div>
+                            </div>
+                            <button type="submit" class="admin-btn">Envoyer l'invitation</button>
+                        </form>
+                    </div>
+                    <!-- Invitations list -->
+                    <div id="invitations-list"><div class="admin-list-empty">Chargement...</div></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="admin-toast" id="admin-toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stream-chat@8.40.0/dist/browser.full-bundle.min.js"></script>
+    <script src="../supabase-config.js"></script>
+    <script src="admin-app.js"></script>
+    <script src="admin-events.js"></script>
+    <script src="admin-matching.js"></script>
+    <script src="admin-mahram.js"></script>
+    <script src="admin-chat.js"></script>
+    <script src="admin-invitations.js"></script>
+</body>
+</html>

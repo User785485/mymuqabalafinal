@@ -223,14 +223,20 @@ class _EventDetailBody extends ConsumerWidget {
             },
           ),
 
-          // ── Pool / waiting list status ────────────────────────────────
+          // ── Pool / confirmation status ─────────────────────────────────
           AppSpacing.gapXl,
-          _PoolStatusSection(isDark: isDark),
+          _PoolStatusSection(isDark: isDark, event: event),
 
           // ── Join session button (coaching_groupe with webinarjam_url) ─
           if (_hasWebinarUrl(event)) ...[
             AppSpacing.gapMd,
             _JoinSessionButton(event: event),
+          ],
+
+          // ── Join Blink Date button (matching event en_cours) ──────────
+          if (_isLiveMatchingEvent(event)) ...[
+            AppSpacing.gapMd,
+            _JoinBlinkDateButton(event: event),
           ],
 
           // ── Bottom padding ────────────────────────────────────────────
@@ -245,6 +251,12 @@ class _EventDetailBody extends ConsumerWidget {
     final dateFormat = DateFormat.yMMMMd('fr_FR');
     final timeFormat = DateFormat.Hm('fr_FR');
     return '${dateFormat.format(date)} \u00e0 ${timeFormat.format(date)}';
+  }
+
+  /// Checks whether the event is a live matching event (en_cours).
+  bool _isLiveMatchingEvent(EventModel event) {
+    return event.statut == 'en_cours' &&
+        (event.typeEvenement == 'matching' || event.typeEvenement == 'blink_date');
   }
 
   /// Checks whether the event has a webinarjam_url in its config.
@@ -366,22 +378,110 @@ class _InfoRow extends StatelessWidget {
 // Pool / waiting list status section
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/// Displays the user's pool status instead of an RSVP button.
+/// Displays the user's participation status and confirmation buttons.
 ///
-/// - If the questionnaire is completed: shows a success card ("Vous \u00eates
-///   dans le pool de matching") with a checkmark.
-/// - If not completed: shows a prompt to complete the compatibility
-///   questionnaire, with a button navigating to the questionnaire screen.
-/// - Always shows an info line explaining that participant selection is
-///   handled by the matching algorithm.
-class _PoolStatusSection extends ConsumerWidget {
-  const _PoolStatusSection({required this.isDark});
+/// States:
+///   1. Questionnaire not completed → prompt to complete
+///   2. In pool, no participation → "Vous \u00eates dans le pool"
+///   3. Participation status = 'inscrit' → Confirm/Decline buttons
+///   4. Participation status = 'confirme' → "Pr\u00e9sence confirm\u00e9e"
+///   5. Participation status = 'absent' → "Vous avez d\u00e9clin\u00e9"
+class _PoolStatusSection extends ConsumerStatefulWidget {
+  const _PoolStatusSection({required this.isDark, required this.event});
 
   final bool isDark;
+  final EventModel event;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_PoolStatusSection> createState() =>
+      _PoolStatusSectionState();
+}
+
+class _PoolStatusSectionState extends ConsumerState<_PoolStatusSection> {
+  bool _isLoading = false;
+
+  Future<void> _handleConfirm() async {
+    setState(() => _isLoading = true);
+    try {
+      final repo = ref.read(eventsRepositoryProvider);
+      final result = await repo.confirmParticipation(widget.event.id);
+      if (result['success'] == true && mounted) {
+        ref.invalidate(myParticipationStatusProvider(widget.event.id));
+        ref.invalidate(eventParticipantsProvider(widget.event.id));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Pr\u00e9sence confirm\u00e9e !'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } on Exception catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur : $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleDecline() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('D\u00e9cliner la participation ?'),
+        content: const Text(
+          'En d\u00e9clinant, vous ne participerez pas \u00e0 cet '
+          '\u00e9v\u00e9nement et votre priorit\u00e9 pour les prochains '
+          'matchings sera r\u00e9duite.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('D\u00e9cliner'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    setState(() => _isLoading = true);
+    try {
+      final repo = ref.read(eventsRepositoryProvider);
+      final result = await repo.declineParticipation(widget.event.id);
+      if (result['success'] == true && mounted) {
+        ref.invalidate(myParticipationStatusProvider(widget.event.id));
+        ref.invalidate(eventParticipantsProvider(widget.event.id));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Participation d\u00e9clin\u00e9e.'),
+          ),
+        );
+      }
+    } on Exception catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur : $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = widget.isDark;
     final questionnaireAsync = ref.watch(hasCompletedQuestionnaireProvider);
+    final participationAsync =
+        ref.watch(myParticipationStatusProvider(widget.event.id));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -394,24 +494,41 @@ class _PoolStatusSection extends ConsumerWidget {
         ),
         AppSpacing.gapMd,
 
-        // ── Pool status card ──────────────────────────────────────────
+        // ── Main status card ──────────────────────────────────────────
         questionnaireAsync.when(
-          loading: () => const LoadingSkeleton(
-            height: 60,
-            borderRadius: 12,
-          ),
-          error: (_, __) => _buildPromptCard(context),
+          loading: () =>
+              const LoadingSkeleton(height: 60, borderRadius: 12),
+          error: (_, __) => _buildPromptCard(context, isDark),
           data: (hasCompleted) {
-            if (hasCompleted) {
-              return _buildInPoolCard();
+            if (!hasCompleted) {
+              return _buildPromptCard(context, isDark);
             }
-            return _buildPromptCard(context);
+
+            // Questionnaire completed — check participation status
+            return participationAsync.when(
+              loading: () =>
+                  const LoadingSkeleton(height: 60, borderRadius: 12),
+              error: (_, __) => _buildInPoolCard(isDark),
+              data: (statut) {
+                if (statut == null) return _buildInPoolCard(isDark);
+                if (statut == 'inscrit') {
+                  return _buildConfirmationCard(isDark);
+                }
+                if (statut == 'confirme') {
+                  return _buildConfirmedCard(isDark);
+                }
+                if (statut == 'absent') {
+                  return _buildDeclinedCard(isDark);
+                }
+                return _buildInPoolCard(isDark);
+              },
+            );
           },
         ),
 
         AppSpacing.gapMd,
 
-        // ── Algorithmic selection info ─────────────────────────────────
+        // ── Info line ─────────────────────────────────────────────────
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -451,8 +568,181 @@ class _PoolStatusSection extends ConsumerWidget {
     );
   }
 
-  /// Card shown when the user IS in the matching pool.
-  Widget _buildInPoolCard() {
+  // ── Card: Questionnaire not completed ──────────────────────────────
+  Widget _buildPromptCard(BuildContext context, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: isDark
+            ? AppColors.violet.withValues(alpha: 0.08)
+            : AppColors.violetLight,
+        borderRadius: AppRadius.borderMd,
+        border: Border.all(
+          color: isDark
+              ? AppColors.violet.withValues(alpha: 0.2)
+              : AppColors.violet.withValues(alpha: 0.15),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.assignment_outlined, size: 20, color: AppColors.violet),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Compl\u00e9tez le questionnaire de compatibilit\u00e9 pour participer',
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: isDark ? AppColors.darkInk : AppColors.ink,
+                    fontWeight: FontWeight.w500,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          AppSpacing.gapMd,
+          SizedBox(
+            width: double.infinity,
+            child: MuqabalaButton(
+              label: 'Acc\u00e9der au questionnaire',
+              icon: Icons.arrow_forward_rounded,
+              variant: MuqabalaButtonVariant.primary,
+              onPressed: () => context.pushNamed(RouteNames.questionnaire),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Card: In pool, waiting for pre-matching ────────────────────────
+  Widget _buildInPoolCard(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: isDark
+            ? AppColors.success.withValues(alpha: 0.08)
+            : AppColors.successLight,
+        borderRadius: AppRadius.borderMd,
+        border: Border.all(
+          color: isDark
+              ? AppColors.success.withValues(alpha: 0.2)
+              : AppColors.success.withValues(alpha: 0.15),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: AppColors.success.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.check_rounded, size: 18, color: AppColors.success),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Vous \u00eates dans le pool de matching',
+                  style: AppTypography.label.copyWith(
+                    color: AppColors.success,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'En attente du prochain \u00e9v\u00e9nement',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Card: Compatibilities found, confirm/decline ───────────────────
+  Widget _buildConfirmationCard(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark
+            ? AppColors.violet.withValues(alpha: 0.08)
+            : AppColors.violetLight,
+        borderRadius: AppRadius.borderLg,
+        border: Border.all(
+          color: isDark
+              ? AppColors.violet.withValues(alpha: 0.25)
+              : AppColors.violet.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.favorite_rounded, size: 20, color: AppColors.violet),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Compatibilit\u00e9s disponibles !',
+                  style: AppTypography.label.copyWith(
+                    color: AppColors.violet,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          AppSpacing.gapSm,
+          Text(
+            'Des profils compatibles ont \u00e9t\u00e9 trouv\u00e9s pour vous. '
+            'Confirmez votre pr\u00e9sence pour participer \u00e0 cet \u00e9v\u00e9nement.',
+            style: AppTypography.bodyMedium.copyWith(
+              color: isDark ? AppColors.darkInkSoft : AppColors.inkSoft,
+              height: 1.5,
+            ),
+          ),
+          AppSpacing.gapLg,
+          if (_isLoading)
+            const Center(child: CircularProgressIndicator())
+          else ...[
+            SizedBox(
+              width: double.infinity,
+              child: MuqabalaButton(
+                label: 'Confirmer ma pr\u00e9sence',
+                icon: Icons.check_circle_outline_rounded,
+                variant: MuqabalaButtonVariant.primary,
+                onPressed: _handleConfirm,
+              ),
+            ),
+            AppSpacing.gapSm,
+            SizedBox(
+              width: double.infinity,
+              child: MuqabalaButton(
+                label: 'D\u00e9cliner',
+                icon: Icons.close_rounded,
+                variant: MuqabalaButtonVariant.secondary,
+                onPressed: _handleDecline,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // ── Card: Confirmed ────────────────────────────────────────────────
+  Widget _buildConfirmedCard(bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
@@ -476,7 +766,7 @@ class _PoolStatusSection extends ConsumerWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.check_rounded,
+              Icons.check_circle_rounded,
               size: 18,
               color: AppColors.success,
             ),
@@ -487,7 +777,7 @@ class _PoolStatusSection extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Vous \u00eates dans le pool de matching',
+                  'Pr\u00e9sence confirm\u00e9e',
                   style: AppTypography.label.copyWith(
                     color: AppColors.success,
                     fontWeight: FontWeight.w600,
@@ -495,11 +785,9 @@ class _PoolStatusSection extends ConsumerWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Vous \u00eates sur la liste d\'attente',
+                  'Vous serez inclus(e) dans le matching d\u00e9finitif',
                   style: AppTypography.bodySmall.copyWith(
-                    color: isDark
-                        ? AppColors.darkInkMuted
-                        : AppColors.inkMuted,
+                    color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
                   ),
                 ),
               ],
@@ -510,55 +798,50 @@ class _PoolStatusSection extends ConsumerWidget {
     );
   }
 
-  /// Card shown when the user has NOT completed the questionnaire.
-  Widget _buildPromptCard(BuildContext context) {
+  // ── Card: Declined ─────────────────────────────────────────────────
+  Widget _buildDeclinedCard(bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: isDark
-            ? AppColors.violet.withValues(alpha: 0.08)
-            : AppColors.violetLight,
+            ? AppColors.inkFaint.withValues(alpha: 0.08)
+            : AppColors.inkFaint.withValues(alpha: 0.06),
         borderRadius: AppRadius.borderMd,
         border: Border.all(
-          color: isDark
-              ? AppColors.violet.withValues(alpha: 0.2)
-              : AppColors.violet.withValues(alpha: 0.15),
+          color: AppColors.inkFaint.withValues(alpha: 0.15),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.assignment_outlined,
-                size: 20,
-                color: AppColors.violet,
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'Compl\u00e9tez le questionnaire de compatibilit\u00e9 '
-                  'pour participer',
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: isDark ? AppColors.darkInk : AppColors.ink,
-                    fontWeight: FontWeight.w500,
-                    height: 1.4,
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: AppColors.inkFaint.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.close_rounded, size: 18, color: AppColors.inkMuted),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Participation d\u00e9clin\u00e9e',
+                  style: AppTypography.label.copyWith(
+                    color: AppColors.inkMuted,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-            ],
-          ),
-          AppSpacing.gapMd,
-          SizedBox(
-            width: double.infinity,
-            child: MuqabalaButton(
-              label: 'Acc\u00e9der au questionnaire',
-              icon: Icons.arrow_forward_rounded,
-              variant: MuqabalaButtonVariant.primary,
-              onPressed: () {
-                context.pushNamed(RouteNames.questionnaire);
-              },
+                const SizedBox(height: 2),
+                Text(
+                  'Vous ne participerez pas \u00e0 cet \u00e9v\u00e9nement',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -631,6 +914,29 @@ class _JoinSessionButton extends StatelessWidget {
         );
       }
     }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Join Blink Date button
+// ═══════════════════════════════════════════════════════════════════════════════
+
+class _JoinBlinkDateButton extends StatelessWidget {
+  const _JoinBlinkDateButton({required this.event});
+
+  final EventModel event;
+
+  @override
+  Widget build(BuildContext context) {
+    return MuqabalaButton(
+      label: 'Rejoindre le Blink Date',
+      icon: Icons.bolt_rounded,
+      variant: MuqabalaButtonVariant.primary,
+      onPressed: () => context.pushNamed(
+        RouteNames.blinkDate,
+        extra: event.id,
+      ),
+    );
   }
 }
 

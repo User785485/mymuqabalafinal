@@ -2,7 +2,7 @@
 ///
 /// Handles all Supabase interactions for the Blink Date feature:
 /// fetching rounds, updating statuses, requesting LiveKit tokens,
-/// and submitting post-call feedback.
+/// submitting post-call feedback, photo selections, and match results.
 library;
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -73,13 +73,44 @@ class BlinkDateRepository {
     }
   }
 
+  /// Fetch all Blink Date rounds for the current user in an event.
+  ///
+  /// Uses RPC `get_user_blink_dates_for_event` which returns rounds
+  /// with partner info (prenom, photo floue, room_name).
+  Future<List<BlinkDateModel>> getBlinkDatesForEvent(String eventId) async {
+    try {
+      final userId = _supabase.auth.currentUser?.id;
+      if (userId == null) throw Exception('Not authenticated');
+
+      final data = await _supabase.rpc('get_user_blink_dates_for_event', params: {
+        'p_event_id': eventId,
+        'p_user_id': userId,
+      });
+
+      final rawList = data as List<dynamic>? ?? [];
+      final results = rawList
+          .map((item) => BlinkDateModel.fromJson(item as Map<String, dynamic>))
+          .toList();
+
+      AppLogger.info(
+        'Loaded ${results.length} blink dates for event $eventId',
+        tag: _tag,
+      );
+      return results;
+    } catch (e, st) {
+      AppLogger.error(
+        'Failed to fetch BlinkDates for event $eventId',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+  }
+
   // ── LiveKit token ──────────────────────────────────────────────────────
 
   /// Request a LiveKit access token from the Supabase Edge Function.
-  ///
-  /// Returns a map containing:
-  /// - `token`: the JWT token for LiveKit
-  /// - `ws_url`: the WebSocket URL to connect to
   Future<Map<String, dynamic>> getLivekitToken(String roomName) async {
     try {
       final response = await _supabase.functions.invoke(
@@ -87,7 +118,12 @@ class BlinkDateRepository {
         body: {'room_name': roomName},
       );
 
-      final data = response.data as Map<String, dynamic>;
+      if (response.data == null) {
+        throw Exception('LiveKit token response is null for room "$roomName"');
+      }
+      final data = response.data is Map<String, dynamic>
+          ? response.data as Map<String, dynamic>
+          : throw Exception('LiveKit token response is not a valid Map for room "$roomName"');
 
       AppLogger.info(
         'Obtained LiveKit token for room "$roomName"',
@@ -108,8 +144,6 @@ class BlinkDateRepository {
   // ── Mutations ──────────────────────────────────────────────────────────
 
   /// Update the status of a Blink Date round.
-  ///
-  /// Valid statuses: 'en_attente', 'en_cours', 'termine', 'annule'.
   Future<void> updateBlinkDateStatus(String id, String statut) async {
     try {
       await _supabase
@@ -132,19 +166,42 @@ class BlinkDateRepository {
     }
   }
 
-  /// Submit post-call feedback for a Blink Date round.
+  /// Submit binary feedback for a blink date round.
   ///
-  /// Inserts a row into the `feedback_forms` table with:
-  /// - `type_formulaire`: 'post_blink_date'
-  /// - `match_id`: the match ID associated with this Blink Date
-  /// - `reponses`: the feedback answers (rating, interest, etc.)
+  /// Uses RPC `submit_blink_date_feedback` to set wants_to_continue.
+  Future<Map<String, dynamic>> submitBlinkDateFeedback(
+    String blinkDateId,
+    bool wantsToContinue,
+  ) async {
+    try {
+      final data = await _supabase.rpc('submit_blink_date_feedback', params: {
+        'p_blink_date_id': blinkDateId,
+        'p_wants_to_continue': wantsToContinue,
+      });
+
+      AppLogger.info(
+        'Submitted feedback for BlinkDate $blinkDateId: $wantsToContinue',
+        tag: _tag,
+      );
+      return data as Map<String, dynamic>? ?? {'success': true};
+    } catch (e, st) {
+      AppLogger.error(
+        'Failed to submit feedback for BlinkDate $blinkDateId',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+  }
+
+  /// Submit post-call feedback (legacy star rating format).
   Future<void> submitFeedback(
     String blinkDateId,
     String userId,
     Map<String, dynamic> reponses,
   ) async {
     try {
-      // Look up the match_id from the blink_dates table.
       final blinkDate = await _supabase
           .from('blink_dates')
           .select('match_id')
@@ -165,6 +222,113 @@ class BlinkDateRepository {
     } catch (e, st) {
       AppLogger.error(
         'Failed to submit feedback for BlinkDate $blinkDateId',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+  }
+
+  // ── Photo selections ──────────────────────────────────────────────────
+
+  /// Get partner photos for the photo reveal phase.
+  Future<List<Map<String, dynamic>>> getPartnerPhotosForEvent(
+    String eventId,
+  ) async {
+    try {
+      final userId = _supabase.auth.currentUser?.id;
+      if (userId == null) throw Exception('Not authenticated');
+
+      final data = await _supabase
+          .from('photo_selections')
+          .select('id, photo_user_id, is_leurre, is_selected, profiles:photo_user_id(photo_nette_url)')
+          .eq('event_id', eventId)
+          .eq('selecteur_id', userId);
+
+      final results = (data as List<dynamic>).map((row) {
+        final r = row as Map<String, dynamic>;
+        final profile = r['profiles'] as Map<String, dynamic>?;
+        return {
+          'id': r['id'],
+          'photo_user_id': r['photo_user_id'],
+          'is_leurre': r['is_leurre'],
+          'is_selected': r['is_selected'],
+          'photo_nette_url': profile?['photo_nette_url'],
+        };
+      }).toList();
+
+      results.shuffle();
+
+      AppLogger.info(
+        'Loaded ${results.length} photo selections for event $eventId',
+        tag: _tag,
+      );
+      return results;
+    } catch (e, st) {
+      AppLogger.error(
+        'Failed to fetch photo selections for event $eventId',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+  }
+
+  /// Submit photo selections for the event.
+  Future<Map<String, dynamic>> submitPhotoSelections(
+    String eventId,
+    List<String> selectedIds,
+  ) async {
+    try {
+      final data = await _supabase.rpc('submit_photo_selections_for_event', params: {
+        'p_event_id': eventId,
+        'p_selections': selectedIds,
+      });
+
+      AppLogger.info(
+        'Submitted ${selectedIds.length} photo selections for event $eventId',
+        tag: _tag,
+      );
+      return data as Map<String, dynamic>? ?? {'success': true};
+    } catch (e, st) {
+      AppLogger.error(
+        'Failed to submit photo selections for event $eventId',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+  }
+
+  // ── Match results ─────────────────────────────────────────────────────
+
+  /// Get final match results for the current user in an event.
+  Future<List<Map<String, dynamic>>> getMatchResults(String eventId) async {
+    try {
+      final userId = _supabase.auth.currentUser?.id;
+      if (userId == null) throw Exception('Not authenticated');
+
+      final data = await _supabase.rpc('get_user_match_results', params: {
+        'p_event_id': eventId,
+        'p_user_id': userId,
+      });
+
+      final results = (data as List<dynamic>?)
+              ?.map((item) => item as Map<String, dynamic>)
+              .toList() ??
+          [];
+
+      AppLogger.info(
+        'Loaded ${results.length} match results for event $eventId',
+        tag: _tag,
+      );
+      return results;
+    } catch (e, st) {
+      AppLogger.error(
+        'Failed to fetch match results for event $eventId',
         tag: _tag,
         error: e,
         stackTrace: st,
