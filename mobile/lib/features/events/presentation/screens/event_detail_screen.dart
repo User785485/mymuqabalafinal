@@ -100,7 +100,12 @@ class _EventDetailBody extends ConsumerWidget {
     final participantsAsync = ref.watch(eventParticipantsProvider(event.id));
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 16,
+        bottom: AppSpacing.lg,
+      ),
       physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -432,8 +437,8 @@ class _PoolStatusSectionState extends ConsumerState<_PoolStatusSection> {
       builder: (ctx) => AlertDialog(
         title: const Text('D\u00e9cliner la participation ?'),
         content: const Text(
-          'En d\u00e9clinant, vous ne participerez pas \u00e0 cet '
-          '\u00e9v\u00e9nement et votre priorit\u00e9 pour les prochains '
+          'En d\u00e9clinant, tu ne participeras pas \u00e0 cet '
+          '\u00e9v\u00e9nement et ta priorit\u00e9 pour les prochains '
           'matchings sera r\u00e9duite.',
         ),
         actions: [
@@ -487,7 +492,7 @@ class _PoolStatusSectionState extends ConsumerState<_PoolStatusSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Votre statut',
+          'Ton statut',
           style: AppTypography.h3.copyWith(
             color: isDark ? AppColors.darkInk : AppColors.ink,
           ),
@@ -705,8 +710,8 @@ class _PoolStatusSectionState extends ConsumerState<_PoolStatusSection> {
           ),
           AppSpacing.gapSm,
           Text(
-            'Des profils compatibles ont \u00e9t\u00e9 trouv\u00e9s pour vous. '
-            'Confirmez votre pr\u00e9sence pour participer \u00e0 cet \u00e9v\u00e9nement.',
+            'Des profils compatibles ont \u00e9t\u00e9 trouv\u00e9s pour toi. '
+            'Confirme ta pr\u00e9sence pour participer \u00e0 cet \u00e9v\u00e9nement.',
             style: AppTypography.bodyMedium.copyWith(
               color: isDark ? AppColors.darkInkSoft : AppColors.inkSoft,
               height: 1.5,
@@ -785,7 +790,7 @@ class _PoolStatusSectionState extends ConsumerState<_PoolStatusSection> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Vous serez inclus(e) dans le matching d\u00e9finitif',
+                  'Tu seras inclus(e) dans le matching d\u00e9finitif',
                   style: AppTypography.bodySmall.copyWith(
                     color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
                   ),
@@ -836,7 +841,7 @@ class _PoolStatusSectionState extends ConsumerState<_PoolStatusSection> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Vous ne participerez pas \u00e0 cet \u00e9v\u00e9nement',
+                  'Tu ne participeras pas \u00e0 cet \u00e9v\u00e9nement',
                   style: AppTypography.bodySmall.copyWith(
                     color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
                   ),
@@ -1067,7 +1072,7 @@ class _DetailErrorView extends StatelessWidget {
             AppSpacing.gapSm,
             Text(
               'Impossible de charger les d\u00e9tails de l\'\u00e9v\u00e9nement.\n'
-              'V\u00e9rifiez votre connexion et r\u00e9essayez.',
+              'V\u00e9rifie ta connexion et r\u00e9essaie.',
               style: AppTypography.bodyMedium.copyWith(
                 color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
               ),

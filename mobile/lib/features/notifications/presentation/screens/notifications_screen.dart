@@ -151,7 +151,7 @@ class NotificationsScreen extends ConsumerWidget {
     return EmptyState(
       icon: Icons.error_outline_rounded,
       title: 'Erreur de chargement',
-      subtitle: 'Impossible de charger vos notifications.\nVeuillez réessayer.',
+      subtitle: 'Impossible de charger tes notifications.\nR\u00e9essaie.',
       actionLabel: 'Réessayer',
       onAction: () {
         ref.invalidate(notificationsListProvider);

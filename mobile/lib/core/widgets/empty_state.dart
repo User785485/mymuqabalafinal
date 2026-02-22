@@ -22,7 +22,10 @@ import 'package:my_muqabala/core/constants/app_typography.dart';
 import 'package:my_muqabala/core/widgets/muqabala_button.dart';
 
 /// A widget displayed when a list or screen has no content to show.
-class EmptyState extends StatelessWidget {
+///
+/// The icon container has a subtle breathing (pulse) animation to add
+/// life to otherwise static empty screens.
+class EmptyState extends StatefulWidget {
   const EmptyState({
     required this.icon,
     required this.title,
@@ -60,27 +63,61 @@ class EmptyState extends StatelessWidget {
   final EdgeInsets padding;
 
   @override
+  State<EmptyState> createState() => _EmptyStateState();
+}
+
+class _EmptyStateState extends State<EmptyState>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _breathController;
+  late final Animation<double> _breathAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _breathController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    _breathAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _breathController, curve: Curves.easeInOut),
+    );
+    _breathController.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _breathController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final effectiveIconColor = iconColor ?? AppColors.inkFaint;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final effectiveIconColor = widget.iconColor ?? (isDark ? AppColors.darkInkFaint : AppColors.inkFaint);
 
     return Center(
       child: Padding(
-        padding: padding,
+        padding: widget.padding,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // ── Icon ──────────────────────────────────────────────────
-            Container(
-              width: iconSize * 1.5,
-              height: iconSize * 1.5,
-              decoration: BoxDecoration(
-                color: AppColors.purpleLight.withValues(alpha: 0.5),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                size: iconSize,
-                color: effectiveIconColor,
+            // ── Breathing icon ─────────────────────────────────────────
+            ScaleTransition(
+              scale: _breathAnimation,
+              child: Container(
+                width: widget.iconSize * 1.5,
+                height: widget.iconSize * 1.5,
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.violet.withValues(alpha: 0.15)
+                      : AppColors.purpleLight.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  widget.icon,
+                  size: widget.iconSize,
+                  color: effectiveIconColor,
+                ),
               ),
             ),
 
@@ -88,31 +125,31 @@ class EmptyState extends StatelessWidget {
 
             // ── Title (Cormorant) ─────────────────────────────────────
             Text(
-              title,
+              widget.title,
               style: AppTypography.displaySmall.copyWith(
-                color: AppColors.ink,
+                color: isDark ? AppColors.darkInk : AppColors.ink,
               ),
               textAlign: TextAlign.center,
             ),
 
             // ── Subtitle (Outfit muted) ──────────────────────────────
-            if (subtitle != null) ...[
+            if (widget.subtitle != null) ...[
               AppSpacing.gapSm,
               Text(
-                subtitle!,
+                widget.subtitle!,
                 style: AppTypography.bodyMedium.copyWith(
-                  color: AppColors.inkMuted,
+                  color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
                 ),
                 textAlign: TextAlign.center,
               ),
             ],
 
             // ── Action button ────────────────────────────────────────
-            if (actionLabel != null && onAction != null) ...[
+            if (widget.actionLabel != null && widget.onAction != null) ...[
               AppSpacing.gapXl,
               MuqabalaButton(
-                label: actionLabel!,
-                onPressed: onAction,
+                label: widget.actionLabel!,
+                onPressed: widget.onAction,
                 isFullWidth: false,
                 variant: MuqabalaButtonVariant.primary,
               ),

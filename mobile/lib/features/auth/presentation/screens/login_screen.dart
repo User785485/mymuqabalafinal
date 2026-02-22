@@ -21,7 +21,8 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final _phoneController = PhoneController(
     initialValue: const PhoneNumber(isoCode: IsoCode.FR, nsn: ''),
   );
@@ -30,8 +31,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isLoading = false;
   bool _obscurePassword = true;
 
+  late final AnimationController _entryController;
+  late final Animation<double> _fadeAnim;
+  late final Animation<Offset> _slideAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _entryController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    final curve = CurvedAnimation(
+      parent: _entryController,
+      curve: Curves.easeOutCubic,
+    );
+    _fadeAnim = Tween<double>(begin: 0, end: 1).animate(curve);
+    _slideAnim = Tween<Offset>(
+      begin: const Offset(0, 0.08),
+      end: Offset.zero,
+    ).animate(curve);
+    _entryController.forward();
+  }
+
   @override
   void dispose() {
+    _entryController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -42,7 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     final phoneNumber = _phoneController.value;
     if (phoneNumber.nsn.isEmpty) {
-      setState(() => _errorMessage = 'Veuillez entrer votre numéro.');
+      setState(() => _errorMessage = 'Entre ton numéro.');
       return;
     }
 
@@ -52,7 +77,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     if (_passwordController.text.isEmpty) {
-      setState(() => _errorMessage = 'Veuillez entrer votre mot de passe.');
+      setState(() => _errorMessage = 'Entre ton mot de passe.');
       return;
     }
 
@@ -107,7 +132,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 420),
-                      child: _buildCard(context),
+                      child: FadeTransition(
+                        opacity: _fadeAnim,
+                        child: SlideTransition(
+                          position: _slideAnim,
+                          child: _buildCard(context),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -172,7 +203,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Votre numéro de téléphone',
+                    'Ton numéro de téléphone',
                     style: TextStyle(
                       fontFamily: 'Outfit',
                       fontSize: 12,
@@ -294,7 +325,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   cursorColor: AppColors.purple,
                   onSubmitted: (_) => _submit(),
                   decoration: InputDecoration(
-                    hintText: 'Entrez votre mot de passe',
+                    hintText: 'Entre ton mot de passe',
                     hintStyle: TextStyle(
                       fontFamily: 'Outfit',
                       fontSize: 16,

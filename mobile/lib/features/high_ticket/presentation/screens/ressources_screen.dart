@@ -124,7 +124,12 @@ class _RessourceTabContent extends StatelessWidget {
     final percentage = total > 0 ? (completed / total * 100).round() : 0;
 
     return ListView.builder(
-      padding: AppSpacing.screenPadding,
+      padding: EdgeInsets.only(
+        left: AppSpacing.md,
+        right: AppSpacing.md,
+        top: AppSpacing.lg,
+        bottom: AppSpacing.lg,
+      ),
       itemCount: ressources.length + 1, // +1 for progress header
       itemBuilder: (context, index) {
         if (index == 0) {

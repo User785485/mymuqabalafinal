@@ -25,7 +25,7 @@ class HistoriqueRencontresScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final historiqueAsync = ref.watch(rencontresHistoriqueProvider);
-    final bottomPad = MediaQuery.of(context).padding.bottom;
+
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBg : AppColors.paper,
@@ -53,7 +53,7 @@ class HistoriqueRencontresScreen extends ConsumerWidget {
             left: AppSpacing.md,
             right: AppSpacing.md,
             top: AppSpacing.lg,
-            bottom: 92 + bottomPad,
+            bottom: AppSpacing.lg,
           ),
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
@@ -98,7 +98,7 @@ class HistoriqueRencontresScreen extends ConsumerWidget {
                     icon: Icons.history_rounded,
                     title: 'Aucune rencontre passée',
                     subtitle:
-                        'Votre historique de rencontres appara\u00eetra ici.',
+                        'Ton historique de rencontres appara\u00eetra ici.',
                   );
                 }
 
@@ -204,7 +204,7 @@ class _RencontreExpansionTile extends StatelessWidget {
               )
             else
               Text(
-                'L\u2019analyse de votre coach sera disponible prochainement.',
+                'L\u2019analyse de ton coach sera disponible prochainement.',
                 style: AppTypography.bodyMedium.copyWith(
                   color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
                   fontStyle: FontStyle.italic,

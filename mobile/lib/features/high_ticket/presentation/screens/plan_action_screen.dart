@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_muqabala/core/constants/app_colors.dart';
+import 'package:my_muqabala/core/widgets/verset_card.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
 import 'package:my_muqabala/core/widgets/empty_state.dart';
@@ -44,7 +45,7 @@ class PlanActionScreen extends ConsumerWidget {
               icon: Icons.timeline_outlined,
               title: 'Plan d\u2019action non disponible',
               subtitle:
-                  'Votre plan d\u2019action personnalis\u00e9 appara\u00eetra ici.',
+                  'Ton plan d\u2019action personnalis\u00e9 appara\u00eetra ici.',
             );
           }
 
@@ -74,8 +75,24 @@ class PlanActionScreen extends ConsumerWidget {
               await ref.read(planActionProvider.future);
             },
             child: ListView(
-              padding: AppSpacing.screenPadding,
+              padding: EdgeInsets.only(
+                left: AppSpacing.md,
+                right: AppSpacing.md,
+                top: AppSpacing.lg,
+                bottom: AppSpacing.lg,
+              ),
               children: [
+                // Page subtitle
+                Text(
+                  'Ton plan concret pour cr\u00e9er des opportunit\u00e9s de rencontre saines dans ton environnement.',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: isDark
+                        ? AppColors.darkInkMuted
+                        : AppColors.inkMuted,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                AppSpacing.gapMd,
                 // Progress
                 Row(
                   children: [
@@ -121,6 +138,8 @@ class PlanActionScreen extends ConsumerWidget {
                   for (final bilan in bilans)
                     _BilanCard(bilan: bilan, isDark: isDark, ref: ref),
                 ],
+                AppSpacing.gapXl,
+                AppVersets.compatibilite,
                 AppSpacing.gapXxl,
               ],
             ),

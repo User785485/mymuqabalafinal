@@ -88,7 +88,7 @@ class _FreeTextWidgetState extends State<FreeTextWidget> {
           style: AppTypography.bodyMedium,
           cursorColor: AppColors.violet,
           decoration: InputDecoration(
-            hintText: widget.hintText ?? '\u00c9crivez votre r\u00e9ponse ici\u2026',
+            hintText: widget.hintText ?? '\u00c9cris ta r\u00e9ponse ici\u2026',
             hintStyle: AppTypography.bodyMedium.copyWith(
               color: AppColors.inkFaint,
             ),

@@ -547,7 +547,7 @@ class _DocumentErrorBody extends StatelessWidget {
             ),
             AppSpacing.gapSm,
             Text(
-              'V\u00e9rifiez votre connexion et r\u00e9essayez.',
+              'V\u00e9rifie ta connexion et r\u00e9essaie.',
               style: AppTypography.bodyMedium.copyWith(
                 color: AppColors.inkMuted,
               ),

@@ -1,9 +1,9 @@
 /// Application router built with go_router + Riverpod.
 ///
 /// Features:
-///   - StatefulShellRoute with 3 tab branches (preserves state per tab)
+///   - StatefulShellRoute with 4 tab branches (preserves state per tab)
+///   - Tabs: Accueil, Rencontres, Mon Espace, Profil
 ///   - Chat as floating action button (push full-screen, no tab)
-///   - Profile in AppBar (push full-screen, no tab)
 ///   - Glassmorphism floating bottom navigation bar
 ///   - Auth redirect guard (unauthenticated users → /login)
 ///   - Onboarding redirect (first-launch users → /onboarding)
@@ -38,6 +38,7 @@ import 'package:my_muqabala/features/events/presentation/screens/events_screen.d
 import 'package:my_muqabala/features/events/presentation/screens/event_detail_screen.dart';
 import 'package:my_muqabala/features/documents/presentation/screens/document_viewer_screen.dart';
 import 'package:my_muqabala/features/mon_espace/presentation/screens/acces_premium_screen.dart';
+import 'package:my_muqabala/features/mon_espace/presentation/screens/mon_espace_screen.dart';
 import 'package:my_muqabala/features/rencontres/presentation/screens/rencontres_hub_screen.dart';
 import 'package:my_muqabala/features/rencontres/presentation/screens/compatibilite_screen.dart';
 import 'package:my_muqabala/features/rencontres/presentation/screens/rencontres_en_cours_screen.dart';
@@ -49,6 +50,8 @@ import 'package:my_muqabala/features/high_ticket/presentation/screens/cartograph
 import 'package:my_muqabala/features/high_ticket/presentation/screens/ressources_screen.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/screens/ressource_detail_screen.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/screens/plan_action_screen.dart';
+import 'package:my_muqabala/features/high_ticket/presentation/screens/compte_rendu_screen.dart';
+import 'package:my_muqabala/features/high_ticket/presentation/screens/page_de_vente_screen.dart';
 import 'package:my_muqabala/features/profile/presentation/screens/profile_screen.dart';
 import 'package:my_muqabala/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:my_muqabala/features/profile/data/models/profile_model.dart';
@@ -66,8 +69,10 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 final _rencontresNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'rencontres');
-final _accesPremiumNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'acces-premium');
+final _monEspaceNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'mon-espace');
+final _profilNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'profil');
 
 // ── Auth state provider ─────────────────────────────────────────────────────
 
@@ -364,7 +369,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // ── Main app: 3-tab StatefulShellRoute ────────────────────────────
+      // ── Main app: 4-tab StatefulShellRoute ────────────────────────────
       StatefulShellRoute.indexedStack(
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state, navigationShell) {
@@ -458,16 +463,16 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // ── Tab 2: Accès Premium ──────────────────────────────────
+          // ── Tab 2: Mon Espace ──────────────────────────────────
           StatefulShellBranch(
-            navigatorKey: _accesPremiumNavigatorKey,
+            navigatorKey: _monEspaceNavigatorKey,
             routes: [
               GoRoute(
-                path: '/acces-premium',
-                name: RouteNames.accesPremium,
+                path: '/mon-espace',
+                name: RouteNames.monEspace,
                 pageBuilder: (context, state) => _fadeTransitionPage(
                   key: state.pageKey,
-                  child: const AccesPremiumScreen(),
+                  child: const MonEspaceScreen(),
                 ),
                 routes: [
                   GoRoute(
@@ -559,6 +564,64 @@ final routerProvider = Provider<GoRouter>((ref) {
                       child: const PlanActionScreen(),
                     ),
                   ),
+                  GoRoute(
+                    path: 'compte-rendu',
+                    name: RouteNames.compteRendu,
+                    pageBuilder: (context, state) =>
+                        _slideTransitionPage(
+                      key: state.pageKey,
+                      child: const CompteRenduScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'compte-rendu/:docId',
+                    name: RouteNames.compteRenduViewer,
+                    pageBuilder: (context, state) {
+                      final docId =
+                          state.pathParameters['docId'] ?? '';
+                      return _slideTransitionPage(
+                        key: state.pageKey,
+                        child: CompteRenduScreen(docId: docId),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'page-de-vente',
+                    name: RouteNames.pageDeVente,
+                    pageBuilder: (context, state) =>
+                        _slideTransitionPage(
+                      key: state.pageKey,
+                      child: const PageDeVenteScreen(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // ── Tab 3: Profil ──────────────────────────────────────
+          StatefulShellBranch(
+            navigatorKey: _profilNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/profil',
+                name: RouteNames.profilTab,
+                pageBuilder: (context, state) => _fadeTransitionPage(
+                  key: state.pageKey,
+                  child: const ProfileScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    name: RouteNames.editProfileTab,
+                    pageBuilder: (context, state) {
+                      final profile = state.extra as ProfileModel;
+                      return _slideTransitionPage(
+                        key: state.pageKey,
+                        child: EditProfileScreen(profile: profile),
+                      );
+                    },
+                  ),
                 ],
               ),
             ],
@@ -649,8 +712,8 @@ CustomTransitionPage<void> _slideUpTransitionPage({
 // Scaffold with floating nav bar + chat FAB
 // ══════════════════════════════════════════════════════════════════════════════
 
-/// Height of the floating navigation bar.
-const _kNavBarHeight = 68.0;
+/// Height of the floating navigation bar — use [AppSpacing.navBarHeight].
+const _kNavBarHeight = AppSpacing.navBarHeight;
 
 class _ScaffoldWithNavBar extends ConsumerWidget {
   const _ScaffoldWithNavBar({required this.navigationShell});
@@ -659,20 +722,17 @@ class _ScaffoldWithNavBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-
     return Scaffold(
-      extendBody: true,
       body: Stack(
         children: [
           // Main content
           navigationShell,
 
           // ── Chat FAB ──────────────────────────────────────────────────
-          Positioned(
+          const Positioned(
             right: 16,
-            bottom: _kNavBarHeight + bottomPadding + 8 + 24,
-            child: const _ChatFab(),
+            bottom: 16,
+            child: _ChatFab(),
           ),
         ],
       ),
@@ -706,13 +766,13 @@ class _FloatingNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
 
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
         right: 16,
-        bottom: bottomPadding + 8,
+        bottom: bottomPadding + AppSpacing.navBarBottomMargin,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(22),
@@ -730,22 +790,28 @@ class _FloatingNavBar extends StatelessWidget {
                     ? AppColors.darkBorder.withValues(alpha: 0.3)
                     : AppColors.divider.withValues(alpha: 0.4),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.shadowLight,
-                  blurRadius: 20,
-                  offset: const Offset(0, 4),
-                ),
-                // Subtle violet glow
-                BoxShadow(
-                  color: AppColors.violet.withValues(alpha: 0.06),
-                  blurRadius: 30,
-                  spreadRadius: 2,
-                ),
-              ],
+              boxShadow: isDark
+                  ? [
+                      BoxShadow(
+                        color: AppColors.shadowDark,
+                        blurRadius: 12,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: AppColors.shadowLight,
+                        blurRadius: 20,
+                        offset: const Offset(0, 4),
+                      ),
+                      BoxShadow(
+                        color: AppColors.violet.withValues(alpha: 0.06),
+                        blurRadius: 30,
+                        spreadRadius: 2,
+                      ),
+                    ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _NavItem(
                   icon: Icons.home_outlined,
@@ -764,13 +830,20 @@ class _FloatingNavBar extends StatelessWidget {
                   isDark: isDark,
                 ),
                 _NavItem(
-                  icon: Icons.diamond_outlined,
-                  selectedIcon: Icons.diamond_rounded,
-                  label: 'Premium',
+                  icon: Icons.auto_stories_outlined,
+                  selectedIcon: Icons.auto_stories,
+                  label: 'Mon Espace',
                   isSelected: currentIndex == 2,
                   onTap: () => onTap(2),
                   isDark: isDark,
-                  useGoldGradient: true,
+                ),
+                _NavItem(
+                  icon: Icons.person_outline,
+                  selectedIcon: Icons.person_rounded,
+                  label: 'Profil',
+                  isSelected: currentIndex == 3,
+                  onTap: () => onTap(3),
+                  isDark: isDark,
                 ),
               ],
             ),
@@ -810,25 +883,16 @@ class _NavItem extends StatelessWidget {
     final inactiveColor =
         isDark ? AppColors.darkInkMuted : AppColors.inkMuted;
 
-    Widget iconWidget;
-    if (useGoldGradient && isSelected) {
-      iconWidget = _GoldDiamondIcon(
-        icon: selectedIcon,
-        size: 24,
-      );
-    } else {
-      iconWidget = Icon(
-        isSelected ? selectedIcon : icon,
-        size: 24,
-        color: isSelected ? activeColor : inactiveColor,
-      );
-    }
+    final iconWidget = Icon(
+      isSelected ? selectedIcon : icon,
+      size: 24,
+      color: isSelected ? activeColor : inactiveColor,
+    );
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 72,
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -841,11 +905,7 @@ class _NavItem extends StatelessWidget {
                 fontFamily: 'Outfit',
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: useGoldGradient && isSelected
-                    ? AppColors.gold
-                    : isSelected
-                        ? activeColor
-                        : inactiveColor,
+                color: isSelected ? activeColor : inactiveColor,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -1045,9 +1105,7 @@ class _ErrorScreen extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 error?.toString() ?? 'La page demand\u00e9e n\'existe pas.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.inkMuted,
-                    ),
+                style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),

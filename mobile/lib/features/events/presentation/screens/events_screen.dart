@@ -138,7 +138,7 @@ class _PastEventsTab extends ConsumerWidget {
           return const _EventsEmptyState(
             title: 'Aucun \u00e9v\u00e9nement pass\u00e9',
             subtitle:
-                'Votre historique d\'\u00e9v\u00e9nements appara\u00eetra ici.',
+                'Ton historique d\'événements apparaîtra ici.',
           );
         }
 
@@ -166,9 +166,8 @@ class _EventsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomPad = MediaQuery.of(context).padding.bottom;
     return ListView.builder(
-      padding: EdgeInsets.only(top: 8, bottom: 92 + bottomPad),
+      padding: const EdgeInsets.only(top: 8, bottom: AppSpacing.lg),
       physics: const AlwaysScrollableScrollPhysics(),
       itemCount: events.length,
       itemBuilder: (context, index) {
@@ -274,7 +273,7 @@ class _EventsErrorView extends StatelessWidget {
             AppSpacing.gapSm,
             Text(
               'Impossible de charger les \u00e9v\u00e9nements.\n'
-              'V\u00e9rifiez votre connexion et r\u00e9essayez.',
+              'V\u00e9rifie ta connexion et réessaie.',
               style: AppTypography.bodyMedium.copyWith(
                 color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
               ),

@@ -18,6 +18,9 @@ abstract final class RouteNames {
   static const chat = 'chat';
   static const profile = 'profile';
   static const accesPremium = 'accesPremium';
+  static const monEspace = 'monEspace';
+  static const profilTab = 'profilTab';
+  static const editProfileTab = 'editProfileTab';
 
   // ── Detail screens ────────────────────────────────────────────────────
   static const chatDetail = 'chat-detail';
@@ -41,6 +44,9 @@ abstract final class RouteNames {
   static const ressources = 'ressources';
   static const ressourceDetail = 'ressourceDetail';
   static const planAction = 'planAction';
+  static const compteRendu = 'compteRendu';
+  static const compteRenduViewer = 'compteRenduViewer';
+  static const pageDeVente = 'pageDeVente';
 
   // ── Feature screens ───────────────────────────────────────────────────
   static const blinkDate = 'blink-date';

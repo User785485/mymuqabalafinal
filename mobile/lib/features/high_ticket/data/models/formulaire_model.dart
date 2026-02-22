@@ -13,6 +13,7 @@ enum FormulaireGroup {
   phase2,
   phase3,
   phase4,
+  bilanFinal,
   express,
 }
 
@@ -31,6 +32,10 @@ class FormulaireModel {
   bool get isCompleted => content.isCompleted;
   String? get url => content.url;
   String? get contenuHtml => content.contenuHtml;
+  String? get titre => content.titre;
+
+  /// Whether this form uses the integrated chat engine (vs external Typebot).
+  bool get isChatEngine => content.url?.contains('questionnaire.html') ?? false;
 
   /// Parses a [SectionContentModel] into a [FormulaireModel].
   factory FormulaireModel.fromContent(SectionContentModel c) {
@@ -39,6 +44,8 @@ class FormulaireModel {
 
     if (key.startsWith('S')) {
       group = FormulaireGroup.scenarios;
+    } else if (key == 'F_FINAL') {
+      group = FormulaireGroup.bilanFinal;
     } else if (key.startsWith('F1')) {
       group = FormulaireGroup.phase1;
     } else if (key.startsWith('F2')) {
@@ -47,6 +54,8 @@ class FormulaireModel {
       group = FormulaireGroup.phase3;
     } else if (key.startsWith('F4')) {
       group = FormulaireGroup.phase4;
+    } else if (key.startsWith('EXP')) {
+      group = FormulaireGroup.express;
     } else {
       group = FormulaireGroup.express;
     }
@@ -62,11 +71,12 @@ class FormulaireModel {
   static String groupLabel(FormulaireGroup group) {
     return switch (group) {
       FormulaireGroup.scenarios => 'Sc\u00e9narios (S1\u2013S10)',
-      FormulaireGroup.phase1 => 'Phase 1 (F1.1\u2013F1.3)',
-      FormulaireGroup.phase2 => 'Phase 2 (F2.1\u2013F2.3)',
-      FormulaireGroup.phase3 => 'Phase 3 (F3.1\u2013F3.3)',
-      FormulaireGroup.phase4 => 'Phase 4 (F4.1\u2013F4.3)',
-      FormulaireGroup.express => 'Express',
+      FormulaireGroup.phase1 => 'Partie 1 \u2014 La Germination (F1.1\u2013F1.6)',
+      FormulaireGroup.phase2 => 'Partie 2 \u2014 Les Racines (F2.1\u2013F2.5)',
+      FormulaireGroup.phase3 => 'Partie 3 \u2014 Les Patterns (F3.1\u2013F3.4)',
+      FormulaireGroup.phase4 => 'Partie 4 \u2014 Les Valeurs (F4.1\u2013F4.3)',
+      FormulaireGroup.bilanFinal => 'Partie 5 \u2014 Le Bilan Final',
+      FormulaireGroup.express => 'Formulaires Express',
     };
   }
 }

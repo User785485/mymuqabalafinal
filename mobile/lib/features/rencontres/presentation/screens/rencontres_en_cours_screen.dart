@@ -27,7 +27,7 @@ class RencontresEnCoursScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final retoursAsync = ref.watch(retoursHebdoProvider);
-    final bottomPad = MediaQuery.of(context).padding.bottom;
+
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBg : AppColors.paper,
@@ -55,7 +55,7 @@ class RencontresEnCoursScreen extends ConsumerWidget {
             left: AppSpacing.md,
             right: AppSpacing.md,
             top: AppSpacing.lg,
-            bottom: 92 + bottomPad,
+            bottom: AppSpacing.lg,
           ),
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
@@ -219,7 +219,7 @@ class _RetourExpansionTile extends StatelessWidget {
               )
             else
               Text(
-                'Retour en attente de rédaction par votre coach.',
+                'Retour en attente de r\u00e9daction par ton coach.',
                 style: AppTypography.bodyMedium.copyWith(
                   color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
                   fontStyle: FontStyle.italic,

@@ -121,13 +121,13 @@ class _PhotoSelectionScreenState extends ConsumerState<PhotoSelectionScreen> {
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: AppRadius.borderLg),
         title: Text(
-          'Confirmer votre s\u00e9lection',
+          'Confirmer ta sélection',
           style: AppTypography.h3.copyWith(color: AppColors.ink),
         ),
         content: Text(
-          'Vous avez s\u00e9lectionn\u00e9 ${_selectedIds.length} '
+          'Tu as sélectionné ${_selectedIds.length} '
           'photo${_selectedIds.length > 1 ? 's' : ''}. '
-          'Cette action est d\u00e9finitive.',
+          'Cette action est définitive.',
           style: AppTypography.bodyMedium.copyWith(color: AppColors.inkMuted),
         ),
         actions: [
@@ -169,7 +169,7 @@ class _PhotoSelectionScreenState extends ConsumerState<PhotoSelectionScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'S\u00e9lection enregistr\u00e9e avec succ\u00e8s !',
+                'Sélection enregistrée avec succès !',
                 style: AppTypography.bodyMedium.copyWith(color: Colors.white),
               ),
             ),
@@ -226,7 +226,7 @@ class _PhotoSelectionScreenState extends ConsumerState<PhotoSelectionScreen> {
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       title: Text(
-        'S\u00e9lection de photos',
+        'Sélection de photos',
         style: AppTypography.h3.copyWith(color: AppColors.ink),
       ),
       centerTitle: true,
@@ -245,7 +245,7 @@ class _PhotoSelectionScreenState extends ConsumerState<PhotoSelectionScreen> {
       icon: Icons.photo_library_outlined,
       title: 'Aucun match actif',
       subtitle:
-          'Les photos seront disponibles lorsqu\'un match vous sera propos\u00e9.',
+          'Les photos seront disponibles lorsqu\'un match vous sera proposé.',
     );
   }
 
@@ -261,7 +261,7 @@ class _PhotoSelectionScreenState extends ConsumerState<PhotoSelectionScreen> {
             icon: Icons.photo_library_outlined,
             title: 'Aucune photo disponible',
             subtitle:
-                'Les photos de s\u00e9lection n\'ont pas encore \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es.',
+                'Les photos de sélection n\'ont pas encore été générées.',
           );
         }
 
@@ -301,8 +301,8 @@ class _PhotoSelectionScreenState extends ConsumerState<PhotoSelectionScreen> {
     return EmptyState(
       icon: Icons.error_outline_rounded,
       title: 'Erreur de chargement',
-      subtitle: 'Impossible de charger les photos. Veuillez r\u00e9essayer.',
-      actionLabel: 'R\u00e9essayer',
+      subtitle: 'Impossible de charger les photos. Réessaie.',
+      actionLabel: 'Réessayer',
       onAction: () => ref.invalidate(photoSelectionsProvider(widget.matchId!)),
     );
   }
@@ -353,13 +353,13 @@ class _PhotoSelectionScreenState extends ConsumerState<PhotoSelectionScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Qui est votre match ?',
+          'Qui est ton match ?',
           style: AppTypography.h2.copyWith(color: AppColors.ink),
         ),
         AppSpacing.gapXs,
         Text(
-          'Observez attentivement les photos ci-dessous et '
-          's\u00e9lectionnez celle(s) qui vous correspond(ent) le plus.',
+          'Observe attentivement les photos ci-dessous et '
+          'sélectionne celle(s) qui te correspond(ent) le plus.',
           style: AppTypography.bodyMedium.copyWith(color: AppColors.inkMuted),
         ),
       ],
@@ -393,9 +393,9 @@ class _PhotoSelectionScreenState extends ConsumerState<PhotoSelectionScreen> {
           const SizedBox(width: 8),
           Text(
             _selectedIds.isEmpty
-                ? 'S\u00e9lectionnez jusqu\'\u00e0 $_maxSelections photos'
+                ? 'Sélectionne jusqu\'à $_maxSelections photos'
                 : '${_selectedIds.length} / $_maxSelections '
-                    's\u00e9lectionn\u00e9e${_selectedIds.length > 1 ? 's' : ''}',
+                    'sélectionné${_selectedIds.length > 1 ? 's' : ''}',
             style: AppTypography.labelMedium.copyWith(
               color:
                   _selectedIds.isEmpty ? AppColors.inkMuted : AppColors.violet,
@@ -427,8 +427,8 @@ class _PhotoSelectionScreenState extends ConsumerState<PhotoSelectionScreen> {
           Expanded(
             child: Text(
               'Parmi ces photos, certaines sont des leurres. '
-              'Faites confiance \u00e0 votre intuition et choisissez '
-              'avec le c\u0153ur.',
+              'Fais confiance à ton intuition et choisis '
+              'avec le cœur.',
               style: AppTypography.bodySmall.copyWith(
                 color: AppColors.inkSoft,
                 height: 1.5,

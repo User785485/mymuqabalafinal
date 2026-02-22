@@ -136,7 +136,7 @@ class RevealCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Votre match',
+                        'Ton match',
                         style: AppTypography.labelMedium.copyWith(
                           color: AppColors.violet,
                           fontWeight: FontWeight.w600,

@@ -104,7 +104,12 @@ class _RessourceDetailScreenState
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
-                        padding: AppSpacing.screenPadding,
+                        padding: EdgeInsets.only(
+                          left: AppSpacing.md,
+                          right: AppSpacing.md,
+                          top: AppSpacing.lg,
+                          bottom: AppSpacing.lg,
+                        ),
                         child: HtmlWidget(
                           _ressource!.contenuHtml ?? '',
                           textStyle: AppTypography.bodyMedium.copyWith(

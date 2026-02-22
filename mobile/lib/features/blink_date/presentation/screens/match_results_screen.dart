@@ -327,7 +327,7 @@ class _MatchResultsScreenState extends ConsumerState<MatchResultsScreen>
               AppSpacing.gapMd,
               Text(
                 'Malheureusement, il n\'y a pas eu de match mutuel '
-                'cette fois-ci. Mais ne perdez pas espoir \u2014 votre '
+                'cette fois-ci. Mais ne perds pas espoir \u2014 ton '
                 'profil reste actif pour les prochains \u00e9v\u00e9nements.',
                 style: AppTypography.bodyLarge.copyWith(
                   color: AppColors.inkMuted,

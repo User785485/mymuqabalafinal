@@ -27,6 +27,7 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [
         AppSpacing.gapMd,
@@ -53,13 +54,15 @@ class ProfileHeader extends StatelessWidget {
                     color: AppColors.purple.withValues(alpha: 0.2),
                     width: 3,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.purple.withValues(alpha: 0.12),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
+                  boxShadow: isDark
+                      ? null
+                      : [
+                          BoxShadow(
+                            color: AppColors.purple.withValues(alpha: 0.12),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                 ),
                 child: ClipOval(
                   child: profile.hasPhoto
@@ -88,7 +91,7 @@ class ProfileHeader extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.purple,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
+                      border: Border.all(color: isDark ? AppColors.darkCard : Colors.white, width: 2),
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.purple.withValues(alpha: 0.3),
@@ -151,13 +154,13 @@ class ProfileHeader extends StatelessWidget {
             Icon(
               Icons.location_on_outlined,
               size: 16,
-              color: AppColors.inkMuted,
+              color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
             ),
             const SizedBox(width: 4),
             Text(
               profile.ville,
               style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.inkMuted,
+                color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
               ),
             ),
           ],

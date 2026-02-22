@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:my_muqabala/app.dart';
 import 'package:my_muqabala/core/constants/app_colors.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
+import 'package:my_muqabala/core/router/route_names.dart';
 import 'package:my_muqabala/core/utils/date_utils.dart';
 import 'package:my_muqabala/features/profile/data/models/profile_model.dart';
 import 'package:my_muqabala/features/profile/presentation/providers/profile_provider.dart';
-import 'package:my_muqabala/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:my_muqabala/features/profile/presentation/widgets/profile_header.dart';
 import 'package:my_muqabala/features/profile/presentation/widgets/settings_tile.dart';
 
@@ -26,17 +29,17 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  // ── Local toggle states (persisted via SharedPreferences in a real app) ──
+  // ── Local toggle states ──
   bool _notificationsEnabled = true;
   bool _biometricEnabled = false;
-  bool _darkModeEnabled = false;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final profileAsync = ref.watch(currentProfileProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.paper,
+      backgroundColor: isDark ? AppColors.darkBg : AppColors.paper,
       appBar: AppBar(
         title: const Text('Mon profil'),
         actions: [
@@ -55,7 +58,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       ),
       body: RefreshIndicator(
         color: AppColors.purple,
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? AppColors.darkCard : Colors.white,
         onRefresh: () async {
           ref.invalidate(currentProfileProvider);
           // Wait for the new data to arrive
@@ -70,7 +73,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           data: (profile) {
             if (profile == null) {
               return const _ErrorView(
-                message: 'Profil introuvable. Veuillez vous reconnecter.',
+                message: 'Profil introuvable. Reconnecte-toi.',
               );
             }
             return _buildContent(context, profile);
@@ -89,6 +92,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ProfileHeader(
           profile: profile,
           onTapAvatar: () => _navigateToEdit(profile),
+        ),
+
+        // ── Profile completion card ─────────────────────────────────
+        _ProfileCompletionCard(
+          profile: profile,
+          onComplete: () => _navigateToEdit(profile),
         ),
 
         // ── Section 1: Informations ─────────────────────────────────
@@ -110,8 +119,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         AppSpacing.gapSm,
         _buildAccountCard(profile),
 
-        // Bottom padding for safe area
-        SizedBox(height: MediaQuery.of(context).padding.bottom + 32),
+        const SizedBox(height: AppSpacing.lg),
       ],
     );
   }
@@ -119,6 +127,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   // ── Preferences card ──────────────────────────────────────────────────
 
   Widget _buildPreferencesCard() {
+    final themeMode = ref.watch(themeModeProvider);
+    final isDarkMode = themeMode == ThemeMode.dark;
+
     return _CardContainer(
       child: Column(
         children: [
@@ -151,11 +162,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           SettingsTile(
             icon: Icons.dark_mode_outlined,
             title: 'Mode sombre',
-            subtitle: _darkModeEnabled ? 'Activé' : 'Désactivé',
+            subtitle: isDarkMode ? 'Activé' : 'Désactivé',
             trailing: Switch.adaptive(
-              value: _darkModeEnabled,
-              onChanged: (value) {
-                setState(() => _darkModeEnabled = value);
+              value: isDarkMode,
+              onChanged: (value) async {
+                final newMode = value ? ThemeMode.dark : ThemeMode.light;
+                ref.read(themeModeProvider.notifier).state = newMode;
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setString('theme_mode', value ? 'dark' : 'light');
               },
             ),
           ),
@@ -207,11 +221,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   // ── Navigation ────────────────────────────────────────────────────────
 
   void _navigateToEdit(ProfileModel profile) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => EditProfileScreen(profile: profile),
-      ),
-    );
+    // Try tab-based route first, fall back to full-screen route
+    context.pushNamed(RouteNames.editProfileTab, extra: profile);
   }
 
   // ── Sign out confirmation ─────────────────────────────────────────────
@@ -278,7 +289,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       final success =
           await ref.read(deleteAccountProvider(userId).future);
       if (success && mounted) {
-        _showSnackBar('Votre compte a été désactivé.');
+        _showSnackBar('Ton compte a été désactivé.');
       }
     }
   }
@@ -295,6 +306,112 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 //  Private helper widgets
 // ═══════════════════════════════════════════════════════════════════════
 
+/// Profile completion indicator card.
+class _ProfileCompletionCard extends StatelessWidget {
+  const _ProfileCompletionCard({
+    required this.profile,
+    required this.onComplete,
+  });
+
+  final ProfileModel profile;
+  final VoidCallback onComplete;
+
+  double _calculateCompletion() {
+    int filled = 0;
+    const total = 6;
+    if (profile.prenom.isNotEmpty) filled++;
+    if (profile.nom != null && profile.nom!.isNotEmpty) filled++;
+    if (profile.email != null && profile.email!.isNotEmpty) filled++;
+    if (profile.ville.isNotEmpty) filled++;
+    if (profile.bio != null && profile.bio!.isNotEmpty) filled++;
+    if (profile.hasPhoto) filled++;
+    return filled / total;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final completion = _calculateCompletion();
+    final percent = (completion * 100).round();
+
+    if (percent >= 100) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Container(
+        width: double.infinity,
+        padding: AppSpacing.cardPadding,
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkCard : AppColors.surface,
+          borderRadius: AppRadius.borderLg,
+          border: Border.all(
+            color: AppColors.violet.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Profil compl\u00e9t\u00e9 \u00e0 $percent%',
+                    style: AppTypography.label.copyWith(
+                      color: isDark ? AppColors.darkInk : AppColors.ink,
+                    ),
+                  ),
+                ),
+                Text(
+                  '$percent%',
+                  style: AppTypography.labelLarge.copyWith(
+                    color: AppColors.violet,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            AppSpacing.gapSm,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: completion,
+                backgroundColor: isDark
+                    ? AppColors.darkBorder
+                    : AppColors.divider,
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  AppColors.violet,
+                ),
+                minHeight: 6,
+              ),
+            ),
+            AppSpacing.gapSm,
+            Text(
+              'Complète ton profil pour améliorer tes rencontres',
+              style: AppTypography.bodySmall.copyWith(
+                color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
+              ),
+            ),
+            AppSpacing.gapSm,
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: onComplete,
+                child: Text(
+                  'Compl\u00e9ter',
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.violet,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Section title in Cormorant font.
 class _SectionTitle extends StatelessWidget {
   const _SectionTitle({required this.title});
@@ -302,12 +419,13 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(left: 4),
       child: Text(
         title,
         style: AppTypography.displaySmall.copyWith(
-          color: AppColors.ink,
+          color: isDark ? AppColors.darkInk : AppColors.ink,
         ),
       ),
     );
@@ -321,18 +439,21 @@ class _CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkCard : Colors.white,
         borderRadius: AppRadius.borderLg,
-        border: Border.all(color: AppColors.divider, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.divider, width: 1),
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       clipBehavior: Clip.antiAlias,
       child: child,
@@ -346,12 +467,13 @@ class _TileDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(left: 72),
       child: Divider(
         height: 1,
         thickness: 1,
-        color: AppColors.divider,
+        color: isDark ? AppColors.darkBorder : AppColors.divider,
       ),
     );
   }
@@ -432,6 +554,7 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       crossAxisAlignment:
           isMultiLine ? CrossAxisAlignment.start : CrossAxisAlignment.center,
@@ -440,7 +563,9 @@ class _InfoRow extends StatelessWidget {
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: AppColors.purpleLight.withValues(alpha: 0.5),
+            color: isDark
+                ? AppColors.violet.withValues(alpha: 0.15)
+                : AppColors.purpleLight.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, size: 18, color: AppColors.purple),
@@ -453,7 +578,7 @@ class _InfoRow extends StatelessWidget {
               Text(
                 label,
                 style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.inkMuted,
+                  color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
                   letterSpacing: 0.3,
                 ),
               ),
@@ -461,7 +586,7 @@ class _InfoRow extends StatelessWidget {
               Text(
                 value,
                 style: AppTypography.bodyMedium.copyWith(
-                  color: AppColors.ink,
+                  color: isDark ? AppColors.darkInk : AppColors.ink,
                   fontWeight: FontWeight.w500,
                 ),
                 maxLines: isMultiLine ? 5 : 1,
@@ -481,6 +606,8 @@ class _ProfileShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerColor = isDark ? AppColors.darkCard : AppColors.divider;
     return Center(
       child: Padding(
         padding: AppSpacing.screenPadding,
@@ -493,7 +620,7 @@ class _ProfileShimmer extends StatelessWidget {
               height: 96,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.divider,
+                color: shimmerColor,
               ),
             ),
             AppSpacing.gapMd,
@@ -502,7 +629,7 @@ class _ProfileShimmer extends StatelessWidget {
               width: 160,
               height: 24,
               decoration: BoxDecoration(
-                color: AppColors.divider,
+                color: shimmerColor,
                 borderRadius: AppRadius.borderSm,
               ),
             ),
@@ -512,7 +639,7 @@ class _ProfileShimmer extends StatelessWidget {
               width: 100,
               height: 20,
               decoration: BoxDecoration(
-                color: AppColors.divider,
+                color: shimmerColor,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -522,7 +649,7 @@ class _ProfileShimmer extends StatelessWidget {
               width: double.infinity,
               height: 200,
               decoration: BoxDecoration(
-                color: AppColors.divider,
+                color: shimmerColor,
                 borderRadius: AppRadius.borderLg,
               ),
             ),
@@ -561,9 +688,7 @@ class _ErrorView extends StatelessWidget {
             AppSpacing.gapSm,
             Text(
               message,
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.inkMuted,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[

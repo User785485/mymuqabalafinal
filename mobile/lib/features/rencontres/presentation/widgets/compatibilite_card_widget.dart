@@ -41,7 +41,7 @@ class _CompatibiliteCard extends StatelessWidget {
       CompatibiliteStatus.pending => (
           Icons.search_rounded,
           'Recherche de compatibilité',
-          'Remplissez votre formulaire pour lancer la recherche',
+          'Remplis ton formulaire pour lancer la recherche',
           AppColors.violet,
         ),
       CompatibiliteStatus.searching => (

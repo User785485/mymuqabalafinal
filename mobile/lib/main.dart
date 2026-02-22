@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:my_muqabala/bootstrap.dart';
 import 'package:my_muqabala/app.dart';
@@ -35,9 +36,21 @@ Future<void> main() async {
   // ignore: avoid_print
   print('[BOOT] bootstrap complete — calling runApp');
 
+  // Restore theme preference from disk
+  final prefs = await SharedPreferences.getInstance();
+  final savedTheme = prefs.getString('theme_mode');
+  final initialThemeMode = switch (savedTheme) {
+    'dark' => ThemeMode.dark,
+    'light' => ThemeMode.light,
+    _ => ThemeMode.system,
+  };
+
   runApp(
-    const ProviderScope(
-      child: MyMuqabalaApp(),
+    ProviderScope(
+      overrides: [
+        themeModeProvider.overrideWith((ref) => initialThemeMode),
+      ],
+      child: const MyMuqabalaApp(),
     ),
   );
   // ignore: avoid_print

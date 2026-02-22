@@ -59,6 +59,14 @@ class HighTicketRepository {
   Future<List<SectionContentModel>> getPlanAction(String userId) =>
       getSectionContents(userId, 'plan_action');
 
+  /// Convenience: get compte-rendu for a user.
+  Future<List<SectionContentModel>> getCompteRendu(String userId) =>
+      getSectionContents(userId, 'compte_rendu');
+
+  /// Convenience: get page de vente for a user.
+  Future<List<SectionContentModel>> getPageDeVente(String userId) =>
+      getSectionContents(userId, 'page_de_vente');
+
   /// Mark a content item as completed.
   Future<void> markContentCompleted(String contentId) async {
     try {
@@ -74,6 +82,33 @@ class HighTicketRepository {
         stackTrace: st,
       );
       rethrow;
+    }
+  }
+
+  /// Fetch client's web access credentials (telephone + access_code).
+  /// Used to authenticate the chat-engine WebView.
+  Future<({String telephone, String accessCode})?> getClientWebCredentials(
+    String userId,
+  ) async {
+    try {
+      final row = await _client
+          .from('profiles')
+          .select('telephone, access_code')
+          .eq('id', userId)
+          .single();
+
+      final tel = row['telephone'] as String?;
+      final code = row['access_code'] as String?;
+      if (tel == null || code == null) return null;
+      return (telephone: tel, accessCode: code);
+    } catch (e, st) {
+      AppLogger.error(
+        'Failed to get web credentials',
+        tag: 'HighTicketRepo',
+        error: e,
+        stackTrace: st,
+      );
+      return null;
     }
   }
 

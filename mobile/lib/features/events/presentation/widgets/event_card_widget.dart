@@ -82,7 +82,7 @@ class EventCardWidget extends StatelessWidget {
                           vertical: 3,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.errorLight,
+                          color: isDark ? AppColors.error.withValues(alpha: 0.15) : AppColors.errorLight,
                           borderRadius: AppRadius.borderSm,
                         ),
                         child: Text(
@@ -100,7 +100,7 @@ class EventCardWidget extends StatelessWidget {
                           vertical: 3,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.successLight,
+                          color: isDark ? AppColors.success.withValues(alpha: 0.15) : AppColors.successLight,
                           borderRadius: AppRadius.borderSm,
                         ),
                         child: Text(

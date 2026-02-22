@@ -6,6 +6,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:my_muqabala/core/widgets/tappable_card.dart';
+
 import 'package:my_muqabala/core/constants/app_colors.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
@@ -18,11 +20,13 @@ class SectionCardWidget extends ConsumerWidget {
     required this.color,
     required this.progressProvider,
     required this.onTap,
+    this.description,
     super.key,
   });
 
   final IconData icon;
   final String title;
+  final String? description;
   final Color color;
   final FutureProvider<Map<String, dynamic>> progressProvider;
   final VoidCallback onTap;
@@ -32,7 +36,7 @@ class SectionCardWidget extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final progressAsync = ref.watch(progressProvider);
 
-    return GestureDetector(
+    return TappableCard(
       onTap: onTap,
       child: Container(
         padding: AppSpacing.cardPadding,
@@ -72,6 +76,18 @@ class SectionCardWidget extends ConsumerWidget {
                 fontSize: 15,
               ),
             ),
+            if (description != null) ...[
+              const SizedBox(height: 2),
+              Text(
+                description!,
+                style: AppTypography.bodySmall.copyWith(
+                  color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
+                  fontSize: 10,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
             const Spacer(),
             // Progress
             progressAsync.when(

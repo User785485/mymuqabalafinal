@@ -180,8 +180,8 @@ class _DocumentsEmptyBody extends StatelessWidget {
     return const EmptyState(
       icon: Icons.folder_open_outlined,
       title: 'Aucun document disponible',
-      subtitle: 'Les documents de votre coach appara\u00eetront ici '
-          'd\u00e8s qu\u2019ils seront publi\u00e9s.',
+      subtitle: 'Les documents de ton coach apparaîtront ici '
+          'dès qu’ils seront publiés.',
     );
   }
 }
@@ -220,7 +220,7 @@ class _DocumentsErrorBody extends StatelessWidget {
             ),
             AppSpacing.gapSm,
             Text(
-              'V\u00e9rifiez votre connexion internet et r\u00e9essayez.',
+              'Vérifie ta connexion internet et réessaie.',
               style: AppTypography.bodyMedium.copyWith(
                 color: AppColors.inkMuted,
               ),

@@ -7,11 +7,15 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'package:my_muqabala/core/widgets/tappable_card.dart';
 
 import 'package:my_muqabala/core/constants/app_colors.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
+import 'package:my_muqabala/core/router/route_names.dart';
 import 'package:my_muqabala/features/home/data/models/home_repository.dart';
 import 'package:my_muqabala/features/home/presentation/providers/home_provider.dart';
 
@@ -21,6 +25,7 @@ class PendingActionsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final actionsAsync = ref.watch(pendingActionsProvider);
 
     return actionsAsync.when(
@@ -29,12 +34,12 @@ class PendingActionsWidget extends ConsumerWidget {
         return _PendingActionsCard(actions: actions);
       },
       loading: () => Shimmer.fromColors(
-        baseColor: AppColors.divider,
-        highlightColor: AppColors.paper,
+        baseColor: isDark ? AppColors.darkCard : AppColors.divider,
+        highlightColor: isDark ? AppColors.darkBorder : AppColors.paper,
         child: Container(
           height: 120,
           decoration: BoxDecoration(
-            color: AppColors.divider,
+            color: isDark ? AppColors.darkCard : AppColors.divider,
             borderRadius: AppRadius.borderLg,
           ),
         ),
@@ -114,12 +119,14 @@ class _ActionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Priority-based colors
     final (accentColor, bgColor) = switch (action.priority) {
-      'urgent' => (AppColors.rose, AppColors.roseLight),
-      'normal' => (AppColors.purple, AppColors.purpleLight),
-      'info' => (AppColors.sage, AppColors.sageLight),
-      _ => (AppColors.purple, AppColors.purpleLight),
+      'urgent' => (AppColors.rose, isDark ? AppColors.rose.withValues(alpha: 0.15) : AppColors.roseLight),
+      'normal' => (AppColors.purple, isDark ? AppColors.violet.withValues(alpha: 0.15) : AppColors.purpleLight),
+      'info' => (AppColors.sage, isDark ? AppColors.sage.withValues(alpha: 0.15) : AppColors.sageLight),
+      _ => (AppColors.purple, isDark ? AppColors.violet.withValues(alpha: 0.15) : AppColors.purpleLight),
     };
 
     // Type-based icon
@@ -134,10 +141,25 @@ class _ActionItem extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: GestureDetector(
+      child: TappableCard(
         onTap: () {
-          // Navigate to the relevant screen based on action.routePath
-          // (to be implemented with GoRouter context.push)
+          final path = action.routePath;
+          if (path == null || path.isEmpty) return;
+          if (path == '/questionnaire') {
+            context.pushNamed(RouteNames.questionnaire);
+          } else if (path == '/notifications') {
+            context.pushNamed(RouteNames.notifications);
+          } else if (path.startsWith('/feedback')) {
+            final refId = path.split('/').length > 2 ? path.split('/')[2] : null;
+            context.pushNamed(RouteNames.feedback, extra: {
+              'formType': 'post_blink_date',
+              if (refId != null) 'referenceId': refId,
+            });
+          } else if (path.startsWith('/formulaire')) {
+            context.pushNamed(RouteNames.formulaires);
+          } else {
+            context.push(path);
+          }
         },
         child: Container(
           padding: const EdgeInsets.symmetric(
@@ -173,7 +195,7 @@ class _ActionItem extends StatelessWidget {
                 child: Text(
                   action.title,
                   style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.ink,
+                    color: isDark ? AppColors.darkInk : AppColors.ink,
                     fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,

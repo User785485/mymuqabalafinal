@@ -48,6 +48,14 @@ final currentPhaseProvider = FutureProvider.autoDispose<int>((ref) async {
   return repo.getCurrentPhase(userId);
 });
 
+/// Progress within the current active phase (0.0 to 1.0).
+final phaseProgressProvider = FutureProvider.autoDispose<double>((ref) async {
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return 0.0;
+  final repo = ref.watch(homeRepositoryProvider);
+  return repo.getPhaseProgress(userId);
+});
+
 /// Next upcoming event for the user.
 final nextEventProvider =
     FutureProvider.autoDispose<Map<String, dynamic>?>((ref) async {
@@ -108,6 +116,7 @@ final unreadNotificationCountProvider =
 void refreshAllHomeData(WidgetRef ref) {
   ref.invalidate(userPrenomProvider);
   ref.invalidate(currentPhaseProvider);
+  ref.invalidate(phaseProgressProvider);
   ref.invalidate(nextEventProvider);
   ref.invalidate(activeMatchProvider);
   ref.invalidate(coachMessageProvider);

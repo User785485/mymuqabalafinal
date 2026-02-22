@@ -200,7 +200,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               AppSpacing.verticalSm,
               Text(
                 'Vous avez d\u00e9j\u00e0 r\u00e9pondu \u00e0 ce formulaire.\n'
-                'Merci pour votre retour !',
+                'Merci pour ton retour !',
                 style: AppTypography.bodyMedium.copyWith(
                   color: AppColors.inkMuted,
                 ),
@@ -381,14 +381,14 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 ),
                 AppSpacing.verticalXl,
                 Text(
-                  'Merci pour votre retour !',
+                  'Merci pour ton retour !',
                   style: AppTypography.h2,
                   textAlign: TextAlign.center,
                 ),
                 AppSpacing.verticalSm,
                 Text(
                   'Vos r\u00e9ponses ont bien \u00e9t\u00e9 enregistr\u00e9es.\n'
-                  'Elles nous aident \u00e0 am\u00e9liorer votre accompagnement.',
+                  'Elles nous aident \u00e0 am\u00e9liorer ton accompagnement.',
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.inkMuted,
                   ),

@@ -174,62 +174,54 @@ class ChatRepository {
 
   // ── Create coaching channel ─────────────────────────────────────────────
 
-  /// Creates a coaching channel between the client and their coach/admin.
+  /// Creates a coaching channel via the `initiate-coaching-chat` Edge Function.
   ///
-  /// Looks up a coach or admin in the profiles table, then creates a
-  /// Stream Chat channel `coaching-{clientId}` with both as members.
-  /// Returns the channel ID, or null if no coach was found.
+  /// The Edge Function handles everything server-side:
+  /// - Finds the coach/admin (bypasses RLS)
+  /// - Upserts both users in Stream Chat
+  /// - Creates the channel and sends a welcome message
+  ///
+  /// Returns the channel ID, or null on failure.
   Future<String?> createCoachingChannel(
     StreamChatClient client,
     String clientId,
   ) async {
     try {
-      // Find a coach or admin in profiles
-      final coachResponse = await _supabase
-          .from('profiles')
-          .select('id, prenom')
-          .inFilter('role', ['coach', 'admin'])
-          .limit(1)
-          .maybeSingle();
+      AppLogger.info(
+        'Initiating coaching chat via Edge Function',
+        tag: 'ChatRepository',
+      );
 
-      if (coachResponse == null) {
+      final response = await SupabaseClientManager.client.functions.invoke(
+        'initiate-coaching-chat',
+      );
+
+      final data = response.data as Map<String, dynamic>?;
+
+      if (data == null || data['channel_id'] == null) {
         AppLogger.warning(
-          'No coach/admin found in profiles',
+          'Edge Function returned no channel_id: $data',
           tag: 'ChatRepository',
         );
         return null;
       }
 
-      final coachId = coachResponse['id'] as String;
-      final coachName = coachResponse['prenom'] as String? ?? 'Coach';
-
-      // Get client display name
-      final clientName = await getUserDisplayName(clientId);
-
-      // Create the channel
-      final channelId = 'coaching-$clientId';
-      final channel = client.channel(
-        'messaging',
-        id: channelId,
-        extraData: {
-          'name': 'Coaching - $clientName',
-          'members': [clientId, coachId],
-        },
-      );
-
-      await channel.watch();
-
-      // Send welcome message
-      await channel.sendMessage(
-        Message(text: 'Assalamou alaykoum, je souhaite échanger avec mon coach.'),
-      );
+      final channelId = data['channel_id'] as String;
 
       AppLogger.info(
-        'Created coaching channel $channelId with coach $coachId',
+        'Coaching channel created server-side: $channelId',
         tag: 'ChatRepository',
       );
 
       return channelId;
+    } on FunctionException catch (e, st) {
+      AppLogger.error(
+        'Edge Function "initiate-coaching-chat" failed',
+        tag: 'ChatRepository',
+        error: e,
+        stackTrace: st,
+      );
+      return null;
     } on Exception catch (e, st) {
       AppLogger.error(
         'Failed to create coaching channel',

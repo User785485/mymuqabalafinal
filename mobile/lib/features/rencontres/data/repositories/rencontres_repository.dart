@@ -132,6 +132,8 @@ class RencontresRepository {
   /// Fetches section visibility settings for a user.
   ///
   /// Returns a map of section keys to their visibility status.
+  /// The section_visibility table has one row per user with boolean columns
+  /// (show_accueil, show_ressources, etc.), not a key-value format.
   Future<Map<String, bool>> getSectionVisibility(String userId) async {
     try {
       AppLogger.debug(
@@ -142,17 +144,21 @@ class RencontresRepository {
       final response = await _supabase
           .from('section_visibility')
           .select()
-          .eq('client_id', userId);
+          .eq('client_id', userId)
+          .maybeSingle();
 
-      final visibility = <String, bool>{};
-      for (final row in response as List<dynamic>) {
-        final map = row as Map<String, dynamic>;
-        final key = map['section_key'] as String?;
-        final visible = map['is_visible'] as bool? ?? true;
-        if (key != null) {
-          visibility[key] = visible;
-        }
-      }
+      if (response == null) return {};
+
+      final visibility = {
+        'accueil': response['show_accueil'] as bool? ?? true,
+        'ressources': response['show_ressources'] as bool? ?? true,
+        'formulaires': response['show_formulaires'] as bool? ?? true,
+        'cartographie': response['show_cartographie'] as bool? ?? true,
+        'compatibilite': response['show_compatibilite'] as bool? ?? true,
+        'plan_action': response['show_plan_action'] as bool? ?? true,
+        'rencontres': response['show_rencontres'] as bool? ?? true,
+        'historique': response['show_historique'] as bool? ?? true,
+      };
 
       AppLogger.info(
         'Loaded ${visibility.length} visibility settings for user $userId',

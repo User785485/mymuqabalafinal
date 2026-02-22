@@ -203,7 +203,7 @@ class _BlinkDateScreenState extends ConsumerState<BlinkDateScreen>
           ),
           AppSpacing.gapLg,
           Text(
-            'Chargement de votre Blink Date...',
+            'Chargement de ton Blink Date...',
             style: AppTypography.bodyMedium.copyWith(color: AppColors.inkMuted),
           ),
         ],
@@ -292,11 +292,10 @@ class _BlinkDateScreenState extends ConsumerState<BlinkDateScreen>
               ],
             ),
           ),
-
           AppSpacing.gapXl,
 
           Text(
-            'Pr\u00eat\u00b7e pour votre \u00e9change ?',
+            'Pr\u00eat\u00b7e pour ton \u00e9change ?',
             style: AppTypography.h2.copyWith(color: AppColors.ink),
             textAlign: TextAlign.center,
           ),

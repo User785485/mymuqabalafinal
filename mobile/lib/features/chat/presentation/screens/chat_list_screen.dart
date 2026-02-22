@@ -1,18 +1,12 @@
-/// Chat list screen showing all conversations for the authenticated user.
+/// Chat screen — direct messaging with the coach.
 ///
-/// Uses the Stream Chat SDK to display a real-time list of channels.
-/// The screen handles three states:
-/// 1. **Client null** : Stream Chat not configured — shows an [EmptyState]
-/// 2. **No connected user** : Waiting for connection — shows a loading indicator
-/// 3. **Connected** : Renders [StreamChannelListView] with custom tile styling
-///
-/// Navigation: tapping a channel pushes [RouteNames.chatDetail] with the
-/// channel ID as a path parameter.
+/// No conversation list. Opens directly to the message thread.
+/// If no channel exists yet, auto-creates one via edge function
+/// and shows the input immediately so the client can type.
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 import 'package:my_muqabala/app.dart';
@@ -20,15 +14,13 @@ import 'package:my_muqabala/core/constants/app_colors.dart';
 import 'package:my_muqabala/core/providers/stream_connection_provider.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
-import 'package:my_muqabala/core/router/route_names.dart';
 import 'package:my_muqabala/core/utils/logger.dart';
 import 'package:my_muqabala/core/network/supabase_client.dart';
 import 'package:my_muqabala/core/widgets/empty_state.dart';
-import 'package:my_muqabala/core/widgets/loading_skeleton.dart';
 import 'package:my_muqabala/features/chat/data/repositories/chat_repository.dart';
-import 'package:my_muqabala/features/chat/presentation/widgets/channel_tile_widget.dart';
+import 'package:my_muqabala/features/chat/presentation/widgets/coach_message_badge.dart';
 
-/// Main chat list screen displayed as the "Chat" tab.
+/// Direct chat screen displayed as the "Chat" tab.
 class ChatListScreen extends ConsumerStatefulWidget {
   const ChatListScreen({super.key});
 
@@ -37,13 +29,12 @@ class ChatListScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatListScreenState extends ConsumerState<ChatListScreen> {
-  /// Controller for the Stream channel list.
-  /// Initialized only when the client is ready and a user is connected.
-  StreamChannelListController? _channelListController;
+  Channel? _channel;
+  bool _isLoadingChannel = true;
+  String? _errorMessage;
 
   @override
   void dispose() {
-    _channelListController?.dispose();
     super.dispose();
   }
 
@@ -53,38 +44,11 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
   Widget build(BuildContext context) {
     final client = ref.watch(streamChatClientProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // Watch the connection provider to trigger connect and observe its state.
     final connectionState = ref.watch(streamConnectionProvider);
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBg : AppColors.paper,
-      appBar: _buildAppBar(isDark),
       body: _buildBody(client, isDark, connectionState),
-    );
-  }
-
-  // ── App Bar ────────────────────────────────────────────────────────────────
-
-  PreferredSizeWidget _buildAppBar(bool isDark) {
-    return AppBar(
-      title: Text(
-        'Chat',
-        style: AppTypography.h2.copyWith(
-          color: isDark ? AppColors.darkInk : AppColors.ink,
-        ),
-      ),
-      centerTitle: false,
-      backgroundColor: isDark ? AppColors.darkBg : AppColors.paper,
-      surfaceTintColor: Colors.transparent,
-      elevation: 0,
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1),
-        child: Container(
-          height: 1,
-          color: isDark ? AppColors.darkBorder : AppColors.divider,
-        ),
-      ),
     );
   }
 
@@ -95,48 +59,348 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
     bool isDark,
     AsyncValue<bool> connectionState,
   ) {
-    // State 1: Stream Chat not configured
+    // Not configured
     if (client == null) {
-      return const EmptyState(
-        icon: Icons.chat_bubble_outline_rounded,
-        title: 'Chat non disponible',
-        subtitle:
-            'Le service de messagerie n\'est pas encore configuré. '
-            'Veuillez réessayer ultérieurement.',
+      return _wrapWithAppBar(
+        isDark,
+        const EmptyState(
+          icon: Icons.chat_bubble_outline_rounded,
+          title: 'Chat non disponible',
+          subtitle: 'Le service de messagerie n\'est pas encore configuré.',
+        ),
       );
     }
 
-    // State 2: Connection provider errored out
+    // Connection error
     if (connectionState is AsyncError) {
-      AppLogger.warning(
-        'Stream connection provider error: ${connectionState.error}',
-        tag: 'ChatListScreen',
-      );
-      return _buildServiceUnavailable();
+      return _wrapWithAppBar(isDark, _buildServiceUnavailable());
     }
 
-    // State 3: Connection provider still loading — show spinner
+    // Still connecting
     if (connectionState is AsyncLoading) {
-      return _buildConnectingState(isDark);
+      return _wrapWithAppBar(isDark, _buildConnectingState(isDark));
     }
 
-    // State 4: Connection provider resolved to false — service unavailable
+    // Not connected
     final isConnected = connectionState.value ?? false;
     if (!isConnected) {
-      return _buildServiceUnavailable();
+      return _wrapWithAppBar(isDark, _buildServiceUnavailable());
     }
 
-    // State 5: Connected — verify the user is actually set on the client
     final currentUser = client.state.currentUser;
     if (currentUser == null) {
-      return _buildServiceUnavailable();
+      return _wrapWithAppBar(isDark, _buildServiceUnavailable());
     }
 
-    // State 6: Fully connected — show channel list
-    return _buildChannelList(client, currentUser, isDark);
+    // Connected — load channel and show messages directly
+    _ensureChannelLoaded(client, currentUser);
+
+    if (_isLoadingChannel) {
+      return _wrapWithAppBar(isDark, _buildConnectingState(isDark));
+    }
+
+    if (_errorMessage != null) {
+      return _wrapWithAppBar(
+        isDark,
+        EmptyState(
+          icon: Icons.error_outline_rounded,
+          title: 'Erreur',
+          subtitle: _errorMessage!,
+          actionLabel: 'Réessayer',
+          onAction: () {
+            setState(() {
+              _isLoadingChannel = true;
+              _errorMessage = null;
+              _channel = null;
+            });
+          },
+        ),
+      );
+    }
+
+    if (_channel == null) {
+      return _wrapWithAppBar(isDark, _buildConnectingState(isDark));
+    }
+
+    // Show messages directly
+    return _buildDirectChat(_channel!, isDark);
   }
 
-  // ── Connecting state ───────────────────────────────────────────────────────
+  // ── Ensure channel is loaded (called from build) ──────────────────────────
+
+  bool _loadingInProgress = false;
+
+  void _ensureChannelLoaded(StreamChatClient client, User currentUser) {
+    if (_channel != null || _errorMessage != null || _loadingInProgress) return;
+    _loadingInProgress = true;
+
+    // Run async loading after the build frame
+    Future.microtask(() => _loadOrCreateChannel(client, currentUser));
+  }
+
+  Future<void> _loadOrCreateChannel(
+    StreamChatClient client,
+    User currentUser,
+  ) async {
+    try {
+      AppLogger.info(
+        'Loading coaching channel for ${currentUser.id}',
+        tag: 'ChatListScreen',
+      );
+
+      // Query existing channels
+      final channels = await client.queryChannels(
+        filter: Filter.in_('members', [currentUser.id]),
+        channelStateSort: const [SortOption('last_message_at')],
+        paginationParams: const PaginationParams(limit: 1),
+      ).first;
+
+      if (channels.isNotEmpty) {
+        // Found existing channel — use it
+        final channel = channels.first;
+        await channel.watch();
+
+        if (mounted) {
+          setState(() {
+            _channel = channel;
+            _isLoadingChannel = false;
+            _loadingInProgress = false;
+          });
+        }
+        return;
+      }
+
+      // No channel — auto-create one via edge function
+      AppLogger.info(
+        'No channel found, auto-creating coaching channel',
+        tag: 'ChatListScreen',
+      );
+
+      final repo = ChatRepository(SupabaseClientManager.client);
+      final channelId = await repo.createCoachingChannel(
+        client,
+        currentUser.id,
+      );
+
+      if (channelId == null) {
+        if (mounted) {
+          setState(() {
+            _errorMessage =
+                'Impossible de configurer le chat. Réessayez plus tard.';
+            _isLoadingChannel = false;
+            _loadingInProgress = false;
+          });
+        }
+        return;
+      }
+
+      // Watch the newly created channel
+      final channel = client.channel('messaging', id: channelId);
+      await channel.watch();
+
+      if (mounted) {
+        setState(() {
+          _channel = channel;
+          _isLoadingChannel = false;
+          _loadingInProgress = false;
+        });
+      }
+    } catch (e, st) {
+      AppLogger.error(
+        'Failed to load/create coaching channel',
+        tag: 'ChatListScreen',
+        error: e,
+        stackTrace: st,
+      );
+
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Erreur de connexion au chat. Réessayez.';
+          _isLoadingChannel = false;
+          _loadingInProgress = false;
+        });
+      }
+    }
+  }
+
+  // ── Direct chat UI (messages + input) ─────────────────────────────────────
+
+  Widget _buildDirectChat(Channel channel, bool isDark) {
+    final partnerName = _resolvePartnerName(channel);
+
+    return StreamChannel(
+      channel: channel,
+      child: Column(
+        children: [
+          // App bar
+          _buildChatAppBar(isDark, partnerName),
+
+          // Messages
+          Expanded(
+            child: StreamMessageListView(
+              messageBuilder: (context, details, messages, defaultWidget) {
+                return defaultWidget.copyWith(
+                  showUserAvatar: DisplayWidget.show,
+                );
+              },
+            ),
+          ),
+
+          // Input
+          Container(
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkSurface : AppColors.surface,
+              border: Border(
+                top: BorderSide(
+                  color: isDark ? AppColors.darkBorder : AppColors.divider,
+                  width: 1,
+                ),
+              ),
+            ),
+            child: SafeArea(
+              child: StreamMessageInput(
+                sendButtonLocation: SendButtonLocation.inside,
+                actionsLocation: ActionsLocation.leftInside,
+                disableAttachments: false,
+                idleSendButton: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.send_rounded,
+                    color: AppColors.inkFaint,
+                    size: 24,
+                  ),
+                ),
+                activeSendButton: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.send_rounded,
+                    color: AppColors.violet,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── App bars ──────────────────────────────────────────────────────────────
+
+  Widget _buildChatAppBar(bool isDark, String partnerName) {
+    final firstLetter =
+        partnerName.isNotEmpty ? partnerName[0].toUpperCase() : '?';
+
+    return Container(
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top,
+      ),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkBg : AppColors.paper,
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AppColors.darkBorder : AppColors.divider,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            // Coach avatar
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.violet,
+                shape: BoxShape.circle,
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                firstLetter,
+                style: AppTypography.label.copyWith(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            AppSpacing.horizontalSm,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          partnerName,
+                          style: AppTypography.h3.copyWith(
+                            color: isDark ? AppColors.darkInk : AppColors.ink,
+                            fontSize: 18,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      AppSpacing.horizontalSm,
+                      const CoachMessageBadge(),
+                    ],
+                  ),
+                  Text(
+                    'Ton accompagnant',
+                    style: AppTypography.caption.copyWith(
+                      color:
+                          isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _wrapWithAppBar(bool isDark, Widget body) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top,
+          ),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkBg : AppColors.paper,
+            border: Border(
+              bottom: BorderSide(
+                color: isDark ? AppColors.darkBorder : AppColors.divider,
+                width: 1,
+              ),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Text(
+                  'Chat',
+                  style: AppTypography.h2.copyWith(
+                    color: isDark ? AppColors.darkInk : AppColors.ink,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(child: body),
+      ],
+    );
+  }
+
+  // ── States ────────────────────────────────────────────────────────────────
 
   Widget _buildConnectingState(bool isDark) {
     return Center(
@@ -163,8 +427,6 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
     );
   }
 
-  // ── Service unavailable state ─────────────────────────────────────────
-
   Widget _buildServiceUnavailable() {
     return const EmptyState(
       icon: Icons.chat_bubble_outline_rounded,
@@ -175,150 +437,29 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
     );
   }
 
-  // ── Channel list ───────────────────────────────────────────────────────────
+  // ── Helpers ───────────────────────────────────────────────────────────────
 
-  Widget _buildChannelList(
-    StreamChatClient client,
-    User currentUser,
-    bool isDark,
-  ) {
-    // Initialize the controller if not yet created or if the user changed.
-    _initializeControllerIfNeeded(client, currentUser.id);
-
-    return StreamChannelListView(
-      controller: _channelListController!,
-      itemBuilder: (context, channels, index, defaultTile) {
-        final channel = channels[index];
-        return Column(
-          children: [
-            ChannelTileWidget(
-              channel: channel,
-              currentUserId: currentUser.id,
-              onTap: () => _navigateToChannel(channel),
-            ),
-            if (index < channels.length - 1)
-              Divider(
-                height: 1,
-                indent: AppSpacing.md + 52 + AppSpacing.md,
-                endIndent: AppSpacing.md,
-                color: isDark ? AppColors.darkBorder : AppColors.divider,
-              ),
-          ],
-        );
-      },
-      loadingBuilder: (context) => const LoadingSkeletonList(
-        itemCount: 5,
-        itemHeight: 72,
-      ),
-      emptyBuilder: (context) => EmptyState(
-        icon: Icons.chat_bubble_outline_rounded,
-        title: 'Aucune conversation',
-        subtitle:
-            'Cliquez ci-dessous pour démarrer une conversation '
-            'avec votre coach.',
-        actionLabel: 'Contacter mon coach',
-        onAction: () => _startCoachConversation(client, currentUser),
-      ),
-      errorBuilder: (context, error) => EmptyState(
-        icon: Icons.error_outline_rounded,
-        title: 'Erreur de chargement',
-        subtitle:
-            'Impossible de charger vos conversations. '
-            'Vérifiez votre connexion et réessayez.',
-        actionLabel: 'Réessayer',
-        onAction: () {
-          _channelListController?.refresh();
-        },
-      ),
-      onChannelTap: _navigateToChannel,
-    );
-  }
-
-  // ── Controller initialization ──────────────────────────────────────────────
-
-  void _initializeControllerIfNeeded(
-    StreamChatClient client,
-    String currentUserId,
-  ) {
-    if (_channelListController != null) return;
-
-    AppLogger.info(
-      'Initializing StreamChannelListController for user: $currentUserId',
-      tag: 'ChatListScreen',
-    );
-
-    _channelListController = StreamChannelListController(
-      client: client,
-      filter: Filter.in_('members', [currentUserId]),
-      channelStateSort: const [SortOption('last_message_at')],
-      limit: 20,
-    );
-  }
-
-  // ── Start coach conversation ───────────────────────────────────────────────
-
-  bool _creatingChannel = false;
-
-  Future<void> _startCoachConversation(
-    StreamChatClient client,
-    User currentUser,
-  ) async {
-    if (_creatingChannel) return;
-    setState(() => _creatingChannel = true);
-
-    try {
-      final repo = ChatRepository(SupabaseClientManager.client);
-      final channelId = await repo.createCoachingChannel(
-        client,
-        currentUser.id,
-      );
-
-      if (channelId != null && mounted) {
-        // Refresh the channel list
-        _channelListController?.refresh();
-        // Navigate to the new channel
-        context.pushNamed(
-          RouteNames.chatDetail,
-          pathParameters: {'channelId': channelId},
-        );
-      } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Impossible de contacter le coach pour le moment.'),
-          ),
-        );
+  String _resolvePartnerName(Channel channel) {
+    final explicitName = channel.extraData['name'] as String?;
+    if (explicitName != null && explicitName.isNotEmpty) {
+      // Strip "Coaching - " prefix
+      if (explicitName.startsWith('Coaching - ')) {
+        return explicitName.substring(11);
       }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Erreur lors de la création du chat.')),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _creatingChannel = false);
-    }
-  }
-
-  // ── Navigation ─────────────────────────────────────────────────────────────
-
-  void _navigateToChannel(Channel channel) {
-    final channelId = channel.id;
-    if (channelId == null || channelId.isEmpty) {
-      AppLogger.warning(
-        'Cannot navigate to channel with null/empty ID',
-        tag: 'ChatListScreen',
-      );
-      return;
+      return explicitName;
     }
 
-    AppLogger.debug(
-      'Navigating to chat detail: $channelId',
-      tag: 'ChatListScreen',
-    );
+    final client = ref.read(streamChatClientProvider);
+    final currentUserId = client?.state.currentUser?.id;
+    final members = channel.state?.members ?? [];
 
-    context.pushNamed(
-      RouteNames.chatDetail,
-      pathParameters: {'channelId': channelId},
-    );
+    final otherMembers = members.where((m) => m.userId != currentUserId);
+    if (otherMembers.isNotEmpty) {
+      final partner = otherMembers.first;
+      final name = partner.user?.name;
+      if (name != null && name.isNotEmpty) return name;
+    }
+
+    return 'Mon coach';
   }
 }

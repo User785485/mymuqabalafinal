@@ -39,6 +39,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
+    final meta = widget.profile.metadata;
     _form = FormGroup({
       'prenom': FormControl<String>(
         value: widget.profile.prenom,
@@ -58,6 +59,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       'bio': FormControl<String>(
         value: widget.profile.bio ?? '',
         validators: [Validators.maxLength(300)],
+      ),
+      'pratique_religieuse': FormControl<String>(
+        value: meta['pratique_religieuse'] as String? ?? '',
+      ),
+      'objectif_mariage': FormControl<String>(
+        value: meta['objectif_mariage'] as String? ?? '',
+        validators: [Validators.maxLength(200)],
+      ),
+      'preferences_priere': FormControl<String>(
+        value: meta['preferences_priere'] as String? ?? '',
+        validators: [Validators.maxLength(200)],
       ),
     });
   }
@@ -80,11 +92,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final ville = _form.control('ville').value as String?;
     final bio = _form.control('bio').value as String?;
 
+    final pratiqueReligieuse = _form.control('pratique_religieuse').value as String?;
+    final objectifMariage = _form.control('objectif_mariage').value as String?;
+    final prefPriere = _form.control('preferences_priere').value as String?;
+    final meta = widget.profile.metadata;
+
     return prenom != widget.profile.prenom ||
         (nom ?? '') != (widget.profile.nom ?? '') ||
         (email ?? '') != (widget.profile.email ?? '') ||
         ville != widget.profile.ville ||
-        (bio ?? '') != (widget.profile.bio ?? '');
+        (bio ?? '') != (widget.profile.bio ?? '') ||
+        (pratiqueReligieuse ?? '') != (meta['pratique_religieuse'] as String? ?? '') ||
+        (objectifMariage ?? '') != (meta['objectif_mariage'] as String? ?? '') ||
+        (prefPriere ?? '') != (meta['preferences_priere'] as String? ?? '');
   }
 
   @override
@@ -181,13 +201,58 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
               _buildBioField(),
 
+              AppSpacing.gapLg,
+
+              // ── Islamic context fields ─────────────────────────────
+              Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 8),
+                child: Text(
+                  'Contexte islamique',
+                  style: AppTypography.displaySmall.copyWith(
+                    color: AppColors.ink,
+                  ),
+                ),
+              ),
+
+              ReactiveDropdownField<String>(
+                formControlName: 'pratique_religieuse',
+                decoration: const InputDecoration(
+                  labelText: 'Pratique religieuse',
+                  prefixIcon: Icon(Icons.mosque_outlined, size: 20),
+                ),
+                items: const [
+                  DropdownMenuItem(value: '', child: Text('Non renseign\u00e9')),
+                  DropdownMenuItem(value: 'pratiquant', child: Text('Pratiquant(e)')),
+                  DropdownMenuItem(value: 'en_chemin', child: Text('En chemin')),
+                  DropdownMenuItem(value: 'debutant', child: Text('D\u00e9butant(e)')),
+                ],
+              ),
+
+              AppSpacing.gapMd,
+
+              _buildTextField(
+                controlName: 'objectif_mariage',
+                label: 'Objectif du mariage',
+                icon: Icons.favorite_outline_rounded,
+                textCapitalization: TextCapitalization.sentences,
+              ),
+
+              AppSpacing.gapMd,
+
+              _buildTextField(
+                controlName: 'preferences_priere',
+                label: 'Pr\u00e9f\u00e9rences de pri\u00e8re',
+                icon: Icons.access_time_rounded,
+                textCapitalization: TextCapitalization.sentences,
+              ),
+
               AppSpacing.gapXl,
 
               // ── Save button ───────────────────────────────────────
               _buildSaveButton(isLoading),
 
               SizedBox(
-                height: MediaQuery.of(context).padding.bottom + 24,
+                height: MediaQuery.of(context).viewPadding.bottom + 24,
               ),
             ],
           ),
@@ -542,6 +607,27 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final currentBio = widget.profile.bio ?? '';
     if ((bio ?? '') != currentBio) {
       updates['bio'] = (bio != null && bio.isNotEmpty) ? bio : null;
+    }
+
+    // Islamic context fields stored in metadata JSONB
+    final meta = widget.profile.metadata;
+    final pratiqueReligieuse = (form.control('pratique_religieuse').value as String?)?.trim() ?? '';
+    final objectifMariage = (form.control('objectif_mariage').value as String?)?.trim() ?? '';
+    final prefPriere = (form.control('preferences_priere').value as String?)?.trim() ?? '';
+
+    final currentPratique = meta['pratique_religieuse'] as String? ?? '';
+    final currentObjectif = meta['objectif_mariage'] as String? ?? '';
+    final currentPriere = meta['preferences_priere'] as String? ?? '';
+
+    if (pratiqueReligieuse != currentPratique ||
+        objectifMariage != currentObjectif ||
+        prefPriere != currentPriere) {
+      updates['metadata'] = {
+        ...meta,
+        'pratique_religieuse': pratiqueReligieuse.isNotEmpty ? pratiqueReligieuse : null,
+        'objectif_mariage': objectifMariage.isNotEmpty ? objectifMariage : null,
+        'preferences_priere': prefPriere.isNotEmpty ? prefPriere : null,
+      };
     }
 
     // 3. Only call the API if there are actual changes

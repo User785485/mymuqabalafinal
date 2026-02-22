@@ -46,11 +46,14 @@ class SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final foreground =
-        isDestructive ? AppColors.error : AppColors.ink;
+        isDestructive ? AppColors.error : (isDark ? AppColors.darkInk : AppColors.ink);
     final iconBg = isDestructive
         ? AppColors.error.withValues(alpha: 0.08)
-        : AppColors.purpleLight.withValues(alpha: 0.5);
+        : isDark
+            ? AppColors.violet.withValues(alpha: 0.15)
+            : AppColors.purpleLight.withValues(alpha: 0.5);
     final iconColor = isDestructive ? AppColors.error : AppColors.purple;
 
     return Material(
@@ -97,7 +100,7 @@ class SettingsTile extends StatelessWidget {
                       Text(
                         subtitle!,
                         style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.inkMuted,
+                          color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -113,7 +116,7 @@ class SettingsTile extends StatelessWidget {
               else if (onTap != null)
                 Icon(
                   Icons.chevron_right_rounded,
-                  color: AppColors.inkFaint,
+                  color: isDark ? AppColors.darkInkFaint : AppColors.inkFaint,
                   size: 22,
                 ),
             ],

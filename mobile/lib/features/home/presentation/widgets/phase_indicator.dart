@@ -39,16 +39,22 @@ class PhaseIndicator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final phaseAsync = ref.watch(currentPhaseProvider);
+    final progressAsync = ref.watch(phaseProgressProvider);
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return phaseAsync.when(
-      data: (phase) => _PhaseProgressBar(currentPhase: phase),
+      data: (phase) => _PhaseProgressBar(
+        currentPhase: phase,
+        progress: progressAsync.value ?? 0.5,
+      ),
       loading: () => Shimmer.fromColors(
-        baseColor: AppColors.divider,
-        highlightColor: AppColors.paper,
+        baseColor: isDark ? AppColors.darkCard : AppColors.divider,
+        highlightColor: isDark ? AppColors.darkBorder : AppColors.paper,
         child: Container(
           height: 96,
           decoration: BoxDecoration(
-            color: AppColors.divider,
+            color: isDark ? AppColors.darkCard : AppColors.divider,
             borderRadius: AppRadius.borderLg,
           ),
         ),
@@ -60,13 +66,21 @@ class PhaseIndicator extends ConsumerWidget {
 
 /// The actual progress bar with 4 labeled steps.
 class _PhaseProgressBar extends StatelessWidget {
-  const _PhaseProgressBar({required this.currentPhase});
+  const _PhaseProgressBar({
+    required this.currentPhase,
+    required this.progress,
+  });
 
   /// Current phase: 0 = not yet started, 1-4 = active phase.
   final int currentPhase;
 
+  /// Progress within the current phase (0.0 to 1.0).
+  final double progress;
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Card(
       child: Padding(
         padding: AppSpacing.cardPadding,
@@ -83,9 +97,9 @@ class _PhaseProgressBar extends StatelessWidget {
                 ),
                 AppSpacing.gapHSm,
                 Text(
-                  'Votre parcours',
+                  'Ton parcours',
                   style: AppTypography.labelLarge.copyWith(
-                    color: AppColors.ink,
+                    color: isDark ? AppColors.darkInk : AppColors.ink,
                   ),
                 ),
                 const Spacer(),
@@ -132,17 +146,24 @@ class _PhaseProgressBar extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: isCompleted || isActive
                                 ? color
-                                : AppColors.divider,
+                                : isDark ? AppColors.darkBorder : AppColors.divider,
                             borderRadius: AppRadius.borderCircular,
                           ),
                           child: isActive
                               ? ClipRRect(
                                   borderRadius: AppRadius.borderCircular,
-                                  child: LinearProgressIndicator(
-                                    value: 0.5,
-                                    backgroundColor: color.withValues(alpha: 0.3),
-                                    valueColor: AlwaysStoppedAnimation<Color>(color),
-                                    minHeight: 6,
+                                  child: TweenAnimationBuilder<double>(
+                                    tween: Tween<double>(begin: 0, end: progress),
+                                    duration: const Duration(milliseconds: 800),
+                                    curve: Curves.easeOutCubic,
+                                    builder: (context, value, _) {
+                                      return LinearProgressIndicator(
+                                        value: value,
+                                        backgroundColor: color.withValues(alpha: 0.3),
+                                        valueColor: AlwaysStoppedAnimation<Color>(color),
+                                        minHeight: 6,
+                                      );
+                                    },
                                   ),
                                 )
                               : null,
@@ -155,7 +176,7 @@ class _PhaseProgressBar extends StatelessWidget {
                           style: AppTypography.labelSmall.copyWith(
                             color: isCompleted || isActive
                                 ? color
-                                : AppColors.inkFaint,
+                                : isDark ? AppColors.darkInkFaint : AppColors.inkFaint,
                             fontWeight: isActive
                                 ? FontWeight.w600
                                 : FontWeight.w400,

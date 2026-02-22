@@ -28,18 +28,20 @@ class EventCountdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final eventAsync = ref.watch(nextEventProvider);
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return eventAsync.when(
       data: (event) {
         if (event == null) return const SizedBox.shrink();
         return _EventCountdownCard(event: event);
       },
       loading: () => Shimmer.fromColors(
-        baseColor: AppColors.divider,
-        highlightColor: AppColors.paper,
+        baseColor: isDark ? AppColors.darkCard : AppColors.divider,
+        highlightColor: isDark ? AppColors.darkBorder : AppColors.paper,
         child: Container(
           height: 110,
           decoration: BoxDecoration(
-            color: AppColors.divider,
+            color: isDark ? AppColors.darkCard : AppColors.divider,
             borderRadius: AppRadius.borderLg,
           ),
         ),
@@ -93,6 +95,7 @@ class _EventCountdownCardState extends State<_EventCountdownCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final titre = widget.event['titre'] as String? ?? 'Événement';
     final dateStr = widget.event['date_evenement'] as String?;
     final type = widget.event['type'] as String? ?? '';
@@ -150,7 +153,7 @@ class _EventCountdownCardState extends State<_EventCountdownCard> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: AppColors.roseLight,
+                            color: isDark ? AppColors.rose.withValues(alpha: 0.15) : AppColors.roseLight,
                             borderRadius: AppRadius.borderSm,
                           ),
                           child: Icon(
@@ -174,7 +177,7 @@ class _EventCountdownCardState extends State<_EventCountdownCard> {
                                 Text(
                                   formattedDate,
                                   style: AppTypography.bodySmall.copyWith(
-                                    color: AppColors.inkMuted,
+                                    color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -193,7 +196,7 @@ class _EventCountdownCardState extends State<_EventCountdownCard> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.roseLight,
+                        color: isDark ? AppColors.rose.withValues(alpha: 0.15) : AppColors.roseLight,
                         borderRadius: AppRadius.borderCircular,
                       ),
                       child: Row(

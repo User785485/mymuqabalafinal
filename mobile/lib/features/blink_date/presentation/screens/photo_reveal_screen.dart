@@ -342,7 +342,7 @@ class _PhotoRevealScreenState extends ConsumerState<PhotoRevealScreen>
             20,
             12,
             20,
-            MediaQuery.of(context).padding.bottom + 16,
+            MediaQuery.of(context).viewPadding.bottom + 16,
           ),
           decoration: BoxDecoration(
             color: AppColors.surface,

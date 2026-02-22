@@ -108,6 +108,24 @@ class PremiumGateWidget extends ConsumerWidget {
                           ),
                         ),
                       ),
+                      AppSpacing.gapSm,
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () =>
+                              context.goNamed(RouteNames.monEspace),
+                          icon: const Icon(Icons.auto_stories, size: 18),
+                          label: const Text('En savoir plus'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.violet,
+                            side: const BorderSide(color: AppColors.violet),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

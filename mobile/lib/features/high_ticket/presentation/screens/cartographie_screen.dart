@@ -1,10 +1,11 @@
 /// Cartographie \u00e9motionnelle screen.
 ///
-/// Displays 4 phases with expansion tiles:
-///   - Exploration (DOC_01\u201305)
-///   - Approfondissement (DOC_06\u201310)
-///   - Transformation (DOC_11\u201315)
-///   - Int\u00e9gration (DOC_16\u201320)
+/// Displays 4 phases aligned with the web dashboard:
+///   - Accueillir (DOC_01\u201303)
+///   - Comprendre (DOC_04\u201311)
+///   - Se situer (DOC_12\u201317)
+///   - Agir (DOC_18\u201320)
+/// Plus a bonus section for the Protocole de Lib\u00e9ration \u00c9motionnelle.
 library;
 
 import 'package:flutter/material.dart';
@@ -17,25 +18,13 @@ import 'package:my_muqabala/core/constants/app_typography.dart';
 import 'package:my_muqabala/core/router/route_names.dart';
 import 'package:my_muqabala/core/widgets/empty_state.dart';
 import 'package:my_muqabala/core/widgets/loading_skeleton.dart';
+import 'package:my_muqabala/core/widgets/verset_card.dart';
+import 'package:my_muqabala/features/high_ticket/data/cartographie_descriptions.dart';
 import 'package:my_muqabala/features/high_ticket/data/models/section_content_model.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/providers/high_ticket_provider.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/widgets/phase_expansion_widget.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/widgets/progress_bar_widget.dart';
 
-/// Phase definition for display.
-class _Phase {
-  const _Phase(this.title, this.start, this.end);
-  final String title;
-  final int start;
-  final int end;
-}
-
-const _phases = [
-  _Phase('Exploration', 1, 5),
-  _Phase('Approfondissement', 6, 10),
-  _Phase('Transformation', 11, 15),
-  _Phase('Int\u00e9gration', 16, 20),
-];
 
 class CartographieScreen extends ConsumerWidget {
   const CartographieScreen({super.key});
@@ -65,7 +54,7 @@ class CartographieScreen extends ConsumerWidget {
               icon: Icons.map_outlined,
               title: 'Cartographie non disponible',
               subtitle:
-                  'Votre cartographie \u00e9motionnelle appara\u00eetra ici.',
+                  'Ta cartographie \u00e9motionnelle appara\u00eetra ici.',
             );
           }
 
@@ -74,6 +63,11 @@ class CartographieScreen extends ConsumerWidget {
           final percentage =
               total > 0 ? (completed / total * 100).round() : 0;
 
+          // Separate the Protocole from DOC_XX items
+          final protocole = docs.where(
+            (d) => d.contentKey.toUpperCase() == 'PROTOCOLE',
+          ).toList();
+
           return RefreshIndicator(
             color: AppColors.violet,
             onRefresh: () async {
@@ -81,7 +75,12 @@ class CartographieScreen extends ConsumerWidget {
               await ref.read(cartographieDocsProvider.future);
             },
             child: ListView(
-              padding: AppSpacing.screenPadding,
+              padding: EdgeInsets.only(
+                left: AppSpacing.md,
+                right: AppSpacing.md,
+                top: AppSpacing.lg,
+                bottom: AppSpacing.lg,
+              ),
               children: [
                 // Global progress
                 Row(
@@ -105,10 +104,17 @@ class CartographieScreen extends ConsumerWidget {
                 ),
                 AppSpacing.gapLg,
                 // Phase expansion tiles
-                for (var i = 0; i < _phases.length; i++) ...[
-                  _buildPhase(context, isDark, _phases[i], docs),
+                for (var i = 0; i < kCartographiePhases.length; i++) ...[
+                  _buildPhase(context, isDark, kCartographiePhases[i], docs),
                   AppSpacing.gapSm,
                 ],
+                // Bonus: Protocole de Libération Émotionnelle
+                if (protocole.isNotEmpty) ...[
+                  AppSpacing.gapMd,
+                  _buildProtocole(context, isDark, protocole.first),
+                ],
+                AppSpacing.gapXl,
+                AppVersets.accueil,
               ],
             ),
           );
@@ -131,7 +137,7 @@ class CartographieScreen extends ConsumerWidget {
   Widget _buildPhase(
     BuildContext context,
     bool isDark,
-    _Phase phase,
+    PhaseInfo phase,
     List<SectionContentModel> allDocs,
   ) {
     // Filter docs for this phase (DOC_01 to DOC_20)
@@ -147,24 +153,19 @@ class CartographieScreen extends ConsumerWidget {
 
     return PhaseExpansionWidget(
       title: phase.title,
+      subtitle: phase.subtitle,
       completedCount: completed,
       totalCount: phaseDocs.length,
-      initiallyExpanded: phaseDocs.any((d) => !d.isCompleted),
+      initiallyExpanded: false,
       children: phaseDocs.map((doc) {
-        return ListTile(
-          leading: doc.isCompleted
-              ? const Icon(Icons.check_circle_rounded,
-                  color: AppColors.success, size: 20)
-              : Icon(Icons.circle_outlined,
-                  color: isDark ? AppColors.darkInkFaint : AppColors.inkFaint,
-                  size: 20),
-          title: Text(
-            doc.titre ?? doc.contentKey,
-            style: AppTypography.bodyMedium.copyWith(
-              color: isDark ? AppColors.darkInk : AppColors.ink,
-            ),
-          ),
-          trailing: const Icon(Icons.chevron_right_rounded, size: 20),
+        final docNum = _extractDocNum(doc.contentKey);
+        final info = kCartographieDocDescriptions[docNum];
+
+        return _DocTile(
+          doc: doc,
+          docNum: docNum,
+          info: info,
+          isDark: isDark,
           onTap: () {
             context.pushNamed(
               RouteNames.cartographieViewer,
@@ -173,6 +174,233 @@ class CartographieScreen extends ConsumerWidget {
           },
         );
       }).toList(),
+    );
+  }
+
+  int _extractDocNum(String contentKey) {
+    final match = RegExp(r'DOC_(\d+)').firstMatch(contentKey.toUpperCase());
+    return match != null ? (int.tryParse(match.group(1)!) ?? 0) : 0;
+  }
+
+  Widget _buildProtocole(
+    BuildContext context,
+    bool isDark,
+    SectionContentModel doc,
+  ) {
+    return Card(
+      elevation: 0,
+      color: isDark ? AppColors.darkSurface : AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: AppColors.violet.withValues(alpha: 0.3),
+        ),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {
+          context.pushNamed(
+            RouteNames.cartographieViewer,
+            pathParameters: {'docId': doc.id},
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: AppColors.violet.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      doc.isCompleted
+                          ? Icons.check_circle_rounded
+                          : Icons.auto_awesome_rounded,
+                      color: doc.isCompleted ? AppColors.success : AppColors.violet,
+                      size: 22,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          doc.titre ?? 'Protocole de Lib\u00e9ration \u00c9motionnelle',
+                          style: AppTypography.label.copyWith(
+                            color: isDark ? AppColors.darkInk : AppColors.ink,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Bonus',
+                          style: AppTypography.bodySmall.copyWith(
+                            color: AppColors.violet,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right_rounded, size: 20),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                kProtocoleInfo.teaser,
+                style: AppTypography.bodySmall.copyWith(
+                  color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 12,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: kProtocoleInfo.tags
+                    .map((tag) => _DocTag(tag: tag, isDark: isDark))
+                    .toList(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+// Enriched document tile with teaser + tags
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+class _DocTile extends StatelessWidget {
+  const _DocTile({
+    required this.doc,
+    required this.docNum,
+    required this.info,
+    required this.isDark,
+    required this.onTap,
+  });
+
+  final SectionContentModel doc;
+  final int docNum;
+  final CartographieDocInfo? info;
+  final bool isDark;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                // Doc number badge
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: doc.isCompleted
+                        ? AppColors.success.withValues(alpha: 0.12)
+                        : const Color(0xFF0D9488).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: doc.isCompleted
+                        ? const Icon(Icons.check_rounded,
+                            color: AppColors.success, size: 16)
+                        : Text(
+                            docNum.toString().padLeft(2, '0'),
+                            style: AppTypography.bodySmall.copyWith(
+                              color: const Color(0xFF0D9488),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 11,
+                            ),
+                          ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    doc.titre ?? doc.contentKey,
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: isDark ? AppColors.darkInk : AppColors.ink,
+                    ),
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded, size: 20),
+              ],
+            ),
+            if (info != null) ...[
+              Padding(
+                padding: const EdgeInsets.only(left: 40, top: 4),
+                child: Text(
+                  info!.teaser,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: isDark
+                        ? AppColors.darkInkMuted
+                        : AppColors.inkMuted,
+                    fontStyle: FontStyle.italic,
+                    fontSize: 11,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 40, top: 6),
+                child: Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: info!.tags
+                      .map((tag) => _DocTag(tag: tag, isDark: isDark))
+                      .toList(),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DocTag extends StatelessWidget {
+  const _DocTag({required this.tag, required this.isDark});
+
+  final String tag;
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D9488).withValues(alpha: isDark ? 0.15 : 0.08),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Text(
+        tag,
+        style: TextStyle(
+          fontFamily: 'Outfit',
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          color: isDark
+              ? const Color(0xFF5EEAD4)
+              : const Color(0xFF0D9488),
+        ),
+      ),
     );
   }
 }

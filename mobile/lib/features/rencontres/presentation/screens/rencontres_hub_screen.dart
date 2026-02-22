@@ -19,7 +19,6 @@ import 'package:my_muqabala/core/constants/app_colors.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
 import 'package:my_muqabala/core/router/route_names.dart';
-import 'package:my_muqabala/core/widgets/profile_app_bar_action.dart';
 import 'package:my_muqabala/features/home/presentation/providers/home_provider.dart';
 import 'package:my_muqabala/features/profile/presentation/providers/profile_provider.dart';
 import 'package:my_muqabala/features/rencontres/presentation/providers/rencontres_provider.dart';
@@ -27,18 +26,13 @@ import 'package:my_muqabala/features/rencontres/presentation/widgets/upcoming_ev
 import 'package:my_muqabala/features/rencontres/presentation/widgets/rencontres_en_cours_card.dart';
 import 'package:my_muqabala/features/rencontres/presentation/widgets/compatibilite_card_widget.dart';
 import 'package:my_muqabala/features/rencontres/presentation/widgets/historique_mini_widget.dart';
-import 'package:my_muqabala/features/rencontres/presentation/widgets/premium_rencontres_section.dart';
 
 class RencontresHubScreen extends ConsumerWidget {
   const RencontresHubScreen({super.key});
 
-  static const _navBarBottomPadding = 92.0;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bottomPad = MediaQuery.of(context).padding.bottom;
-
     final profileAsync = ref.watch(profileStreamProvider);
     final isHighTicket = profileAsync.when(
       data: (profile) => profile?.isHighTicket ?? false,
@@ -60,7 +54,7 @@ class RencontresHubScreen extends ConsumerWidget {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0.5,
-        actions: const [ProfileAppBarAction()],
+        actions: const [],
       ),
       body: RefreshIndicator(
         color: AppColors.violet,
@@ -74,7 +68,7 @@ class RencontresHubScreen extends ConsumerWidget {
             left: AppSpacing.md,
             right: AppSpacing.md,
             top: AppSpacing.lg,
-            bottom: _navBarBottomPadding + bottomPad,
+            bottom: AppSpacing.lg,
           ),
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
@@ -130,6 +124,10 @@ class RencontresHubScreen extends ConsumerWidget {
             ),
             AppSpacing.gapSm,
             const CompatibiliteCardWidget(),
+            if (!isHighTicket) ...[
+              AppSpacing.gapSm,
+              _CompatibilitePremiumTeaser(isDark: isDark),
+            ],
             AppSpacing.gapLg,
 
             // ── 5. Historique ────────────────────────────────────────
@@ -141,25 +139,13 @@ class RencontresHubScreen extends ConsumerWidget {
             ),
             AppSpacing.gapSm,
             const HistoriqueMiniWidget(),
+            if (isHighTicket) ...[
+              AppSpacing.gapSm,
+              _PremiumRencontresLinks(isDark: isDark),
+            ],
             AppSpacing.gapLg,
 
-            // ── 6. Premium / Upsell ─────────────────────────────────
-            _SectionHeader(
-              title: isHighTicket
-                  ? 'Accompagnement premium'
-                  : 'Passer au Premium',
-              icon: Icons.diamond_rounded,
-              color: AppColors.gold,
-              isDark: isDark,
-            ),
-            AppSpacing.gapSm,
-            if (isHighTicket)
-              const PremiumRencontresSection()
-            else
-              _UpsellBanner(isDark: isDark),
-            AppSpacing.gapLg,
-
-            // ── 7. Assistance coach ─────────────────────────────────
+            // ── 6. Assistance coach ─────────────────────────────────
             _AssistanceSection(isDark: isDark),
           ],
         ),
@@ -283,7 +269,7 @@ class _MatchingPhaseSection extends ConsumerWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Votre parcours de rencontre',
+                      'Ton parcours de rencontre',
                       style: AppTypography.bodySmall.copyWith(
                         color: isDark
                             ? AppColors.darkInkMuted
@@ -302,84 +288,117 @@ class _MatchingPhaseSection extends ConsumerWidget {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Mini upsell banner
+// Contextual premium teaser for free users (after compatibilité)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-class _UpsellBanner extends StatelessWidget {
-  const _UpsellBanner({required this.isDark});
+class _CompatibilitePremiumTeaser extends StatelessWidget {
+  const _CompatibilitePremiumTeaser({required this.isDark});
 
   final bool isDark;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.violet.withValues(alpha: isDark ? 0.2 : 0.08),
-            AppColors.rose.withValues(alpha: isDark ? 0.15 : 0.05),
-          ],
+    return GestureDetector(
+      onTap: () => context.goNamed(RouteNames.monEspace),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: 10,
         ),
-        borderRadius: AppRadius.borderLg,
-        border: Border.all(
-          color: AppColors.violet.withValues(alpha: 0.15),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.gold.withValues(alpha: isDark ? 0.15 : 0.08),
+              AppColors.goldWarm.withValues(alpha: isDark ? 0.1 : 0.04),
+            ],
+          ),
+          borderRadius: AppRadius.borderMd,
+          border: Border.all(
+            color: AppColors.gold.withValues(alpha: 0.2),
+          ),
         ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: AppColors.violet.withValues(alpha: 0.15),
-              shape: BoxShape.circle,
+        child: Row(
+          children: [
+            Icon(
+              Icons.auto_awesome_rounded,
+              size: 18,
+              color: AppColors.gold,
             ),
-            child: const Icon(
-              Icons.diamond_rounded,
-              color: AppColors.violet,
-              size: 24,
-            ),
-          ),
-          AppSpacing.gapMd,
-          Text(
-            'Débloquez l\u2019accompagnement premium',
-            style: AppTypography.label.copyWith(
-              color: isDark ? AppColors.darkInk : AppColors.ink,
-              fontSize: 15,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          AppSpacing.gapXs,
-          Text(
-            'Plan d\u2019action, assistante amoureuse et bien plus',
-            style: AppTypography.bodySmall.copyWith(
-              color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          AppSpacing.gapMd,
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: () => context.pushNamed(RouteNames.chat),
-              icon: const Icon(Icons.chat_rounded, size: 18),
-              label: const Text('Contacter mon coach'),
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.violet,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Analyse compl\u00e8te de compatibilit\u00e9',
+                style: AppTypography.labelMedium.copyWith(
+                  color: isDark ? AppColors.darkInk : AppColors.ink,
                 ),
               ),
             ),
-          ),
-        ],
+            Text(
+              'Voir',
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.gold,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              Icons.arrow_forward,
+              size: 14,
+              color: AppColors.gold,
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Premium shortcut links (after historique, for premium users)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+class _PremiumRencontresLinks extends StatelessWidget {
+  const _PremiumRencontresLinks({required this.isDark});
+
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ActionChip(
+            avatar: const Icon(Icons.checklist_rounded, size: 16),
+            label: const Text('Plan d\u2019Action'),
+            onPressed: () => context.pushNamed(RouteNames.planAction),
+            backgroundColor: isDark
+                ? AppColors.violet.withValues(alpha: 0.15)
+                : AppColors.purpleLight,
+            side: BorderSide.none,
+            labelStyle: AppTypography.labelSmall.copyWith(
+              color: AppColors.violet,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: ActionChip(
+            avatar: const Icon(Icons.chat_outlined, size: 16),
+            label: const Text('Assistante'),
+            onPressed: () => context.pushNamed(RouteNames.chat),
+            backgroundColor: isDark
+                ? AppColors.violet.withValues(alpha: 0.15)
+                : AppColors.purpleLight,
+            side: BorderSide.none,
+            labelStyle: AppTypography.labelSmall.copyWith(
+              color: AppColors.violet,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -416,7 +435,7 @@ class _AssistanceSection extends StatelessWidget {
           ),
           AppSpacing.gapXs,
           Text(
-            'Contactez votre coach pour toute question sur votre parcours de rencontre.',
+            'Contacte ton coach pour toute question sur ton parcours de rencontre.',
             style: AppTypography.bodySmall.copyWith(
               color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
             ),

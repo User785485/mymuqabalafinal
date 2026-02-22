@@ -77,6 +77,48 @@ class HomeRepository {
     };
   }
 
+  /// Returns a progress value (0.0 to 1.0) for the current active phase.
+  ///
+  /// Maps [statut_parcours] to a progress within its phase:
+  /// - Pre-phase statuses: 0.0
+  /// - Terminal statuses: 1.0
+  /// - Active phases: progress based on position within the status sequence
+  Future<double> getPhaseProgress(String userId) async {
+    try {
+      final response = await _supabase
+          .from('profiles')
+          .select('statut_parcours')
+          .eq('id', userId)
+          .single();
+
+      final statut = response['statut_parcours'] as String? ?? 'inscription';
+      return _mapStatutToProgress(statut);
+    } on Exception catch (e, st) {
+      AppLogger.error(
+        'Failed to fetch phase progress',
+        tag: 'HomeRepository',
+        error: e,
+        stackTrace: st,
+      );
+      return 0.0;
+    }
+  }
+
+  double _mapStatutToProgress(String statut) {
+    return switch (statut) {
+      'inscription' => 0.2,
+      'formulaire_en_cours' => 0.5,
+      'formation' => 0.7,
+      'matching_pool' => 0.9,
+      'phase_1_matching' => 0.3,
+      'phase_2_decouverte' => 0.4,
+      'phase_3_approfondie' => 0.5,
+      'phase_4_engagement' => 0.6,
+      'termine' || 'termine_positif' => 1.0,
+      _ => 0.0,
+    };
+  }
+
   // ── Next event ─────────────────────────────────────────────────────────
 
   /// Returns the next upcoming event where [userId] is a participant.

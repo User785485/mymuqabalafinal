@@ -7,13 +7,16 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:my_muqabala/core/constants/app_colors.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
-import 'package:my_muqabala/core/widgets/profile_app_bar_action.dart';
+import 'package:my_muqabala/core/router/route_names.dart';
+import 'package:my_muqabala/core/utils/greeting_utils.dart';
+import 'package:my_muqabala/core/widgets/staggered_list.dart';
 import 'package:my_muqabala/features/home/presentation/providers/home_provider.dart';
 import 'package:my_muqabala/features/home/presentation/widgets/coach_message_widget.dart';
 import 'package:my_muqabala/features/home/presentation/widgets/event_countdown.dart';
@@ -27,13 +30,14 @@ class AccueilScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final prenomAsync = ref.watch(userPrenomProvider);
     final unreadCountAsync = ref.watch(unreadNotificationCountProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.paper,
+      backgroundColor: isDark ? AppColors.darkBg : AppColors.paper,
       appBar: AppBar(
-        backgroundColor: AppColors.paper,
+        backgroundColor: isDark ? AppColors.darkBg : AppColors.paper,
         elevation: 0,
         scrolledUnderElevation: 0,
         title: const Text('My Muqabala'),
@@ -47,12 +51,11 @@ class AccueilScreen extends ConsumerWidget {
               error: (_, __) => const _NotificationBell(count: 0),
             ),
           ),
-          const ProfileAppBarAction(),
         ],
       ),
       body: RefreshIndicator(
         color: AppColors.purple,
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? AppColors.darkCard : Colors.white,
         onRefresh: () async {
           refreshAllHomeData(ref);
           // Wait a small delay for providers to start refreshing
@@ -63,32 +66,50 @@ class AccueilScreen extends ConsumerWidget {
             left: AppSpacing.md,
             right: AppSpacing.md,
             top: AppSpacing.lg,
-            bottom: 92 + MediaQuery.of(context).padding.bottom,
+            bottom: AppSpacing.lg,
           ),
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
             // ── Greeting ──────────────────────────────────────────────
-            _GreetingSection(prenomAsync: prenomAsync),
+            StaggeredListItem(
+              index: 0,
+              child: _GreetingSection(prenomAsync: prenomAsync),
+            ),
             AppSpacing.gapLg,
 
             // ── Phase Progress ─────────────────────────────────────────
-            const PhaseIndicator(),
+            StaggeredListItem(
+              index: 1,
+              child: const PhaseIndicator(),
+            ),
             AppSpacing.gapMd,
 
             // ── Event Countdown ────────────────────────────────────────
-            const EventCountdown(),
+            StaggeredListItem(
+              index: 2,
+              child: const EventCountdown(),
+            ),
             AppSpacing.gapMd,
 
             // ── Active Match ───────────────────────────────────────────
-            const MatchCardWidget(),
+            StaggeredListItem(
+              index: 3,
+              child: const MatchCardWidget(),
+            ),
             AppSpacing.gapMd,
 
             // ── Coach Message ──────────────────────────────────────────
-            const CoachMessageWidget(),
+            StaggeredListItem(
+              index: 4,
+              child: const CoachMessageWidget(),
+            ),
             AppSpacing.gapMd,
 
             // ── Pending Actions ────────────────────────────────────────
-            const PendingActionsWidget(),
+            StaggeredListItem(
+              index: 5,
+              child: const PendingActionsWidget(),
+            ),
             AppSpacing.gapXl,
           ],
         ),
@@ -108,6 +129,7 @@ class _GreetingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final today = DateFormat("EEEE d MMMM yyyy", 'fr_FR').format(DateTime.now());
 
     return Column(
@@ -116,20 +138,20 @@ class _GreetingSection extends StatelessWidget {
         // Greeting
         prenomAsync.when(
           data: (prenom) => Text(
-            'As-salamu alaykum${prenom.isNotEmpty ? ' $prenom' : ''}',
+            '${GreetingUtils.greeting(DateTime.now())}${prenom.isNotEmpty ? ' $prenom' : ''}',
             style: AppTypography.displayLarge.copyWith(
-              color: AppColors.ink,
+              color: isDark ? AppColors.darkInk : AppColors.ink,
               height: 1.2,
             ),
           ),
           loading: () => Shimmer.fromColors(
-            baseColor: AppColors.divider,
-            highlightColor: AppColors.paper,
+            baseColor: isDark ? AppColors.darkCard : AppColors.divider,
+            highlightColor: isDark ? AppColors.darkBorder : AppColors.paper,
             child: Container(
               width: 280,
               height: 36,
               decoration: BoxDecoration(
-                color: AppColors.divider,
+                color: isDark ? AppColors.darkCard : AppColors.divider,
                 borderRadius: AppRadius.borderSm,
               ),
             ),
@@ -137,7 +159,7 @@ class _GreetingSection extends StatelessWidget {
           error: (_, __) => Text(
             'As-salamu alaykum',
             style: AppTypography.displayLarge.copyWith(
-              color: AppColors.ink,
+              color: isDark ? AppColors.darkInk : AppColors.ink,
               height: 1.2,
             ),
           ),
@@ -148,7 +170,7 @@ class _GreetingSection extends StatelessWidget {
         Text(
           today,
           style: AppTypography.bodyMedium.copyWith(
-            color: AppColors.inkMuted,
+            color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
           ),
         ),
       ],
@@ -160,32 +182,86 @@ class _GreetingSection extends StatelessWidget {
 // Notification Bell
 // ═══════════════════════════════════════════════════════════════════════════
 
-class _NotificationBell extends StatelessWidget {
+class _NotificationBell extends StatefulWidget {
   const _NotificationBell({required this.count});
 
   final int count;
 
   @override
+  State<_NotificationBell> createState() => _NotificationBellState();
+}
+
+class _NotificationBellState extends State<_NotificationBell>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _shakeController;
+  late final Animation<double> _shakeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _shakeAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0, end: 0.15), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: 0.15, end: -0.15), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: -0.15, end: 0.08), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: 0.08, end: 0), weight: 1),
+    ]).animate(CurvedAnimation(
+      parent: _shakeController,
+      curve: Curves.easeInOut,
+    ));
+
+    if (widget.count > 0) {
+      _shakeController.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _NotificationBell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.count == 0 && widget.count > 0) {
+      _shakeController.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _shakeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        // Navigate to notifications screen (to be implemented)
+    return AnimatedBuilder(
+      animation: _shakeAnimation,
+      builder: (context, child) {
+        return Transform.rotate(
+          angle: _shakeAnimation.value,
+          child: child,
+        );
       },
-      icon: Badge(
-        isLabelVisible: count > 0,
-        label: Text(
-          count > 99 ? '99+' : count.toString(),
-          style: const TextStyle(
-            fontFamily: 'Outfit',
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+      child: IconButton(
+        onPressed: () {
+          context.pushNamed(RouteNames.notifications);
+        },
+        icon: Badge(
+          isLabelVisible: widget.count > 0,
+          label: Text(
+            widget.count > 99 ? '99+' : widget.count.toString(),
+            style: const TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
           ),
-        ),
-        backgroundColor: AppColors.rose,
-        child: const Icon(
-          Icons.notifications_outlined,
-          size: 26,
+          backgroundColor: AppColors.rose,
+          child: const Icon(
+            Icons.notifications_outlined,
+            size: 26,
+          ),
         ),
       ),
     );

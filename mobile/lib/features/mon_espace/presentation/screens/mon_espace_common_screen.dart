@@ -28,13 +28,9 @@ import 'package:my_muqabala/features/matching/presentation/providers/matching_pr
 class MonEspaceCommonScreen extends ConsumerWidget {
   const MonEspaceCommonScreen({super.key});
 
-  /// Extra bottom padding to account for the floating nav bar + FAB.
-  static const _navBarBottomPadding = 92.0;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bottomPad = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBg : AppColors.paper,
@@ -57,7 +53,7 @@ class MonEspaceCommonScreen extends ConsumerWidget {
           left: AppSpacing.md,
           right: AppSpacing.md,
           top: AppSpacing.lg,
-          bottom: _navBarBottomPadding + bottomPad,
+          bottom: AppSpacing.lg,
         ),
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
@@ -297,7 +293,7 @@ class _MatchingPhaseSection extends ConsumerWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Votre parcours de rencontre',
+                      'Ton parcours de rencontre',
                       style: AppTypography.bodySmall.copyWith(
                         color: isDark
                             ? AppColors.darkInkMuted
@@ -347,7 +343,7 @@ class _AssistanceSection extends StatelessWidget {
           ),
           AppSpacing.gapXs,
           Text(
-            'Contactez votre coach pour toute question sur votre parcours de rencontre.',
+            'Contacte ton coach pour toute question sur ton parcours de rencontre.',
             style: AppTypography.bodySmall.copyWith(
               color: isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
             ),

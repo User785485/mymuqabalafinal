@@ -51,6 +51,34 @@ final planActionProvider =
   return repo.getPlanAction(userId);
 });
 
+final compteRenduProvider =
+    FutureProvider.autoDispose<List<SectionContentModel>>((ref) async {
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
+  final repo = ref.watch(highTicketRepositoryProvider);
+  return repo.getCompteRendu(userId);
+});
+
+final pageDeVenteProvider =
+    FutureProvider.autoDispose<List<SectionContentModel>>((ref) async {
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
+  final repo = ref.watch(highTicketRepositoryProvider);
+  return repo.getPageDeVente(userId);
+});
+
+final hasCompteRenduProvider =
+    FutureProvider.autoDispose<bool>((ref) async {
+  final items = await ref.watch(compteRenduProvider.future);
+  return items.isNotEmpty && items.any((i) => i.contenuHtml != null);
+});
+
+final hasPageDeVenteProvider =
+    FutureProvider.autoDispose<bool>((ref) async {
+  final items = await ref.watch(pageDeVenteProvider.future);
+  return items.isNotEmpty && items.any((i) => i.contenuHtml != null);
+});
+
 // ── Progress provider (family by section) ───────────────────────────────
 
 /// Returns progress data for a given section.

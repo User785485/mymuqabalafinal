@@ -79,6 +79,10 @@ abstract final class AppSpacing {
   static const horizontalXl = SizedBox(width: xl);
   static const horizontalXxl = SizedBox(width: xxl);
 
+  // ── Floating nav bar clearance ────────────────────────────────────────
+  static const double navBarHeight = 68;
+  static const double navBarBottomMargin = 8;
+
   // ── Legacy aliases (backward compatibility) ───────────────────────────
   static const gapXs = verticalXs;
   static const gapSm = verticalSm;

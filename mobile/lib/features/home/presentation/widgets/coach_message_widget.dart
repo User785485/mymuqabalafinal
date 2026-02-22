@@ -7,11 +7,15 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'package:my_muqabala/core/widgets/tappable_card.dart';
 
 import 'package:my_muqabala/core/constants/app_colors.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
+import 'package:my_muqabala/core/router/route_names.dart';
 import 'package:my_muqabala/core/utils/date_utils.dart';
 import 'package:my_muqabala/features/home/presentation/providers/home_provider.dart';
 
@@ -21,6 +25,7 @@ class CoachMessageWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final messageAsync = ref.watch(coachMessageProvider);
 
     return messageAsync.when(
@@ -29,12 +34,12 @@ class CoachMessageWidget extends ConsumerWidget {
         return _CoachMessageCard(message: message);
       },
       loading: () => Shimmer.fromColors(
-        baseColor: AppColors.divider,
-        highlightColor: AppColors.paper,
+        baseColor: isDark ? AppColors.darkCard : AppColors.divider,
+        highlightColor: isDark ? AppColors.darkBorder : AppColors.paper,
         child: Container(
           height: 90,
           decoration: BoxDecoration(
-            color: AppColors.divider,
+            color: isDark ? AppColors.darkCard : AppColors.divider,
             borderRadius: AppRadius.borderLg,
           ),
         ),
@@ -51,7 +56,8 @@ class _CoachMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titre = message['titre'] as String? ?? 'Message de votre coach';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final titre = message['titre'] as String? ?? 'Message de ton coach';
     final body = message['corps'] as String? ?? '';
     final createdAt = message['created_at'] as String?;
 
@@ -59,18 +65,20 @@ class _CoachMessageCard extends StatelessWidget {
         ? AppDateUtils.formatRelative(DateTime.parse(createdAt).toLocal())
         : '';
 
-    return GestureDetector(
+    return TappableCard(
       onTap: () {
-        // Navigate to coaching chat (to be implemented)
+        context.pushNamed(RouteNames.chat);
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AppColors.darkCard : AppColors.surface,
           borderRadius: AppRadius.borderLg,
-          border: Border.all(color: AppColors.divider),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.divider),
           boxShadow: [
             BoxShadow(
-              color: AppColors.sage.withValues(alpha: 0.08),
+              color: isDark
+                  ? AppColors.sage.withValues(alpha: 0.15)
+                  : AppColors.sage.withValues(alpha: 0.08),
               blurRadius: 12,
               offset: const Offset(0, 2),
             ),
@@ -97,7 +105,7 @@ class _CoachMessageCard extends StatelessWidget {
                           child: Text(
                             titre,
                             style: AppTypography.labelLarge.copyWith(
-                              color: AppColors.sageDeep,
+                              color: isDark ? AppColors.sage : AppColors.sageDeep,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -107,7 +115,7 @@ class _CoachMessageCard extends StatelessWidget {
                           Text(
                             relativeDate,
                             style: AppTypography.labelSmall.copyWith(
-                              color: AppColors.inkFaint,
+                              color: isDark ? AppColors.darkInkFaint : AppColors.inkFaint,
                             ),
                           ),
                       ],
@@ -118,7 +126,7 @@ class _CoachMessageCard extends StatelessWidget {
                     Text(
                       body,
                       style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.inkSoft,
+                        color: isDark ? AppColors.darkInkSoft : AppColors.inkSoft,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -181,18 +189,23 @@ class _CoachAvatar extends StatelessWidget {
           ),
         ],
       ),
-      child: Container(
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppColors.sageLight,
-        ),
-        child: const Center(
-          child: Icon(
-            Icons.person_outline,
-            size: 24,
-            color: AppColors.sageDeep,
-          ),
-        ),
+      child: Builder(
+        builder: (context) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          return Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isDark ? AppColors.sage.withValues(alpha: 0.15) : AppColors.sageLight,
+            ),
+            child: Center(
+              child: Icon(
+                Icons.person_outline,
+                size: 24,
+                color: isDark ? AppColors.sage : AppColors.sageDeep,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -10,11 +10,15 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'package:my_muqabala/core/widgets/tappable_card.dart';
 
 import 'package:my_muqabala/core/constants/app_colors.dart';
 import 'package:my_muqabala/core/constants/app_spacing.dart';
 import 'package:my_muqabala/core/constants/app_typography.dart';
+import 'package:my_muqabala/core/router/route_names.dart';
 import 'package:my_muqabala/features/home/presentation/providers/home_provider.dart';
 
 /// Card displaying the user's active match partner.
@@ -23,6 +27,7 @@ class MatchCardWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final matchAsync = ref.watch(activeMatchProvider);
 
     return matchAsync.when(
@@ -31,12 +36,12 @@ class MatchCardWidget extends ConsumerWidget {
         return _ActiveMatchCard(match: match);
       },
       loading: () => Shimmer.fromColors(
-        baseColor: AppColors.divider,
-        highlightColor: AppColors.paper,
+        baseColor: isDark ? AppColors.darkCard : AppColors.divider,
+        highlightColor: isDark ? AppColors.darkBorder : AppColors.paper,
         child: Container(
           height: 100,
           decoration: BoxDecoration(
-            color: AppColors.divider,
+            color: isDark ? AppColors.darkCard : AppColors.divider,
             borderRadius: AppRadius.borderLg,
           ),
         ),
@@ -53,6 +58,7 @@ class _ActiveMatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final partner = match['partner'] as Map<String, dynamic>? ?? {};
     final prenom = partner['prenom'] as String? ?? '???';
     final nom = partner['nom'] as String? ?? '';
@@ -73,9 +79,9 @@ class _ActiveMatchCard extends StatelessWidget {
     final displayName =
         nom.isNotEmpty ? '$prenom ${nom[0].toUpperCase()}.' : prenom;
 
-    return GestureDetector(
+    return TappableCard(
       onTap: () {
-        // Navigate to match detail (to be implemented)
+        context.pushNamed(RouteNames.rencontresEnCours);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -83,14 +89,20 @@ class _ActiveMatchCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              AppColors.purpleLight.withValues(alpha: 0.5),
-              Colors.white,
-              AppColors.purpleLight.withValues(alpha: 0.2),
-            ],
+            colors: isDark
+                ? [
+                    AppColors.violet.withValues(alpha: 0.15),
+                    AppColors.darkCard,
+                    AppColors.violet.withValues(alpha: 0.08),
+                  ]
+                : [
+                    AppColors.purpleLight.withValues(alpha: 0.5),
+                    Colors.white,
+                    AppColors.purpleLight.withValues(alpha: 0.2),
+                  ],
             stops: const [0.0, 0.5, 1.0],
           ),
-          border: Border.all(color: AppColors.divider),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.divider),
         ),
         child: Padding(
           padding: AppSpacing.cardPadding,
@@ -111,7 +123,7 @@ class _ActiveMatchCard extends StatelessWidget {
                     Text(
                       displayName,
                       style: AppTypography.labelLarge.copyWith(
-                        color: AppColors.ink,
+                        color: isDark ? AppColors.darkInk : AppColors.ink,
                         fontSize: 16,
                       ),
                       maxLines: 1,
@@ -129,7 +141,7 @@ class _ActiveMatchCard extends StatelessWidget {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.purpleLight,
+                              color: isDark ? AppColors.violet.withValues(alpha: 0.15) : AppColors.purpleLight,
                               borderRadius: AppRadius.borderCircular,
                             ),
                             child: Text(
@@ -204,11 +216,13 @@ class _FallbackAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: 64,
       height: 64,
       decoration: BoxDecoration(
-        color: AppColors.purpleLight,
+        color: isDark ? AppColors.violet.withValues(alpha: 0.2) : AppColors.purpleLight,
         borderRadius: AppRadius.borderMd,
       ),
       child: Center(
@@ -259,13 +273,20 @@ class _CompatibilityCircle extends StatelessWidget {
               color.withValues(alpha: 0.2),
             ),
           ),
-          // Progress arc
-          CircularProgressIndicator(
-            value: progress,
-            strokeWidth: 4,
-            backgroundColor: Colors.transparent,
-            valueColor: AlwaysStoppedAnimation<Color>(color),
-            strokeCap: StrokeCap.round,
+          // Animated progress arc
+          TweenAnimationBuilder<double>(
+            tween: Tween<double>(begin: 0, end: progress),
+            duration: const Duration(milliseconds: 900),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, _) {
+              return CircularProgressIndicator(
+                value: value,
+                strokeWidth: 4,
+                backgroundColor: Colors.transparent,
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+                strokeCap: StrokeCap.round,
+              );
+            },
           ),
           // Percentage text
           Text(

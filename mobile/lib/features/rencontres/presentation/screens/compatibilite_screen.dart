@@ -67,14 +67,12 @@ class _CompatibiliteBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomPad = MediaQuery.of(context).padding.bottom;
-
     return SingleChildScrollView(
       padding: EdgeInsets.only(
         left: AppSpacing.md,
         right: AppSpacing.md,
         top: AppSpacing.lg,
-        bottom: 92 + bottomPad,
+        bottom: AppSpacing.lg,
       ),
       child: Column(
         children: [
@@ -144,7 +142,7 @@ class _CompatibiliteBody extends StatelessWidget {
                   ),
                   AppSpacing.gapSm,
                   Text(
-                    'Votre coach vous communiquera les résultats détaillés lors de votre prochain échange.',
+                    'Ton coach te communiquera les résultats détaillés lors de ton prochain échange.',
                     style: AppTypography.bodyMedium.copyWith(
                       color:
                           isDark ? AppColors.darkInkMuted : AppColors.inkMuted,
@@ -172,8 +170,8 @@ class _StatusHeader extends StatelessWidget {
     final (icon, title, subtitle, color) = switch (model.status) {
       CompatibiliteStatus.pending => (
           Icons.search_rounded,
-          'Lancez votre recherche',
-          'Remplissez le formulaire de compatibilité pour que nous puissions identifier les profils qui vous correspondent.',
+          'Lance ta recherche',
+          'Remplis le formulaire de compatibilité pour que nous puissions identifier les profils qui te correspondent.',
           AppColors.violet,
         ),
       CompatibiliteStatus.searching => (

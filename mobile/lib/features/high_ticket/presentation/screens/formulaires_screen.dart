@@ -14,6 +14,8 @@ import 'package:my_muqabala/core/constants/app_typography.dart';
 import 'package:my_muqabala/core/router/route_names.dart';
 import 'package:my_muqabala/core/widgets/empty_state.dart';
 import 'package:my_muqabala/core/widgets/loading_skeleton.dart';
+import 'package:my_muqabala/core/widgets/verset_card.dart';
+import 'package:my_muqabala/features/high_ticket/data/formulaire_descriptions.dart';
 import 'package:my_muqabala/features/high_ticket/data/models/formulaire_model.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/providers/high_ticket_provider.dart';
 import 'package:my_muqabala/features/high_ticket/presentation/widgets/phase_expansion_widget.dart';
@@ -47,7 +49,7 @@ class FormulairesScreen extends ConsumerWidget {
               icon: Icons.quiz_outlined,
               title: 'Aucun formulaire disponible',
               subtitle:
-                  'Vos formulaires exploratoires appara\u00eetront ici.',
+                  'Tes formulaires exploratoires appara\u00eetront ici.',
             );
           }
 
@@ -73,7 +75,12 @@ class FormulairesScreen extends ConsumerWidget {
               await ref.read(formulairesProvider.future);
             },
             child: ListView(
-              padding: AppSpacing.screenPadding,
+              padding: EdgeInsets.only(
+                left: AppSpacing.md,
+                right: AppSpacing.md,
+                top: AppSpacing.lg,
+                bottom: AppSpacing.lg,
+              ),
               children: [
                 // Global progress
                 Row(
@@ -98,45 +105,29 @@ class FormulairesScreen extends ConsumerWidget {
                   if (grouped.containsKey(group)) ...[
                     PhaseExpansionWidget(
                       title: FormulaireModel.groupLabel(group),
+                      subtitle: kFormulaireGroupDescriptions[group.name],
                       completedCount: grouped[group]!
                           .where((f) => f.isCompleted)
                           .length,
                       totalCount: grouped[group]!.length,
-                      initiallyExpanded:
-                          group == FormulaireGroup.scenarios,
+                      initiallyExpanded: false,
                       children: grouped[group]!
-                          .map(
-                            (f) => ListTile(
-                              title: Text(
-                                f.displayTitle,
-                                style: AppTypography.bodyMedium.copyWith(
-                                  color: isDark
-                                      ? AppColors.darkInk
-                                      : AppColors.ink,
-                                ),
-                              ),
-                              trailing: f.isCompleted
-                                  ? const Icon(
-                                      Icons.check_circle_rounded,
-                                      color: AppColors.success,
-                                      size: 20,
-                                    )
-                                  : const Icon(
-                                      Icons.chevron_right_rounded,
-                                      size: 20,
-                                    ),
-                              onTap: () {
-                                context.pushNamed(
-                                  RouteNames.formulaireDetail,
-                                  pathParameters: {'formId': f.id},
-                                );
-                              },
-                            ),
-                          )
+                          .map((f) => _FormulaireTile(
+                                formulaire: f,
+                                isDark: isDark,
+                                onTap: () {
+                                  context.pushNamed(
+                                    RouteNames.formulaireDetail,
+                                    pathParameters: {'formId': f.id},
+                                  );
+                                },
+                              ))
                           .toList(),
                     ),
                     AppSpacing.gapSm,
                   ],
+                AppSpacing.gapXl,
+                AppVersets.formulaires,
               ],
             ),
           );
@@ -151,6 +142,75 @@ class FormulairesScreen extends ConsumerWidget {
           subtitle: error.toString(),
           actionLabel: 'R\u00e9essayer',
           onAction: () => ref.invalidate(formulairesProvider),
+        ),
+      ),
+    );
+  }
+}
+
+class _FormulaireTile extends StatelessWidget {
+  const _FormulaireTile({
+    required this.formulaire,
+    required this.isDark,
+    required this.onTap,
+  });
+
+  final FormulaireModel formulaire;
+  final bool isDark;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final desc = kFormulaireDescriptions[
+        formulaire.content.contentKey.toUpperCase()];
+
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    formulaire.displayTitle,
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: isDark ? AppColors.darkInk : AppColors.ink,
+                    ),
+                  ),
+                  if (desc != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      desc,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: isDark
+                            ? AppColors.darkInkMuted
+                            : AppColors.inkMuted,
+                        fontSize: 11,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            formulaire.isCompleted
+                ? const Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.success,
+                    size: 20,
+                  )
+                : const Icon(
+                    Icons.chevron_right_rounded,
+                    size: 20,
+                  ),
+          ],
         ),
       ),
     );
