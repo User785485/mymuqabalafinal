@@ -10,7 +10,7 @@
 const DEFAULT_ALLOWED_ORIGINS = [
   "https://my-muqabala.fr",
   "https://www.my-muqabala.fr",
-  "https://admin-muqabala.vercel.app",
+  "https://admin.my-muqabala.fr",
   "http://localhost:3000",
   "http://localhost:5173",
   "http://localhost:8080",

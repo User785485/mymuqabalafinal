@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Compte-rendu personnalisé pour un accompagnement sur-mesure">
+  <meta name="theme-color" content="#6200ea">
+  <title>Compte-rendu personnalisé pour {{PRENOM_1}}</title>
+  
+  <!-- Optimisation de chargement des ressources critiques -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" as="style">
+  
+  <!-- Styles externes -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       SYSTÈME DE DESIGN - ARCHITECTURE COHÉRENTE
+       ========================================================================== */
+    :root {
+      /* ------------------------------------------------
+         ESPACE & RYTHME - Échelle progressive 
+         ------------------------------------------------ */
+      --space-quantum: 0.25rem; /* 4px - unité de base */
+      --space-2xs: calc(var(--space-quantum) * 2);    /* 8px */
+      --space-xs: calc(var(--space-quantum) * 3);     /* 12px */
+      --space-s: calc(var(--space-quantum) * 4);      /* 16px */
+      --space-m: calc(var(--space-quantum) * 6);      /* 24px */
+      --space-l: calc(var(--space-quantum) * 8);      /* 32px */
+      --space-xl: calc(var(--space-quantum) * 12);    /* 48px */
+      --space-2xl: calc(var(--space-quantum) * 16);   /* 64px */
+      
+      /* ------------------------------------------------
+         PALETTE DE COULEURS 
+         ------------------------------------------------ */
+      /* Primaires - Violet */
+      --color-primary-50: #f5f1ff;
+      --color-primary-100: #ede5ff;
+      --color-primary-200: #d8c9ff;
+      --color-primary-300: #c0a3ff;
+      --color-primary-400: #a57aff;
+      --color-primary-500: #8a4bff;
+      --color-primary-600: #6200ea; /* Base */
+      --color-primary-700: #5000d0;
+      --color-primary-800: #4400b6;
+      
+      /* Secondaires - Rose */
+      --color-secondary-50: #fff1f6;
+      --color-secondary-100: #ffe4ee;
+      --color-secondary-200: #ffc6dd;
+      --color-secondary-300: #ff9dc3;
+      --color-secondary-500: #ef4088;
+      --color-secondary-600: #c2185b; /* Base */
+      --color-secondary-700: #a0124b;
+      
+      /* Forces - Vert */
+      --color-forces-50: #e9fbf0;
+      --color-forces-100: #c6f6d9;
+      --color-forces-500: #38c172;
+      --color-forces-600: #2d9d5a;
+      
+      /* Défis - Bleu */
+      --color-defis-50: #edf2ff;
+      --color-defis-100: #dbe4ff;
+      --color-defis-300: #91a7ff;
+      --color-defis-500: #4263eb;
+      --color-defis-600: #3b5bdb;
+      
+      /* Transformations - Rose */
+      --color-transformation-50: #fff0f7;
+      --color-transformation-100: #ffe3ee;
+      --color-transformation-300: #fba4cf;
+      --color-transformation-500: #e83e8c;
+      --color-transformation-600: #d0307b;
+      
+      /* Action - Ambre */
+      --color-action-50: #fff9e6;
+      --color-action-100: #fff3cc;
+      --color-action-300: #ffe066;
+      --color-action-500: #f59f00;
+      --color-action-600: #e67700;
+      
+      /* Témoignage - Turquoise */
+      --color-temoignage-50: #e6fcf5;
+      --color-temoignage-100: #c3fae8;
+      --color-temoignage-300: #63e6be;
+      --color-temoignage-500: #0ca678;
+      --color-temoignage-600: #099268;
+      
+      /* Tons neutres - Gris */
+      --color-neutral-50: #fafafa;
+      --color-neutral-100: #f5f5f5;
+      --color-neutral-200: #e9e9e9;
+      --color-neutral-300: #d9d9d9;
+      --color-neutral-400: #b9b9b9;
+      --color-neutral-500: #919191;
+      --color-neutral-600: #696969;
+      --color-neutral-700: #444444;
+      --color-neutral-800: #2a2a2a;
+      --color-neutral-900: #181818;
+      
+      /* ------------------------------------------------
+         TYPOGRAPHIE
+         ------------------------------------------------ */
+      --font-family-heading: 'Playfair Display', Georgia, serif;
+      --font-family-body: 'Montserrat', system-ui, -apple-system, sans-serif;
+      
+      /* Échelle typographique */
+      --font-size-xs: 0.8rem;     /* 12.8px */
+      --font-size-s: 0.9rem;      /* 14.4px */
+      --font-size-m: 1rem;        /* 16px - Base */
+      --font-size-l: 1.25rem;     /* 20px */
+      --font-size-xl: 1.563rem;   /* 25px */
+      --font-size-2xl: 1.953rem;  /* 31.25px */
+      --font-size-3xl: 2.441rem;  /* 39.06px */
+      --font-size-4xl: 3.052rem;  /* 48.83px - Ajout pour les titres des sections */
+      
+      /* Hauteurs de ligne */
+      --line-height-tight: 1.2;
+      --line-height-normal: 1.6;
+      --line-height-relaxed: 1.75;
+      --line-height-extra-relaxed: 1.9; /* Ajout pour les textes d'introduction */
+      
+      /* Graisse des polices */
+      --font-weight-regular: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+      
+      /* ------------------------------------------------
+         BORDURES ET FORMES
+         ------------------------------------------------ */
+      --border-radius-xs: 0.25rem;  /* 4px */
+      --border-radius-s: 0.5rem;    /* 8px */
+      --border-radius-m: 0.75rem;   /* 12px */
+      --border-radius-l: 1rem;      /* 16px */
+      --border-radius-xl: 1.25rem;  /* 20px - Réduit pour mobile */
+      --border-radius-circle: 50%;
+      --border-radius-pill: 9999px;
+      
+      /* ------------------------------------------------
+         OMBRES 
+         ------------------------------------------------ */
+      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-s: 0 2px 4px rgba(0, 0, 0, 0.07);
+      --shadow-m: 0 4px 8px rgba(0, 0, 0, 0.08);
+      --shadow-l: 0 8px 16px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.09);
+      
+      /* ------------------------------------------------
+         TRANSITIONS
+         ------------------------------------------------ */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-medium: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* ------------------------------------------------
+         VARIABLES SÉMANTIQUES
+         ------------------------------------------------ */
+      --color-text-primary: var(--color-neutral-900);
+      --color-text-secondary: var(--color-neutral-700);
+      --color-text-tertiary: var(--color-neutral-600);
+      --color-text-accent: var(--color-primary-600);
+      --color-text-inverse: white;
+      
+      --color-background-body: #fcfaff;
+      --color-background-card: white;
+      --color-background-primary: var(--color-primary-50);
+      --color-background-forces: var(--color-forces-50);
+      --color-background-defis: var(--color-defis-50);
+      --color-background-transformation: var(--color-transformation-50);
+      --color-background-action: var(--color-action-50);
+      --color-background-temoignage: var(--color-temoignage-50);
+      
+      --color-border-light: rgba(98, 0, 234, 0.1);
+      
+      /* Conteneur */
+      --container-max-width: 800px; /* Plus petit pour une meilleure lisibilité */
+      --container-padding-desktop: var(--space-s);
+      --container-padding-mobile: var(--space-xs);
+    }
+
+    /* ==========================================================================
+       RESET ET NORMALISATION
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      font-size: 16px;
+    }
+    
+    body {
+      font-family: var(--font-family-body);
+      font-size: var(--font-size-m);
+      line-height: var(--line-height-normal);
+      color: var(--color-text-primary);
+      background-color: var(--color-background-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+
+    img, svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    /* ==========================================================================
+       UTILITAIRES
+       ========================================================================== */
+    .gradient-text {
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    /* Classes d'animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .stagger-children > *:nth-child(1) { transition-delay: 100ms; }
+    .stagger-children > *:nth-child(2) { transition-delay: 150ms; }
+    .stagger-children > *:nth-child(3) { transition-delay: 200ms; }
+    .stagger-children > *:nth-child(4) { transition-delay: 250ms; }
+    .stagger-children > *:nth-child(5) { transition-delay: 300ms; }
+    
+    /* ==========================================================================
+       STYLES DE BASE
+       ========================================================================== */
+    h1, h2, h3, h4, h5 {
+      font-family: var(--font-family-heading);
+      line-height: var(--line-height-tight);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-s);
+    }
+    
+    h1 {
+      font-size: clamp(var(--font-size-xl), 5vw, var(--font-size-3xl));
+      margin-bottom: var(--space-m);
+    }
+    
+    h2 {
+      font-size: clamp(var(--font-size-l), 4vw, var(--font-size-2xl));
+      margin-bottom: var(--space-m);
+    }
+    
+    h3 {
+      font-size: var(--font-size-l);
+      margin-bottom: var(--space-s);
+    }
+    
+    p {
+      margin-bottom: var(--space-m);
+    }
+    
+    a {
+      color: var(--color-primary-600);
+      text-decoration: none;
+      transition: all var(--transition-medium);
+      font-weight: var(--font-weight-medium);
+    }
+    
+    a:hover, a:focus {
+      color: var(--color-primary-700);
+      text-decoration: underline;
+    }
+    
+    strong {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary-600);
+    }
+    
+    /* ==========================================================================
+       LAYOUT / STRUCTURE DE PAGE
+       ========================================================================== */
+    .main-container {
+      width: 94%; /* Réduit les marges latérales pour mobile */
+      max-width: var(--container-max-width);
+      margin: 1rem auto;
+      background-color: var(--color-background-card);
+      border-radius: var(--border-radius-m);
+      box-shadow: var(--shadow-m);
+      overflow: hidden;
+      padding: var(--space-m) var(--space-s);
+    }
+    
+    @media (min-width: 768px) {
+      .main-container {
+        width: 90%;
+        margin: 2rem auto;
+        border-radius: var(--border-radius-l);
+        padding: var(--space-l) var(--space-l);
+      }
+    }
+    
+    .section {
+      position: relative;
+      margin-bottom: var(--space-xl);
+    }
+    
+    /* ==========================================================================
+       HEADER / INTRO
+       ========================================================================== */
+    .header {
+      text-align: center;
+      margin-bottom: var(--space-l);
+    }
+    
+    .header::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+      margin: var(--space-s) auto 0;
+      border-radius: 1.5px;
+    }
+    
+    .logo-circle {
+      width: 4.5rem;
+      height: 4.5rem;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+      border-radius: var(--border-radius-circle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-m);
+      box-shadow: 0 8px 20px rgba(98, 0, 234, 0.25);
+      animation: gentlePulse 5s infinite alternate ease-in-out;
+    }
+    
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .emoji-heart {
+      font-size: 2rem;
+      color: white;
+      animation: heartbeat 2.5s infinite;
+    }
+    
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      10%, 30% { transform: scale(1.1); }
+      20% { transform: scale(0.95); }
+    }
+    
+    .gradient-heading {
+      font-size: clamp(var(--font-size-xl), 5vw, var(--font-size-2xl));
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    
+    .introduction-card {
+      border-radius: var(--border-radius-m);
+      padding: var(--space-m);
+      margin-bottom: var(--space-l);
+      background: linear-gradient(150deg, white, var(--color-primary-50));
+      box-shadow: var(--shadow-s);
+      border: 1px solid var(--color-border-light);
+    }
+    
+    @media (min-width: 768px) {
+      .introduction-card {
+        padding: var(--space-l);
+        border-radius: var(--border-radius-l);
+      }
+    }
+    
+    .highlight-box {
+      background-color: var(--color-primary-50);
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      margin-top: var(--space-m);
+      border-left: 3px solid var(--color-primary-600);
+    }
+    
+    @media (min-width: 768px) {
+      .highlight-box {
+        padding: var(--space-m);
+        border-radius: var(--border-radius-m);
+      }
+    }
+    
+    /* ==========================================================================
+       TITRES DE SECTION AMÉLIORÉS
+       ========================================================================== */
+    .section-title {
+      text-align: center;
+      font-size: clamp(var(--font-size-xl), 6vw, var(--font-size-3xl)); /* Augmente la taille des titres */
+      margin-bottom: var(--space-xl);
+      font-weight: var(--font-weight-bold);
+      position: relative;
+      padding-bottom: var(--space-s);
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px; /* Ligne plus large */
+      height: 4px; /* Ligne plus épaisse */
+      border-radius: 2px;
+      background: currentColor;
+    }
+    
+    .section-title.forces {
+      color: var(--color-forces-600);
+    }
+    
+    .section-title.forces::after {
+      background: var(--color-forces-600);
+    }
+    
+    .section-title.defis {
+      color: var(--color-defis-600);
+    }
+    
+    .section-title.defis::after {
+      background: var(--color-defis-600);
+    }
+    
+    .section-title.transformations {
+      color: var(--color-transformation-600);
+    }
+    
+    .section-title.transformations::after {
+      background: var(--color-transformation-600);
+    }
+    
+    .section-title.action {
+      color: var(--color-action-600);
+    }
+    
+    .section-title.action::after {
+      background: var(--color-action-600);
+    }
+    
+    .section-title.temoignage {
+      color: var(--color-temoignage-600);
+    }
+    
+    .section-title.temoignage::after {
+      background: var(--color-temoignage-600);
+    }
+    
+    /* ==========================================================================
+       INTRODUCTIONS DE SECTION AMÉLIORÉES
+       ========================================================================== */
+    .section-intro {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto var(--space-xl);
+      font-size: 1.1rem; /* Texte légèrement plus grand */
+      line-height: var(--line-height-extra-relaxed); /* Plus d'espace entre les lignes */
+      position: relative;
+      padding-bottom: var(--space-m);
+    }
+    
+    .section-intro.forces {
+      color: var(--color-forces-600);
+    }
+    
+    .section-intro.defis {
+      color: var(--color-defis-600);
+    }
+    
+    .section-intro.transformations {
+      color: var(--color-transformation-600);
+    }
+    
+    /* ==========================================================================
+       FORCES ET QUALITÉS
+       ========================================================================== */
+    .forces-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+      margin-top: var(--space-m);
+    }
+    
+    @media (min-width: 640px) {
+      .forces-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .forces-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    .force-card {
+      background: var(--color-background-card);
+      border-radius: var(--border-radius-m);
+      padding: var(--space-m);
+      box-shadow: var(--shadow-s);
+      border-top: 4px solid var(--color-forces-500);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .force-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-l);
+    }
+    
+    .force-icon {
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-s);
+      font-size: 1.5rem;
+      background-color: var(--color-forces-50);
+      border-radius: 50%;
+    }
+    
+    .force-title {
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-l);
+      margin-bottom: var(--space-xs);
+      color: var(--color-forces-600);
+    }
+    
+    .force-quote {
+      font-style: italic;
+      color: var(--color-forces-600);
+      background-color: var(--color-forces-50);
+      padding: var(--space-s);
+      border-radius: var(--border-radius-s);
+      margin-top: auto;
+      border-left: 3px solid var(--color-forces-500);
+    }
+    
+    /* ==========================================================================
+       DÉFIS RELATIONNELS
+       ========================================================================== */
+    .defi-card {
+      margin-bottom: var(--space-l);
+      padding: var(--space-m);
+      background-color: var(--color-background-card);
+      border-radius: var(--border-radius-m);
+      box-shadow: var(--shadow-s);
+      border-left: 4px solid var(--color-defis-600);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .defi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-l);
+    }
+    
+    @media (min-width: 768px) {
+      .defi-card {
+        padding: var(--space-l);
+        border-radius: var(--border-radius-l);
+      }
+    }
+    
+    .defi-badge {
+      display: inline-block;
+      padding: 0.3rem 0.7rem;
+      background-color: var(--color-defis-600);
+      color: white;
+      border-radius: var(--border-radius-xs);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-xs);
+      box-shadow: var(--shadow-xs);
+    }
+    
+    .defi-title {
+      font-size: var(--font-size-l);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-s);
+      color: var(--color-defis-600);
+    }
+    
+    .defi-analysis {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-s);
+      margin-top: var(--space-m);
+    }
+    
+    @media (min-width: 768px) {
+      .defi-analysis {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-m);
+      }
+    }
+    
+    .defi-analysis-card {
+      background-color: var(--color-defis-50);
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      transition: transform var(--transition-medium);
+    }
+    
+    .defi-analysis-card:hover {
+      transform: translateY(-2px);
+    }
+    
+    @media (min-width: 768px) {
+      .defi-analysis-card {
+        padding: var(--space-m);
+        border-radius: var(--border-radius-m);
+      }
+    }
+    
+    .defi-analysis-title {
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-xs);
+      color: var(--color-defis-600);
+      display: flex;
+      align-items: center;
+    }
+    
+    .defi-analysis-icon {
+      margin-right: var(--space-xs);
+    }
+    
+    /* Zoom spécial - Encadrés bleus */
+    .zoom-special {
+      margin-top: var(--space-s);
+      background: var(--color-defis-50);
+      padding: var(--space-s);
+      border-left: 3px solid var(--color-defis-600);
+      border-radius: var(--border-radius-s);
+      box-shadow: var(--shadow-xs);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .zoom-special:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-s);
+    }
+    
+    .zoom-special strong {
+      color: var(--color-defis-600);
+      display: block;
+      margin-bottom: var(--space-xs);
+    }
+    
+    .zoom-special p {
+      margin-top: var(--space-xs);
+      font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+    
+    /* Connecteur entre défis */
+    .connecteur {
+      margin-top: var(--space-s);
+      font-size: 0.95rem;
+      padding: var(--space-xs);
+      border-top: 1px dashed var(--color-defis-300);
+      color: var(--color-defis-600);
+      font-style: italic;
+    }
+    
+    /* ==========================================================================
+       TRANSFORMATIONS
+       ========================================================================== */
+    .transformation-card {
+      margin-bottom: var(--space-l);
+      padding: var(--space-m);
+      background-color: var(--color-background-card);
+      border-radius: var(--border-radius-m);
+      box-shadow: var(--shadow-s);
+      border-left: 4px solid var(--color-transformation-600);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .transformation-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-l);
+    }
+    
+    @media (min-width: 768px) {
+      .transformation-card {
+        padding: var(--space-l);
+        border-radius: var(--border-radius-l);
+      }
+    }
+    
+    .transformation-badge {
+      display: inline-block;
+      padding: 0.3rem 0.7rem;
+      background-color: var(--color-transformation-600);
+      color: white;
+      border-radius: var(--border-radius-xs);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-xs);
+      box-shadow: var(--shadow-xs);
+    }
+    
+    .transformation-title {
+      font-size: var(--font-size-l);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-s);
+      color: var(--color-transformation-600);
+    }
+    
+    .transformation-analysis {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-s);
+      margin-top: var(--space-m);
+    }
+    
+    @media (min-width: 768px) {
+      .transformation-analysis {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-m);
+      }
+    }
+    
+    .transformation-analysis-card {
+      background-color: var(--color-transformation-50);
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      transition: transform var(--transition-medium);
+    }
+    
+    .transformation-analysis-card:hover {
+      transform: translateY(-2px);
+    }
+    
+    @media (min-width: 768px) {
+      .transformation-analysis-card {
+        padding: var(--space-m);
+        border-radius: var(--border-radius-m);
+      }
+    }
+    
+    .transformation-analysis-title {
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-xs);
+      color: var(--color-transformation-600);
+      display: flex;
+      align-items: center;
+    }
+    
+    .transformation-mini-action {
+      background-color: white;
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      margin-top: var(--space-m);
+      border-left: 3px solid var(--color-transformation-600);
+      box-shadow: var(--shadow-xs);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .transformation-mini-action:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-s);
+    }
+    
+    @media (min-width: 768px) {
+      .transformation-mini-action {
+        padding: var(--space-m);
+        border-radius: var(--border-radius-m);
+      }
+    }
+    
+    /* AMÉLIORÉ : Avant/Après */
+    .avant-apres {
+      margin-top: var(--space-m);
+      font-weight: var(--font-weight-medium);
+      position: relative;
+      border-radius: var(--border-radius-m);
+      overflow: hidden;
+      box-shadow: var(--shadow-s);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .avant-apres:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-m);
+    }
+    
+    .avant-apres-content {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    
+    @media (min-width: 768px) {
+      .avant-apres-content {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .avant-block {
+      background-color: var(--color-defis-50);
+      padding: var(--space-m);
+      position: relative;
+    }
+    
+    .avant-block::before {
+      content: "AVANT";
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: var(--color-defis-600);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: var(--font-weight-bold);
+      padding: 0.15rem 0.5rem;
+      border-bottom-right-radius: var(--border-radius-xs);
+    }
+    
+    .apres-block {
+      background-color: var(--color-transformation-50);
+      padding: var(--space-m);
+      position: relative;
+    }
+    
+    .apres-block::before {
+      content: "APRÈS";
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--color-transformation-600);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: var(--font-weight-bold);
+      padding: 0.15rem 0.5rem;
+      border-bottom-left-radius: var(--border-radius-xs);
+    }
+    
+    .avant-content, .apres-content {
+      position: relative;
+      z-index: 1;
+      padding-top: var(--space-s);
+    }
+    
+    @media (min-width: 768px) {
+      .avant-apres-content::after {
+        content: "→";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2rem;
+        height: 2rem;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary-600);
+        box-shadow: var(--shadow-s);
+        z-index: 2;
+      }
+    }
+    
+    /* ==========================================================================
+     
+    
+    /* ==========================================================================
+/* ==========================================================================
+  /* ==========================================================================
+   TÉMOIGNAGE MODERNE
+   ========================================================================== */
+.testimonial-modern {
+  position: relative;
+  max-width: 900px;
+  margin: var(--space-m) auto var(--space-xl);
+  background-color: var(--color-background-card);
+  border-radius: var(--border-radius-m);
+  box-shadow: var(--shadow-m);
+  overflow: hidden;
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.testimonial-modern:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+}
+
+@media (min-width: 768px) {
+  .testimonial-modern {
+    border-radius: var(--border-radius-l);
+  }
+}
+
+/* En-tête élégant */
+.testimonial-header-modern {
+  display: flex;
+  align-items: center;
+  padding: var(--space-m);
+  background: linear-gradient(135deg, var(--color-temoignage-50), var(--color-temoignage-300));
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-header-modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='rgba(9, 146, 104, 0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.6;
+  z-index: 0;
+}
+
+@media (min-width: 768px) {
+  .testimonial-header-modern {
+    padding: var(--space-l);
+  }
+}
+
+.profile-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.avatar-circle {
+  width: 64px;
+  height: 64px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--color-temoignage-600);
+  box-shadow: 0 4px 15px rgba(9, 146, 104, 0.2);
+  position: relative;
+  z-index: 2;
+  margin-right: var(--space-m);
+}
+
+.avatar-icon {
+  font-size: 32px;
+}
+
+.avatar-shadow {
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  bottom: -5px;
+  left: 0;
+  border-radius: 50%;
+  background: rgba(9, 146, 104, 0.15);
+  filter: blur(4px);
+  z-index: 1;
+}
+
+.profile-details {
+  position: relative;
+  z-index: 2;
+}
+
+.profile-name {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  color: var(--color-temoignage-600);
+  font-size: var(--font-size-l);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+}
+
+.profile-age {
+  font-weight: var(--font-weight-medium);
+  opacity: 0.85;
+}
+
+.rating-stars {
+  margin-top: 6px;
+}
+
+.stars-container {
+  color: var(--color-action-500);
+  letter-spacing: 3px;
+  font-size: 1.1rem;
+  display: inline-block;
+  position: relative;
+}
+
+.stars-container::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -3px;
+  left: 0;
+  background: linear-gradient(to right, var(--color-action-500), transparent);
+  border-radius: 1px;
+}
+
+/* Conteneur du témoignage */
+.testimonial-container {
+  padding: var(--space-l);
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .testimonial-container {
+    padding: var(--space-l);
+  }
+}
+
+/* Styles pour Avant/Après */
+.testimony-before, .testimony-after {
+  position: relative;
+  margin-bottom: 45px;
+}
+
+.quote-container {
+  position: relative;
+  padding: var(--space-l);
+  border-radius: var(--border-radius-m);
+  box-shadow: var(--shadow-s);
+}
+
+.testimony-before .quote-container {
+  background: linear-gradient(to bottom right, #edf2ff, #dbe4ff);
+  border-left: 4px solid var(--color-defis-600);
+}
+
+.testimony-after .quote-container {
+  background: linear-gradient(to bottom right, #e6fcf5, #f0fdf9);
+  border-left: 4px solid #00a876;
+}
+
+.quote-badge {
+  position: absolute;
+  top: -15px;
+  left: 20px;
+  padding: 6px 16px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: var(--border-radius-pill);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.testimony-before .quote-badge {
+  background: var(--color-defis-600);
+  color: white;
+}
+
+.testimony-after .quote-badge {
+  background: #00a876;
+  color: white;
+}
+
+.quote-content {
+  position: relative;
+  z-index: 2;
+}
+
+.quote-text {
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-m);
+}
+
+.highlight-intro {
+  color: var(--color-defis-600);
+  font-weight: var(--font-weight-semibold);
+}
+
+.highlight-transformation {
+  color: #00a876;
+  font-weight: var(--font-weight-semibold);
+}
+
+.highlight-result {
+  color: #00a876;
+  font-weight: var(--font-weight-semibold);
+}
+
+.quote-decoration {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.quote-icon {
+  width: 40px;
+  height: 40px;
+  fill: currentColor;
+}
+
+.testimony-before .quote-decoration {
+  color: var(--color-defis-600);
+}
+
+.testimony-after .quote-decoration {
+  color: #00a876;
+}
+
+/* Commentaire du thérapeute */
+.therapist-insight {
+  position: relative;
+  padding: 25px 40px;
+  margin: 40px 0;
+  display: flex;
+  align-items: center;
+}
+
+.insight-line {
+  height: 1px;
+  flex-grow: 1;
+  background: linear-gradient(to right, transparent, var(--color-primary-300), transparent);
+}
+
+.insight-content {
+  padding: 0 var(--space-m);
+  text-align: center;
+  font-style: italic;
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-medium);
+  font-size: 1rem;
+  line-height: var(--line-height-relaxed);
+  position: relative;
+}
+
+.insight-content::before, .insight-content::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary-300);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.insight-content::before {
+  left: 0;
+}
+
+.insight-content::after {
+  right: 0;
+}
+
+.insight-content p {
+  margin: 0;
+  color: var(--color-primary-700);
+}
+
+/* Conclusion du thérapeute */
+.therapist-conclusion {
+  margin-top: 40px;
+  padding: 25px 30px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  position: relative;
+  border-left: 4px solid var(--color-primary-600);
+  box-shadow: var(--shadow-m);
+}
+
+.conclusion-badge {
+  position: absolute;
+  top: -16px;
+  left: 20px;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(98, 0, 234, 0.3);
+  z-index: 2;
+}
+
+.conclusion-icon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.conclusion-text {
+  margin: 0;
+  padding-top: 8px;
+  color: var(--color-primary-700);
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Responsive pour témoignage */
+@media (max-width: 768px) {
+  .testimonial-header-modern {
+    padding: var(--space-s);
+  }
+  
+  .avatar-circle {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    margin-right: var(--space-s);
+  }
+  
+  .profile-name {
+    font-size: var(--font-size-m);
+  }
+  
+  .testimonial-container {
+    padding: var(--space-m);
+  }
+  
+  .quote-container {
+    padding: var(--space-m);
+  }
+  
+  .quote-text {
+    font-size: var(--font-size-s);
+  }
+  
+  .therapist-insight {
+    padding: var(--space-s);
+    flex-direction: column;
+  }
+  
+  .insight-line {
+    width: 80%;
+    margin: var(--space-xs) 0;
+  }
+  
+  .insight-content {
+    order: -1;
+    padding: 0 var(--space-xs) var(--space-xs);
+  }
+  
+  .quote-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+  
+  .conclusion-badge {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .conclusion-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+==========================================================================
+       étape finale - AMÉLIORÉ
+       ========================================================================== */
+    .discovery-section {
+      position: relative;
+      margin: var(--space-xl) 0;
+      border-radius: var(--border-radius-l);
+      overflow: hidden;
+      box-shadow: var(--shadow-l);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .discovery-section:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .discovery-header {
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
+      padding: var(--space-m);
+      position: relative;
+      text-align: center;
+    }
+    
+    .discovery-header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(255,255,255,0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      z-index: 0;
+    }
+    
+    .discovery-title {
+      font-size: clamp(var(--font-size-xl), 5vw, var(--font-size-2xl));
+      color: white;
+      margin-bottom: var(--space-s);
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .discovery-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: var(--font-size-m);
+      font-weight: var(--font-weight-medium);
+      position: relative;
+      z-index: 1;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    
+    /* Contenu en fond violet clair */
+    .discovery-content {
+      background-color: #ede5ff;
+      padding: var(--space-m);
+      position: relative;
+    }
+    
+    @media (min-width: 768px) {
+      .discovery-content {
+        padding: var(--space-l);
+      }
+      
+      .discovery-header {
+        padding: var(--space-l);
+      }
+    }
+    
+    .discovery-intro {
+      margin-bottom: var(--space-l);
+      padding: var(--space-s);
+      text-align: center;
+      color: var(--color-primary-700);
+      line-height: var(--line-height-relaxed);
+    }
+    
+    .highlight-text {
+      color: var(--color-primary-600);
+      font-weight: var(--font-weight-bold);
+    }
+    
+    .feature-list {
+      margin-bottom: var(--space-l);
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: var(--space-m);
+      position: relative;
+      background-color: var(--color-background-card);
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      box-shadow: var(--shadow-s);
+      border: 1px solid var(--color-border-light);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .feature-item:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-l);
+    }
+    
+    .feature-number {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: var(--color-primary-600);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: var(--font-weight-bold);
+      font-size: 1.25rem;
+      margin-right: var(--space-s);
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(98, 0, 234, 0.2);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .feature-content {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .feature-title {
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-m);
+      margin-bottom: var(--space-xs);
+      color: var(--color-primary-600);
+    }
+    
+    /* ==========================================================================
+       CALL TO ACTION - AMÉLIORÉ
+       ========================================================================== */
+    .cta-section {
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
+      border-radius: var(--border-radius-l);
+      padding: var(--space-m);
+      position: relative;
+      text-align: center;
+      color: white;
+      box-shadow: var(--shadow-l);
+      overflow: hidden;
+      margin-top: var(--space-l);
+    }
+    
+    .cta-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='rgba(255,255,255,0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.2;
+      z-index: 0;
+    }
+    
+    @media (min-width: 768px) {
+      .cta-section {
+        padding: var(--space-l);
+      }
+    }
+    
+    .cta-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .cta-title {
+      font-size: clamp(var(--font-size-xl), 4vw, var(--font-size-2xl));
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-m);
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .cta-text {
+      max-width: 600px;
+      margin: var(--space-m) auto;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: var(--font-size-m);
+      line-height: var(--line-height-relaxed);
+    }
+    
+    .cta-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      color: var(--color-primary-600);
+      font-size: var(--font-size-m);
+      font-weight: var(--font-weight-bold);
+      padding: 0.9rem 1.8rem;
+      border-radius: var(--border-radius-pill);
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all var(--transition-medium);
+      margin: var(--space-s) 0;
+    }
+    
+    @media (min-width: 768px) {
+      .cta-button {
+        font-size: var(--font-size-l);
+        padding: 1.1rem 2.2rem;
+      }
+    }
+    
+    .cta-button:hover, .cta-button:focus {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+      color: var(--color-primary-600);
+      text-decoration: none;
+    }
+    
+    .cta-button:active {
+      transform: translateY(-1px);
+    }
+    
+    .cta-button::before {
+      content: "";
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: var(--border-radius-pill);
+      opacity: 0.4;
+      z-index: -1;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+      50% {
+        transform: scale(1.03);
+        opacity: 0.2;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+    }
+    
+    .cta-disclaimer {
+      font-size: var(--font-size-s);
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: var(--space-s);
+    }
+    
+    /* ==========================================================================
+       CONCLUSION - AMÉLIORÉ
+       ========================================================================== */
+    .conclusion-section {
+      text-align: center;
+      max-width: 650px;
+      margin: var(--space-xl) auto;
+      padding: var(--space-l);
+      background-color: #ffffff; /* Fond blanc comme demandé */
+      border-radius: var(--border-radius-l);
+      box-shadow: var(--shadow-l);
+      position: relative;
+      overflow: hidden;
+      color: var(--color-text-primary);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+      border: 1px solid rgba(98, 0, 234, 0.1);
+    }
+    
+    .conclusion-section:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .conclusion-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z' fill='rgba(98, 0, 234, 0.03)' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 1;
+      z-index: 0;
+    }
+    
+    .conclusion-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .conclusion-title {
+      color: var(--color-primary-700);
+      margin-bottom: var(--space-m);
+      font-size: clamp(var(--font-size-xl), 4vw, var(--font-size-2xl));
+      position: relative;
+      display: inline-block;
+    }
+    
+    .conclusion-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, var(--color-primary-600), var(--color-secondary-600));
+      border-radius: 1.5px;
+    }
+    
+    .personalized-name {
+      color: var(--color-primary-700);
+      font-weight: var(--font-weight-bold);
+    }
+    
+    /* AMÉLIORÉ : Bouton dégradé de violet à rose */
+    .conclusion-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
+      color: white;
+      font-size: var(--font-size-m);
+      font-weight: var(--font-weight-bold);
+      padding: 0.9rem 1.8rem;
+      border-radius: var(--border-radius-pill);
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(98, 0, 234, 0.25);
+      cursor: pointer;
+      transition: all var(--transition-medium);
+      margin-top: var(--space-l);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .conclusion-button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+      opacity: 0;
+      z-index: -1;
+      transition: opacity var(--transition-medium);
+    }
+    
+    .conclusion-button:hover::before {
+      opacity: 1;
+    }
+    
+    @media (min-width: 768px) {
+      .conclusion-button {
+        font-size: var(--font-size-l);
+        padding: 1.1rem 2.2rem;
+      }
+    }
+    
+    .conclusion-button:hover, .conclusion-button:focus {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(98, 0, 234, 0.3);
+      color: white;
+      text-decoration: none;
+    }
+    
+    .conclusion-button::after {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+      border-radius: var(--border-radius-pill);
+      z-index: -2;
+      opacity: 0.5;
+      filter: blur(5px);
+      animation: glowPulse 2s infinite alternate;
+    }
+    
+    @keyframes glowPulse {
+      0% {
+        opacity: 0.5;
+        filter: blur(5px);
+      }
+      100% {
+        opacity: 0.8;
+        filter: blur(8px);
+      }
+    }
+    
+    /* ==========================================================================
+       FOOTER
+       ========================================================================== */
+    .footer {
+      margin-top: var(--space-l);
+      padding-top: var(--space-s);
+      border-top: 1px solid var(--color-neutral-200);
+      text-align: center;
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-s);
+    }
+    
+    /* ==========================================================================
+       
+RESPONSIVE DESIGN AJUSTEMENTS
+       ========================================================================== */
+    @media (max-width: 640px) {
+      /* Réduit encore les espaces sur très petits écrans */
+      :root {
+        --space-s: 0.75rem;  /* 12px */
+        --space-m: 1rem;     /* 16px */
+        --space-l: 1.5rem;   /* 24px */
+      }
+      
+      /* Ajuste les flexbox pour petit écran */
+      .action-step,
+      .feature-item {
+        flex-direction: column;
+      }
+      
+      .action-step-number,
+      .feature-number {
+        margin-bottom: var(--space-xs);
+        margin-right: 0;
+      }
+      
+      /* Améliorer lisibilité mobile */
+      p {
+        font-size: 0.95rem;
+      }
+    }
+    
+    /* ==========================================================================
+       ACCESSIBILITÉ
+       ========================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="main-container">
+    <!-- 1. HEADER AVEC LOGO ET TITRE -->
+    <header class="header">
+      <div class="logo-circle">
+        <span class="emoji-heart" aria-hidden="true">💖</span>
+      </div>
+      <h1 class="gradient-heading">Compte-rendu personnalisé</h1>
+      <p style="color: var(--color-primary-600); font-size: var(--font-size-l); text-align: center; font-weight: var(--font-weight-medium);">
+        Préparé exclusivement pour Zohra
+      </p>
+    </header>
+
+    <!-- 2. INTRODUCTION PERSONNALISÉE -->
+<section class="section">
+  <div class="introduction-card reveal">
+    <p class="gradient-text" style="font-size: var(--font-size-l); font-weight: var(--font-weight-bold); margin-bottom: var(--space-m);">
+      Chère Zohra,
+    </p>
+
+    <p>
+      Il y a quelque chose de touchant dans ce que tu as partagé. Ce courage de nommer ce qui était, cette lucidité sur ce qui t'a conduite là où tu étais — ce n'est pas rien.
+    </p>
+
+    <p>
+      Beaucoup de personnes passent des années sans jamais mettre de mots sur ces mécanismes qui ont guidé leurs choix relationnels. Toi, tu l'as fait. Et c'est déjà un <strong>pas considérable</strong>.
+    </p>
+
+    <p>
+      Avant d'aller plus loin, je tiens à te dire quelque chose d'important. Ce que tu vas lire, c'est <strong>le miroir de ce que j'ai perçu</strong> à travers les éléments que tu as choisi de partager avec moi.
+    </p>
+
+    <p>
+      Même si je n'ai qu'un aperçu de ton histoire, j'ai fait de mon mieux pour comprendre ce qui t'anime, ce qui te blesse, et ce qui te retient.
+    </p>
+
+    <p>
+      <em>Certaines choses vont résonner profondément en toi. D'autres te surprendront peut-être, ou ne correspondront pas exactement à ta réalité, et c'est tout à fait normal.</em> Tu es la seule à <em>vraiment</em> te connaître.
+    </p>
+
+    <p>
+      Ce document n'est pas une vérité absolue sur qui tu es — c'est une <span style="color: #7C3AED; font-weight: 600;">invitation à te regarder sous un angle nouveau, avec bienveillance</span>.
+    </p>
+
+    <p>
+      Prends ce qui résonne <em>vraiment</em> pour toi, et laisse le reste. Si ne serait-ce qu'une partie de ce compte-rendu t'aide à mieux te comprendre, alors il aura rempli son rôle.
+    </p>
+
+    <p>
+      Tu as traversé plusieurs relations importantes, portées par une <strong>quête intense d'être aimée</strong>, au point de ne plus te respecter.
+    </p>
+
+    <p>
+      Cette dépendance affective dont tu parles a façonné tes choix pendant longtemps. Tu voulais être en couple à tout prix, sans <em>vraiment</em> poser de critères, sans <em>vraiment</em> te demander ce que toi, tu attendais.
+    </p>
+
+    <p>
+      Certaines de ces histoires ont commencé de manière idyllique pour basculer brutalement vers tout l'inverse. Et aujourd'hui, tu reconnais que cette dépendance, cette permanence dans la demande, t'a menée à l'échec de ces relations.
+    </p>
+
+    <p>
+      Aujourd'hui, ce que tu cherches a changé. Tu veux apprendre à <strong>donner et recevoir de l'amour sainement</strong>. Tu veux améliorer ta communication, lâcher prise sur ce besoin de tout contrôler, sortir définitivement des relations toxiques.
+    </p>
+
+    <p>
+      Tu veux équilibrer ta vie personnelle et professionnelle, t'affirmer davantage, savoir dire non, poser des limites claires.
+    </p>
+
+    <p>
+      Ce que tu cherches dans une relation, c'est la fidélité, le respect des familles, une vraie communication, une stabilité émotionnelle. Quelqu'un d'ambitieux, aligné avec tes valeurs, sincère, indépendant financièrement.
+    </p>
+
+    <p>
+      Quelqu'un qui ait de l'humour, de la maturité émotionnelle, de l'empathie, de la détermination.
+    </p>
+
+    <p>
+      Mais tu as aussi identifié ce qui te freine : la <strong>peur d'être déçue ou trahie</strong>, la crainte de perdre ton indépendance, le besoin de plus de temps pour te sentir prête, la peur de souffrir à nouveau.
+    </p>
+
+    <p>
+      Et tu sais que pour avancer, il y a des chantiers à ouvrir : ton passé, ton rapport à la confiance et à la vulnérabilité, ta gestion des émotions, ton passage à l'action, tes objectifs de vie, ton estime de toi-même.
+    </p>
+
+    <div class="highlight-box">
+      <p>
+        <strong>À la fin de ce compte-rendu, tu pourras accéder à l'étape finale afin de valider ton inscription à My Muqabala pour accéder aux profils de qualité et découvrir comment notre programme d'accompagnement maximisera tes chances de trouver une relation épanouissante insha'Allah.</strong>
+      </p>
+      <p>
+        Je t'invite à lire avec ouverture, en gardant à l'esprit cette citation qui représente le cœur de ma méthodologie: « On n'attire pas la personne que l'on veut, on attire la personne que l'on est. »
+      </p>
+    </div>
+  </div>
+</section>
+
+    <!-- 3. TES FORCES DISTINCTIVES -->
+    <section class="section reveal">
+      <h2 class="section-title forces">Tes forces distinctives</h2>
+
+      <p class="section-intro forces">
+        Avant de plonger dans les difficultés, il est essentiel de reconnaître ce qui fait déjà ta force.
+        Ces atouts sont la fondation de la relation que tu souhaites bâtir.
+      </p>
+
+      <div class="forces-grid stagger-children">
+        <!-- Force 1 -->
+        <div class="force-card reveal">
+          <div class="force-icon">
+            <span style="color: var(--color-forces-600);">🔍</span>
+          </div>
+          <h3 class="force-title">Une lucidité rare sur tes propres mécanismes</h3>
+          <p>
+            Il y a quelque chose de remarquable dans ta capacité à nommer ce qui s'est joué. Tu ne te racontes pas d'histoires.
+          </p>
+          <p>
+            Tu as identifié la dépendance affective, tu as reconnu que tu voulais être en couple à tout prix, que tu étais acquise, en demande permanente.
+          </p>
+          <p>
+            Beaucoup de personnes vivent ces schémas pendant des années sans <em>jamais</em> les voir. Toi, tu les as vus. Et cette lucidité, c'est déjà une <strong>ressource puissante</strong>.
+          </p>
+          <p>
+            Parce qu'<span style="color: #7C3AED; font-weight: 600;">on ne transforme que ce qu'on peut nommer</span>.
+          </p>
+          <p class="force-quote">
+            "Voir ses propres mécanismes, c'est déjà commencer à s'en libérer."
+          </p>
+        </div>
+
+        <!-- Force 2 -->
+        <div class="force-card reveal">
+          <div class="force-icon">
+            <span style="color: var(--color-forces-600);">🌱</span>
+          </div>
+          <h3 class="force-title">La capacité à reconnaître que quelque chose doit changer</h3>
+          <p>
+            Tu ne te contentes pas de constater. Tu as identifié des axes précis de travail sur toi-même. Ton passé, ta confiance, ta vulnérabilité, tes émotions, ton estime de toi.
+          </p>
+          <p>
+            Cette liste, ce n'est pas une complainte. C'est une <strong>carte</strong>. Une carte qui montre que tu sais où regarder.
+          </p>
+          <p>
+            Et cette conscience-là, elle est porteuse. Parce qu'elle dit que <span style="color: #7C3AED; font-weight: 600;">tu ne veux plus subir. Tu veux comprendre, transformer, avancer</span>.
+          </p>
+          <p class="force-quote">
+            "Identifier ce qui doit changer, c'est déjà refuser de rester immobile."
+          </p>
+        </div>
+
+        <!-- Force 3 -->
+        <div class="force-card reveal">
+          <div class="force-icon">
+            <span style="color: var(--color-forces-600);">🎯</span>
+          </div>
+          <h3 class="force-title">Des attentes claires pour ce qui vient</h3>
+          <p>
+            Ce que tu cherches aujourd'hui n'est pas flou. Tu sais ce que tu veux : fidélité, communication, stabilité émotionnelle, alignement de valeurs, maturité, empathie.
+          </p>
+          <p>
+            Et tu sais aussi ce que tu ne veux plus : les relations toxiques, le déséquilibre, l'absence de limites.
+          </p>
+          <p>
+            Cette clarté, c'est le signe que tu es sortie du brouillard. Que tu ne cherches plus juste à être aimée. <span style="color: #7C3AED; font-weight: 600;">Tu cherches à être aimée bien</span>.
+          </p>
+          <p>
+            Et ça, c'est une <strong>évolution majeure</strong>.
+          </p>
+          <p class="force-quote">
+            "Savoir ce qu'on veut, c'est déjà se respecter."
+          </p>
+        </div>
+      </div>
+
+      <p style="margin-top: var(--space-m);">
+        Ces forces constituent une base solide sur laquelle tu vas pouvoir t'appuyer.
+        Passons maintenant à tes défis, afin de mieux comprendre ce qui peut freiner ton épanouissement.
+      </p>
+    </section>
+
+    <!-- 4. TES DÉFIS RELATIONNELS ACTUELS -->
+    <section class="section">
+      <h2 class="section-title defis">Tes défis relationnels actuels</h2>
+
+      <p class="section-intro defis">
+        Chaque défi est lié à une partie de ton histoire. Accueille-les sans jugement : ce sont des zones
+        d'amélioration qui, une fois comprises, peuvent ouvrir la voie à des changements en profondeur.
+      </p>
+
+      <!-- Défi 1 -->
+      <div class="defi-card reveal">
+        <div class="defi-badge">DÉFI 1</div>
+        <h3 class="defi-title">Le passage de la dépendance à l'interdépendance</h3>
+
+        <p>
+          Ce que tu décris — cette dépendance affective qui t'a menée à vouloir être en couple à tout prix — c'est un schéma très humain.
+        </p>
+
+        <p>
+          Quand le <strong>besoin d'être aimée</strong> devient plus fort que le besoin de se respecter, on accepte l'inacceptable. On se fond dans l'autre. On devient acquise, en demande permanente.
+        </p>
+
+        <p>
+          Et ce fonctionnement, il a pu avoir une logique à un moment. Peut-être que dans ton histoire, l'amour s'est présenté comme quelque chose à mériter, à conquérir, à supplier.
+        </p>
+
+        <p>
+          Peut-être qu'être choisie par quelqu'un valait mieux qu'être seule. C'est compréhensible.
+        </p>
+
+        <p>
+          Mais ce schéma a un coût. Parce que dans la dépendance, on perd ses contours. On ne sait plus ce qu'on veut pour soi. On devient le reflet de ce que l'autre attend.
+        </p>
+
+        <p>
+          Et quand ça se termine — comme ça s'est terminé — on se retrouve face à un vide. Parce qu'on a donné sans mesure, sans réciprocité, sans se protéger.
+        </p>
+
+        <p>
+          Et cette douleur-là, elle laisse des traces. Elle crée de la méfiance. Elle fait naître la <strong>peur d'être à nouveau déçue, trahie</strong>. Elle te fait craindre de perdre ton indépendance si tu t'engages à nouveau.
+        </p>
+
+        <p>
+          Le chemin vers l'interdépendance — c'est-à-dire une relation où chacun garde ses contours tout en étant <em>vraiment</em> présent à l'autre — demande de réapprendre quelque chose.
+        </p>
+
+        <p>
+          Que <span style="color: #7C3AED; font-weight: 600;">l'amour n'est pas un abandon de soi</span>. Que donner n'est sain que s'il y a réciprocité. Que se livrer n'est pas se dissoudre.
+        </p>
+
+        <p>
+          Ce chemin, il commence par une question : qu'est-ce que j'attends, moi, pour moi, indépendamment de ce que l'autre attend de moi ?
+        </p>
+
+        <!-- Zoom spécial 1 -->
+        <div class="zoom-special">
+          <strong>Zoom spécial : La confusion entre amour et fusion</strong>
+          <p>
+            "Se perdre dans l'autre, ce n'est pas aimer. C'est disparaître."
+          </p>
+          <p>
+            Dans la dépendance affective, il y a souvent une croyance cachée : si je ne suis pas tout pour l'autre, je ne serai rien. Si je pose mes limites, il partira. Si j'exprime mes besoins, je serai rejetée.
+          </p>
+          <p>
+            Alors on se fond. On devient ce que l'autre veut. Mais ce faisant, on perd ce qui rend l'amour possible : <strong>deux personnes entières</strong> qui choisissent de marcher ensemble. Pas une personne qui s'efface pour qu'une autre existe.
+          </p>
+        </div>
+
+        <!-- Connecteur entre défis -->
+        <p class="connecteur">
+          Et cette peur de te perdre à nouveau dans une relation, elle se manifeste peut-être aujourd'hui autrement.
+        </p>
+      </div>
+
+      <!-- Défi 2 -->
+      <div class="defi-card reveal">
+        <div class="defi-badge">DÉFI 2</div>
+        <h3 class="defi-title">La peur de souffrir à nouveau qui devient un mur</h3>
+
+        <p>
+          Tu le dis clairement : tu as peur d'être déçue, trahie, de souffrir à nouveau. Et cette peur, elle est légitime.
+        </p>
+
+        <p>
+          Après avoir donné sans compter et vécu l'échec de ces relations, il est naturel de vouloir se protéger. Mais je me demande si cette protection n'est pas en train de devenir quelque chose d'autre.
+        </p>
+
+        <p>
+          Quelque chose comme un <strong>mur</strong>.
+        </p>
+
+        <p>
+          Parce que cette crainte de perdre ton indépendance, ce besoin de plus de temps pour te sentir prête, ce travail sur ton rapport à la confiance et à la vulnérabilité — tout cela raconte peut-être une <span style="color: #7C3AED; font-weight: 600;">difficulté à oser se livrer à nouveau</span>.
+        </p>
+
+        <p>
+          C'est compréhensible. Quand on a été blessée, le corps et l'esprit apprennent à se méfier. L'ouverture devient risquée. La vulnérabilité devient dangereuse.
+        </p>
+
+        <p>
+          Alors on contrôle, on analyse, on garde des distances. On cherche la stabilité émotionnelle chez l'autre, mais on a du mal à s'autoriser à être instable soi-même.
+        </p>
+
+        <p>
+          On veut de la communication, mais on a peur de dire ce qui fait <em>vraiment</em> mal. On veut de la sincérité, mais on ne sait plus si on peut faire confiance à son propre jugement.
+        </p>
+
+        <p>
+          Le paradoxe, c'est que cette protection qui devait te garder de la souffrance risque de te garder aussi de la connexion.
+        </p>
+
+        <p>
+          Parce qu'une relation saine demande de la <strong>vulnérabilité</strong>. Pas de la fusion, non. Mais de l'ouverture. De la capacité à dire : voilà qui je suis, voilà ce que je ressens, voilà ce dont j'ai besoin.
+        </p>
+
+        <p>
+          Et ça, ça ne peut se faire que si on accepte le risque. Le risque d'être vue. Le risque d'être déçue. Le risque d'avoir mal.
+        </p>
+
+        <p>
+          Mais cette fois, avec des limites, avec du respect de soi, avec la capacité de partir si ça ne va pas. Ce n'est plus la dépendance. C'est un <strong>engagement conscient</strong>.
+        </p>
+
+        <!-- Zoom spécial 2 -->
+        <div class="zoom-special">
+          <strong>Zoom spécial : Entre protection et fermeture</strong>
+          <p>
+            "Se protéger, oui. Se fermer, non. La différence est subtile mais essentielle."
+          </p>
+          <p>
+            Se protéger, c'est avoir des <strong>limites claires</strong>, savoir dire non, reconnaître les signaux d'alerte, partir si on n'est pas respectée. C'est sain.
+          </p>
+          <p>
+            Se fermer, c'est ne plus laisser personne entrer par peur d'avoir mal. C'est éviter la vulnérabilité pour éviter la blessure.
+          </p>
+          <p>
+            Mais en évitant la blessure, on évite aussi la connexion. Parce qu'aimer, c'est accepter de ne pas tout contrôler. C'est accepter que l'autre puisse nous décevoir. Mais cette fois, avec les outils pour y faire face.
+          </p>
+        </div>
+
+        <!-- Connecteur entre défis -->
+        <p class="connecteur">
+          Et peut-être que ce besoin de contrôle se manifeste aussi dans d'autres aspects de ta vie.
+        </p>
+      </div>
+
+      <!-- Défi 3 -->
+      <div class="defi-card reveal">
+        <div class="defi-badge">DÉFI 3</div>
+        <h3 class="defi-title">Le défi du lâcher-prise et du contrôle</h3>
+
+        <p>
+          Tu as identifié toi-même ce besoin de lâcher prise, d'être moins dans le contrôle. Et je me demande si ce contrôle n'est pas devenu ta manière de gérer la peur.
+        </p>
+
+        <p>
+          Contrôler l'autre pour ne pas être surprise. Contrôler tes émotions pour ne pas être submergée. Contrôler le déroulement de la relation pour ne pas revivre l'échec.
+        </p>
+
+        <p>
+          Mais le contrôle a ses limites. Parce qu'on ne peut pas contrôler si quelqu'un sera sincère. On ne peut pas contrôler si une relation va durer.
+        </p>
+
+        <p>
+          <span style="color: #7C3AED; font-weight: 600;">On ne peut contrôler que ses propres choix</span>.
+        </p>
+
+        <p>
+          Et ce besoin de contrôle, il dit peut-être quelque chose sur une blessure plus ancienne. Peut-être qu'à un moment, tu as perdu le contrôle de quelque chose d'important.
+        </p>
+
+        <p>
+          Peut-être que ces relations qui basculaient du jour au lendemain t'ont appris que tu ne pouvais pas te fier à ta lecture des choses.
+        </p>
+
+        <p>
+          Alors tu sur-analyses. Tu anticipes. Tu cherches des garanties. Mais les <strong>garanties n'existent pas</strong> dans l'amour. Il n'y a que des paris.
+        </p>
+
+        <p>
+          Des paris conscients, basés sur ce qu'on observe, sur la réciprocité, sur le respect. Mais des paris quand même.
+        </p>
+
+        <p>
+          Lâcher prise, ce n'est pas lâcher tout. C'est accepter que certaines choses échappent à ton contrôle. Et que c'est normal. Que c'est même nécessaire pour qu'une relation respire.
+        </p>
+
+        <p>
+          Lâcher prise, c'est faire confiance à ta <strong>capacité à faire face</strong> si ça ne va pas. C'est se dire : je ne contrôle pas l'autre, mais je contrôle si je reste ou si je pars.
+        </p>
+
+        <p>
+          Et ça, c'est déjà beaucoup.
+        </p>
+
+        <!-- Connecteur entre défis -->
+        <p class="connecteur">
+          Tous ces défis sont liés. La dépendance d'hier, la peur d'aujourd'hui, le besoin de contrôle qui en découle. Mais il y a des chemins possibles.
+        </p>
+      </div>
+
+      <!-- Résumé simple avec bordure latérale -->
+      <div class="section-summary">
+        <span class="section-summary-title">En résumé</span>
+        <div class="section-summary-content">
+          Ce que tu as traversé a laissé des traces. La dépendance affective, les échecs relationnels, la peur de souffrir à nouveau.
+          <p></p>
+          Et ces traces se manifestent aujourd'hui par un besoin de contrôle, une difficulté à se livrer, une crainte de perdre ton indépendance si tu t'engages.
+          <p></p>
+          Mais ces mécanismes, aussi compréhensibles soient-ils, risquent de t'empêcher de vivre ce que tu cherches : une relation saine, équilibrée, respectueuse.
+          <p></p>
+          Alors, qu'est-ce qui pourrait se passer maintenant ?
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. TES CHEMINS DE TRANSFORMATION -->
+    <section class="section">
+      <h2 class="section-title transformations">Tes chemins de transformation</h2>
+
+      <p class="section-intro transformations">
+        À chaque défi correspond un potentiel de croissance. Voici comment tu peux transformer ces difficultés en
+        ressources durables pour tes futures relations.
+      </p>
+
+      <!-- Transformation 1 (liée au défi 1) -->
+      <div class="transformation-card reveal">
+        <div class="transformation-badge">TRANSFORMATION 1</div>
+        <h3 class="transformation-title">Réapprendre à donner sans se perdre</h3>
+
+        <p>
+          Le passage de la dépendance à l'interdépendance pourrait commencer par un exercice simple : avant de donner, te demander si tu donnes par amour ou par peur.
+        </p>
+
+        <p>
+          Par peur de perdre l'autre. Par peur de ne pas être assez. Par peur d'être abandonnée.
+        </p>
+
+        <p>
+          Parce que quand on donne par peur, on donne sans limite. On s'épuise. On se perd.
+        </p>
+
+        <p>
+          Mais quand on donne par amour — un amour qui inclut l'amour de soi — on donne avec discernement. On vérifie la réciprocité. On s'assure qu'on ne se vide pas pour remplir l'autre.
+        </p>
+
+        <p>
+          Ce pourrait être un travail quotidien : observer tes gestes, tes paroles, tes concessions. Et te demander : <em>est-ce que je fais ça parce que ça me semble juste, ou parce que j'ai peur de ce qui se passera si je ne le fais pas ?</em>
+        </p>
+
+        <div class="transformation-analysis">
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Bénéfices
+            </h4>
+            <p>
+              Si tu réussis à intégrer cette pratique, tu pourrais retrouver tes contours. Savoir où tu commences et où l'autre finit.
+            </p>
+            <p>
+              Sentir que tu peux être présente dans une relation sans disparaître. Sentir que tu peux aimer sans t'effacer. Et ça, ça changerait tout.
+            </p>
+            <p>
+              Parce que tu ne serais plus dans la <strong>demande permanente</strong>. Tu serais dans l'échange. Dans la réciprocité. Dans une forme d'amour qui te nourrit au lieu de te vider.
+            </p>
+          </div>
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Comment y parvenir ?
+            </h4>
+            <p>
+              Concrètement, cela pourrait passer par l'identification de tes <strong>besoins réels</strong>. Pas ce que tu crois qu'il faut dire. Pas ce que l'autre attend. Mais ce que toi, tu ressens, tu veux, tu attends.
+            </p>
+            <p>
+              Peut-être en tenant un journal où tu notes, chaque jour, un moment où tu as donné. Et tu te demandes : pourquoi j'ai fait ça ? Est-ce que j'en avais envie, ou est-ce que j'avais peur ?
+            </p>
+            <p>
+              Cette pratique, simple en apparence, peut révéler beaucoup.
+            </p>
+          </div>
+        </div>
+
+        <div class="transformation-mini-action">
+          <h4 style="font-weight: var(--font-weight-semibold); font-size: var(--font-size-s); color: var(--color-transformation-600); margin-bottom: var(--space-xs);">
+            Mini-action :
+          </h4>
+          <p>
+            Une mini-action pourrait être : cette semaine, identifie un moment où tu as envie de faire quelque chose pour quelqu'un par peur de le décevoir. Et ne le fais pas.
+          </p>
+          <p>
+            Observe ce qui se passe. Observe si le monde s'écroule. Ou si, au contraire, rien de grave n'arrive.
+          </p>
+          <p>
+            Cette expérience pourrait t'apprendre que <span style="color: #7C3AED; font-weight: 600;">poser des limites ne fait pas fuir les bonnes personnes</span>.
+          </p>
+        </div>
+
+        <!-- Avant / Après -->
+        <div class="avant-apres">
+          <div class="avant-apres-content">
+            <div class="avant-block">
+              <div class="avant-content">
+                Aujourd'hui, tu donnes beaucoup, peut-être trop, parce que tu as peur de ne pas être assez. Tu t'adaptes, tu te moules, tu te perds. Et à la fin, tu te retrouves vidée, en demande permanente, sans savoir où sont passées tes propres envies.
+              </div>
+            </div>
+            <div class="apres-block">
+              <div class="apres-content">
+                Demain, tu pourrais donner avec discernement. Vérifier que ce que tu donnes est reçu, valorisé, rendu. Sentir que tu peux dire non sans que tout s'effondre. Sentir que tu existes dans la relation, pas juste pour l'autre, mais aussi pour toi.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transformation 2 (liée au défi 2) -->
+      <div class="transformation-card reveal">
+        <div class="transformation-badge">TRANSFORMATION 2</div>
+        <h3 class="transformation-title">Apprivoiser la vulnérabilité progressive</h3>
+
+        <p>
+          La peur de souffrir à nouveau est légitime. Mais elle ne peut pas dicter toutes tes décisions. Parce que si elle le fait, elle te garde à l'abri de la douleur, mais aussi de la connexion.
+        </p>
+
+        <p>
+          Une piste pourrait être d'apprivoiser la <strong>vulnérabilité de manière progressive</strong>. Pas tout dire d'un coup. Pas s'ouvrir complètement dès le début. Mais tester. Observer.
+        </p>
+
+        <p>
+          Partager quelque chose de vrai, de vulnérable, et voir comment l'autre le reçoit. S'il le respecte, s'il le valorise, s'il te le rend. Si oui, tu peux aller un peu plus loin. Si non, tu as appris quelque chose.
+        </p>
+
+        <p>
+          Cette approche progressive pourrait te permettre de retrouver confiance, sans te jeter à nouveau dans la fusion.
+        </p>
+
+        <div class="transformation-analysis">
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Bénéfices
+            </h4>
+            <p>
+              Si tu réussis à réintroduire de la vulnérabilité dans tes relations, tu pourrais retrouver la <strong>connexion authentique</strong>.
+            </p>
+            <p>
+              Parce que sans vulnérabilité, il n'y a pas de vraie proximité. Il y a de la surface. De la politesse. De la cohabitation. Mais pas de profondeur.
+            </p>
+            <p>
+              Et ce que tu cherches — cette stabilité émotionnelle, cette communication, cette empathie — tout cela demande de la vulnérabilité. Des deux côtés.
+            </p>
+          </div>
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Comment y parvenir ?
+            </h4>
+            <p>
+              Concrètement, cela pourrait passer par l'identification de tes <strong>signaux d'alerte</strong>. Qu'est-ce qui te dit qu'une personne est digne de confiance ? Comment le sais-tu ?
+            </p>
+            <p>
+              Quels sont les comportements qui te rassurent ? Et quels sont ceux qui te font fuir ?
+            </p>
+            <p>
+              En clarifiant ces signaux, tu pourrais te sentir plus en sécurité pour t'ouvrir. Parce que tu aurais un système de navigation. Pas une garantie absolue, mais une boussole.
+            </p>
+          </div>
+        </div>
+
+        <div class="transformation-mini-action">
+          <h4 style="font-weight: var(--font-weight-semibold); font-size: var(--font-size-s); color: var(--color-transformation-600); margin-bottom: var(--space-xs);">
+            Mini-action :
+          </h4>
+          <p>
+            Une mini-action pourrait être : lors d'une prochaine conversation avec quelqu'un en qui tu as un peu confiance, partage quelque chose de vrai. Pas une grande révélation. Juste une émotion réelle.
+          </p>
+          <p>
+            Et observe comment la personne réagit. Si elle écoute <em>vraiment</em>, si elle valide, si elle ne juge pas.
+          </p>
+          <p>
+            Cette observation pourrait t'aider à identifier qui mérite ton ouverture.
+          </p>
+        </div>
+
+        <!-- Avant / Après -->
+        <div class="avant-apres">
+          <div class="avant-apres-content">
+            <div class="avant-block">
+              <div class="avant-content">
+                Aujourd'hui, tu te protèges en restant en surface. Tu parles, tu échanges, mais tu ne te livres pas vraiment. Parce que tu as peur. Peur d'être déçue. Peur d'être trahie. Peur de revivre ce que tu as vécu. Et cette protection te garde à l'abri, mais aussi seule.
+              </div>
+            </div>
+            <div class="apres-block">
+              <div class="apres-content">
+                Demain, tu pourrais t'ouvrir progressivement, en testant, en observant. Retrouver cette capacité à être vue, vraiment vue, sans te perdre. Sentir que tu peux être vulnérable sans être faible. Que tu peux te livrer sans te dissoudre. Et que cette vulnérabilité, c'est ce qui rend l'amour possible.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transformation 3 (liée au défi 3) -->
+      <div class="transformation-card reveal">
+        <div class="transformation-badge">TRANSFORMATION 3</div>
+        <h3 class="transformation-title">Lâcher le contrôle pour accueillir l'incertitude</h3>
+
+        <p>
+          Le lâcher-prise ne signifie pas tout lâcher. Il signifie accepter que certaines choses échappent à ton contrôle, et que c'est normal.
+        </p>
+
+        <p>
+          Une piste pourrait être de travailler sur l'<strong>acceptation de l'incertitude</strong>. Pas comme une menace, mais comme une composante normale de toute relation.
+        </p>
+
+        <p>
+          Tu ne peux pas savoir si ça va marcher. Tu ne peux pas savoir s'il sera sincère jusqu'au bout. Tu ne peux pas savoir si tu ne seras pas déçue.
+        </p>
+
+        <p>
+          Mais tu peux savoir que tu auras les ressources pour y faire face si ça arrive. Et ça, c'est ton vrai pouvoir.
+        </p>
+
+        <p>
+          Pas le contrôle de l'autre. Mais <span style="color: #7C3AED; font-weight: 600;">la confiance en toi pour gérer ce qui viendra</span>.
+        </p>
+
+        <div class="transformation-analysis">
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Bénéfices
+            </h4>
+            <p>
+              Si tu réussis à intégrer cette acceptation de l'incertitude, tu pourrais retrouver une <strong>légèreté</strong>.
+            </p>
+            <p>
+              Parce que le contrôle, c'est épuisant. Analyser en permanence. Anticiper. Chercher des preuves. Questionner. Surveiller.
+            </p>
+            <p>
+              C'est une vigilance constante qui ne laisse pas de place à la spontanéité, à la joie, à la confiance.
+            </p>
+            <p>
+              En lâchant ce besoin de tout contrôler, tu pourrais retrouver la capacité à être présente, simplement présente, sans chercher à décoder chaque geste, chaque mot.
+            </p>
+          </div>
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Comment y parvenir ?
+            </h4>
+            <p>
+              Concrètement, cela pourrait passer par un travail sur la <strong>tolérance à l'incertitude</strong>. Identifier les moments où l'angoisse monte parce que tu ne sais pas.
+            </p>
+            <p>
+              Et au lieu de chercher à savoir immédiatement, t'entraîner à rester dans l'inconfort. Juste quelques minutes. Observer ce qui se passe dans ton corps. Respirer.
+            </p>
+            <p>
+              Te dire que ne pas savoir, c'est inconfortable, mais ce n'est pas dangereux. Cette pratique, répétée, pourrait diminuer ta réactivité face à l'incertitude.
+            </p>
+          </div>
+        </div>
+
+        <div class="transformation-mini-action">
+          <h4 style="font-weight: var(--font-weight-semibold); font-size: var(--font-size-s); color: var(--color-transformation-600); margin-bottom: var(--space-xs);">
+            Mini-action :
+          </h4>
+          <p>
+            Une mini-action pourrait être : identifie une petite incertitude dans ta vie quotidienne (pas nécessairement relationnelle). Quelque chose où tu ne sais pas comment ça va se passer.
+          </p>
+          <p>
+            Et au lieu de chercher à contrôler, laisse faire. Observe. Constate que même sans ton contrôle, les choses se résolvent souvent d'elles-mêmes.
+          </p>
+          <p>
+            Cette expérience pourrait te montrer que lâcher prise n'est pas si effrayant.
+          </p>
+        </div>
+
+        <!-- Avant / Après -->
+        <div class="avant-apres">
+          <div class="avant-apres-content">
+            <div class="avant-block">
+              <div class="avant-content">
+                Aujourd'hui, tu contrôles pour te rassurer. Tu analyses, tu anticipes, tu cherches des garanties. Mais ce contrôle ne te protège pas vraiment. Il te garde dans une vigilance épuisante, dans une méfiance permanente, dans une incapacité à faire confiance.
+              </div>
+            </div>
+            <div class="apres-block">
+              <div class="apres-content">
+                Demain, tu pourrais accepter l'incertitude comme une composante normale de l'amour. Sentir que tu n'as pas besoin de tout contrôler pour être en sécurité. Que tu peux faire confiance à ta capacité à gérer ce qui viendra. Et cette confiance en toi, c'est ce qui te permettra de t'engager sans te perdre.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+<!-- 9. CONCLUSION ET CTA FINAL -->
+<section class="conclusion-section reveal">
+  <div class="conclusion-content">
+    <h2 class="conclusion-title">
+      Conclusion
+    </h2>
+
+    <p>
+      Ce chemin que tu parcours n'est pas linéaire. Il y aura des moments où tu te sentiras prête, et d'autres où la peur reviendra. Des moments où tu lâcheras prise, et d'autres où tu voudras tout contrôler.
+    </p>
+
+    <p>
+      C'est normal. C'est humain. La transformation ne se fait pas en un jour. Elle se fait pas à pas, erreur après erreur, prise de conscience après prise de conscience.
+    </p>
+
+    <p>
+      Mais ce qui est certain, c'est que <strong>tu as déjà commencé</strong>. Tu as vu tes mécanismes. Tu as reconnu ce qui doit changer. Tu as clarifié ce que tu cherches. Ce sont des fondations solides.
+    </p>
+
+    <p>
+      Maintenant, il s'agit de les honorer. De construire dessus. De t'autoriser à avancer, même si c'est lentement. Même si c'est avec peur. Même si c'est avec incertitude.
+    </p>
+
+    <p>
+      <span class="personalized-name">Zohra</span>, ce que tu cherches — cette relation saine, équilibrée, respectueuse, où tu peux être toi-même sans te perdre — c'est possible.
+    </p>
+
+    <p>
+      Mais ça demande de désapprendre certaines choses. Désapprendre que l'amour est une fusion. Désapprendre que donner signifie tout donner. Désapprendre que la vulnérabilité est dangereuse.
+    </p>
+
+    <p>
+      Et réapprendre. Réapprendre que <span style="color: #7C3AED; font-weight: 600;">l'amour peut être sain. Que donner peut être réciproque. Que la vulnérabilité peut être belle</span>.
+    </p>
+
+    <p>
+      Qu'Allah te facilite ce chemin et t'accorde la sérénité du cœur. Qu'Il t'accorde une union bénie qui apaise ton cœur et honore ta foi.
+    </p>
+
+    <p>
+      In sha Allah, ce travail sur toi-même t'ouvrira les portes d'une relation où tu te sentiras <em>véritablement</em> vue, respectée et aimée.
+    </p>
+
+    <a
+      href="https://wa.me/33612961690?text=%E2%9C%A8%20J%E2%80%99ai%20bien%20termin%C3%A9%20de%20lire%20mon%20compte-rendu%20%E2%9C%A8"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="conclusion-button"
+    >
+      Accéder à l'étape finale
+    </a>
+  </div>
+</section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>
+        © 2025 My Muqabala. Tous droits réservés.
+      </p>
+    </footer>
+  </div>
+
+  <!-- Script pour les animations -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Observation des éléments pour animation à l'affichage
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -30px 0px'
+      });
+
+      // Sélectionne tous les éléments avec la classe 'reveal'
+      document.querySelectorAll('.reveal').forEach(el => {
+        observer.observe(el);
+      });
+
+      // Pour les navigateurs qui ne supportent pas IntersectionObserver
+      if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.reveal').forEach(el => {
+          el.classList.add('is-visible');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+

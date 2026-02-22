@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Compte-rendu personnalisé pour un accompagnement sur-mesure">
+  <meta name="theme-color" content="#6200ea">
+  <title>Compte-rendu personnalisé pour {{PRENOM_1}}</title>
+  
+  <!-- Optimisation de chargement des ressources critiques -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" as="style">
+  
+  <!-- Styles externes -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       SYSTÈME DE DESIGN - ARCHITECTURE COHÉRENTE
+       ========================================================================== */
+    :root {
+      /* ------------------------------------------------
+         ESPACE & RYTHME - Échelle progressive 
+         ------------------------------------------------ */
+      --space-quantum: 0.25rem; /* 4px - unité de base */
+      --space-2xs: calc(var(--space-quantum) * 2);    /* 8px */
+      --space-xs: calc(var(--space-quantum) * 3);     /* 12px */
+      --space-s: calc(var(--space-quantum) * 4);      /* 16px */
+      --space-m: calc(var(--space-quantum) * 6);      /* 24px */
+      --space-l: calc(var(--space-quantum) * 8);      /* 32px */
+      --space-xl: calc(var(--space-quantum) * 12);    /* 48px */
+      --space-2xl: calc(var(--space-quantum) * 16);   /* 64px */
+      
+      /* ------------------------------------------------
+         PALETTE DE COULEURS 
+         ------------------------------------------------ */
+      /* Primaires - Violet */
+      --color-primary-50: #f5f1ff;
+      --color-primary-100: #ede5ff;
+      --color-primary-200: #d8c9ff;
+      --color-primary-300: #c0a3ff;
+      --color-primary-400: #a57aff;
+      --color-primary-500: #8a4bff;
+      --color-primary-600: #6200ea; /* Base */
+      --color-primary-700: #5000d0;
+      --color-primary-800: #4400b6;
+      
+      /* Secondaires - Rose */
+      --color-secondary-50: #fff1f6;
+      --color-secondary-100: #ffe4ee;
+      --color-secondary-200: #ffc6dd;
+      --color-secondary-300: #ff9dc3;
+      --color-secondary-500: #ef4088;
+      --color-secondary-600: #c2185b; /* Base */
+      --color-secondary-700: #a0124b;
+      
+      /* Forces - Vert */
+      --color-forces-50: #e9fbf0;
+      --color-forces-100: #c6f6d9;
+      --color-forces-500: #38c172;
+      --color-forces-600: #2d9d5a;
+      
+      /* Défis - Bleu */
+      --color-defis-50: #edf2ff;
+      --color-defis-100: #dbe4ff;
+      --color-defis-300: #91a7ff;
+      --color-defis-500: #4263eb;
+      --color-defis-600: #3b5bdb;
+      
+      /* Transformations - Rose */
+      --color-transformation-50: #fff0f7;
+      --color-transformation-100: #ffe3ee;
+      --color-transformation-300: #fba4cf;
+      --color-transformation-500: #e83e8c;
+      --color-transformation-600: #d0307b;
+      
+      /* Action - Ambre */
+      --color-action-50: #fff9e6;
+      --color-action-100: #fff3cc;
+      --color-action-300: #ffe066;
+      --color-action-500: #f59f00;
+      --color-action-600: #e67700;
+      
+      /* Témoignage - Turquoise */
+      --color-temoignage-50: #e6fcf5;
+      --color-temoignage-100: #c3fae8;
+      --color-temoignage-300: #63e6be;
+      --color-temoignage-500: #0ca678;
+      --color-temoignage-600: #099268;
+      
+      /* Tons neutres - Gris */
+      --color-neutral-50: #fafafa;
+      --color-neutral-100: #f5f5f5;
+      --color-neutral-200: #e9e9e9;
+      --color-neutral-300: #d9d9d9;
+      --color-neutral-400: #b9b9b9;
+      --color-neutral-500: #919191;
+      --color-neutral-600: #696969;
+      --color-neutral-700: #444444;
+      --color-neutral-800: #2a2a2a;
+      --color-neutral-900: #181818;
+      
+      /* ------------------------------------------------
+         TYPOGRAPHIE
+         ------------------------------------------------ */
+      --font-family-heading: 'Playfair Display', Georgia, serif;
+      --font-family-body: 'Montserrat', system-ui, -apple-system, sans-serif;
+      
+      /* Échelle typographique */
+      --font-size-xs: 0.8rem;     /* 12.8px */
+      --font-size-s: 0.9rem;      /* 14.4px */
+      --font-size-m: 1rem;        /* 16px - Base */
+      --font-size-l: 1.25rem;     /* 20px */
+      --font-size-xl: 1.563rem;   /* 25px */
+      --font-size-2xl: 1.953rem;  /* 31.25px */
+      --font-size-3xl: 2.441rem;  /* 39.06px */
+      --font-size-4xl: 3.052rem;  /* 48.83px - Ajout pour les titres des sections */
+      
+      /* Hauteurs de ligne */
+      --line-height-tight: 1.2;
+      --line-height-normal: 1.6;
+      --line-height-relaxed: 1.75;
+      --line-height-extra-relaxed: 1.9; /* Ajout pour les textes d'introduction */
+      
+      /* Graisse des polices */
+      --font-weight-regular: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+      
+      /* ------------------------------------------------
+         BORDURES ET FORMES
+         ------------------------------------------------ */
+      --border-radius-xs: 0.25rem;  /* 4px */
+      --border-radius-s: 0.5rem;    /* 8px */
+      --border-radius-m: 0.75rem;   /* 12px */
+      --border-radius-l: 1rem;      /* 16px */
+      --border-radius-xl: 1.25rem;  /* 20px - Réduit pour mobile */
+      --border-radius-circle: 50%;
+      --border-radius-pill: 9999px;
+      
+      /* ------------------------------------------------
+         OMBRES 
+         ------------------------------------------------ */
+      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-s: 0 2px 4px rgba(0, 0, 0, 0.07);
+      --shadow-m: 0 4px 8px rgba(0, 0, 0, 0.08);
+      --shadow-l: 0 8px 16px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.09);
+      
+      /* ------------------------------------------------
+         TRANSITIONS
+         ------------------------------------------------ */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-medium: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* ------------------------------------------------
+         VARIABLES SÉMANTIQUES
+         ------------------------------------------------ */
+      --color-text-primary: var(--color-neutral-900);
+      --color-text-secondary: var(--color-neutral-700);
+      --color-text-tertiary: var(--color-neutral-600);
+      --color-text-accent: var(--color-primary-600);
+      --color-text-inverse: white;
+      
+      --color-background-body: #fcfaff;
+      --color-background-card: white;
+      --color-background-primary: var(--color-primary-50);
+      --color-background-forces: var(--color-forces-50);
+      --color-background-defis: var(--color-defis-50);
+      --color-background-transformation: var(--color-transformation-50);
+      --color-background-action: var(--color-action-50);
+      --color-background-temoignage: var(--color-temoignage-50);
+      
+      --color-border-light: rgba(98, 0, 234, 0.1);
+      
+      /* Conteneur */
+      --container-max-width: 800px; /* Plus petit pour une meilleure lisibilité */
+      --container-padding-desktop: var(--space-s);
+      --container-padding-mobile: var(--space-xs);
+    }
+
+    /* ==========================================================================
+       RESET ET NORMALISATION
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      font-size: 16px;
+    }
+    
+    body {
+      font-family: var(--font-family-body);
+      font-size: var(--font-size-m);
+      line-height: var(--line-height-normal);
+      color: var(--color-text-primary);
+      background-color: var(--color-background-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+
+    img, svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    /* ==========================================================================
+       UTILITAIRES
+       ========================================================================== */
+    .gradient-text {
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    /* Classes d'animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .stagger-children > *:nth-child(1) { transition-delay: 100ms; }
+    .stagger-children > *:nth-child(2) { transition-delay: 150ms; }
+    .stagger-children > *:nth-child(3) { transition-delay: 200ms; }
+    .stagger-children > *:nth-child(4) { transition-delay: 250ms; }
+    .stagger-children > *:nth-child(5) { transition-delay: 300ms; }
+    
+    /* ==========================================================================
+       STYLES DE BASE
+       ========================================================================== */
+    h1, h2, h3, h4, h5 {
+      font-family: var(--font-family-heading);
+      line-height: var(--line-height-tight);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-s);
+    }
+    
+    h1 {
+      font-size: clamp(var(--font-size-xl), 5vw, var(--font-size-3xl));
+      margin-bottom: var(--space-m);
+    }
+    
+    h2 {
+      font-size: clamp(var(--font-size-l), 4vw, var(--font-size-2xl));
+      margin-bottom: var(--space-m);
+    }
+    
+    h3 {
+      font-size: var(--font-size-l);
+      margin-bottom: var(--space-s);
+    }
+    
+    p {
+      margin-bottom: var(--space-m);
+    }
+    
+    a {
+      color: var(--color-primary-600);
+      text-decoration: none;
+      transition: all var(--transition-medium);
+      font-weight: var(--font-weight-medium);
+    }
+    
+    a:hover, a:focus {
+      color: var(--color-primary-700);
+      text-decoration: underline;
+    }
+    
+    strong {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary-600);
+    }
+    
+    /* ==========================================================================
+       LAYOUT / STRUCTURE DE PAGE
+       ========================================================================== */
+    .main-container {
+      width: 94%; /* Réduit les marges latérales pour mobile */
+      max-width: var(--container-max-width);
+      margin: 1rem auto;
+      background-color: var(--color-background-card);
+      border-radius: var(--border-radius-m);
+      box-shadow: var(--shadow-m);
+      overflow: hidden;
+      padding: var(--space-m) var(--space-s);
+    }
+    
+    @media (min-width: 768px) {
+      .main-container {
+        width: 90%;
+        margin: 2rem auto;
+        border-radius: var(--border-radius-l);
+        padding: var(--space-l) var(--space-l);
+      }
+    }
+    
+    .section {
+      position: relative;
+      margin-bottom: var(--space-xl);
+    }
+    
+    /* ==========================================================================
+       HEADER / INTRO
+       ========================================================================== */
+    .header {
+      text-align: center;
+      margin-bottom: var(--space-l);
+    }
+    
+    .header::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+      margin: var(--space-s) auto 0;
+      border-radius: 1.5px;
+    }
+    
+    .logo-circle {
+      width: 4.5rem;
+      height: 4.5rem;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+      border-radius: var(--border-radius-circle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-m);
+      box-shadow: 0 8px 20px rgba(98, 0, 234, 0.25);
+      animation: gentlePulse 5s infinite alternate ease-in-out;
+    }
+    
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .emoji-heart {
+      font-size: 2rem;
+      color: white;
+      animation: heartbeat 2.5s infinite;
+    }
+    
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      10%, 30% { transform: scale(1.1); }
+      20% { transform: scale(0.95); }
+    }
+    
+    .gradient-heading {
+      font-size: clamp(var(--font-size-xl), 5vw, var(--font-size-2xl));
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    
+    .introduction-card {
+      border-radius: var(--border-radius-m);
+      padding: var(--space-m);
+      margin-bottom: var(--space-l);
+      background: linear-gradient(150deg, white, var(--color-primary-50));
+      box-shadow: var(--shadow-s);
+      border: 1px solid var(--color-border-light);
+    }
+    
+    @media (min-width: 768px) {
+      .introduction-card {
+        padding: var(--space-l);
+        border-radius: var(--border-radius-l);
+      }
+    }
+    
+    .highlight-box {
+      background-color: var(--color-primary-50);
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      margin-top: var(--space-m);
+      border-left: 3px solid var(--color-primary-600);
+    }
+    
+    @media (min-width: 768px) {
+      .highlight-box {
+        padding: var(--space-m);
+        border-radius: var(--border-radius-m);
+      }
+    }
+    
+    /* ==========================================================================
+       TITRES DE SECTION AMÉLIORÉS
+       ========================================================================== */
+    .section-title {
+      text-align: center;
+      font-size: clamp(var(--font-size-xl), 6vw, var(--font-size-3xl)); /* Augmente la taille des titres */
+      margin-bottom: var(--space-xl);
+      font-weight: var(--font-weight-bold);
+      position: relative;
+      padding-bottom: var(--space-s);
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px; /* Ligne plus large */
+      height: 4px; /* Ligne plus épaisse */
+      border-radius: 2px;
+      background: currentColor;
+    }
+    
+    .section-title.forces {
+      color: var(--color-forces-600);
+    }
+    
+    .section-title.forces::after {
+      background: var(--color-forces-600);
+    }
+    
+    .section-title.defis {
+      color: var(--color-defis-600);
+    }
+    
+    .section-title.defis::after {
+      background: var(--color-defis-600);
+    }
+    
+    .section-title.transformations {
+      color: var(--color-transformation-600);
+    }
+    
+    .section-title.transformations::after {
+      background: var(--color-transformation-600);
+    }
+    
+    .section-title.action {
+      color: var(--color-action-600);
+    }
+    
+    .section-title.action::after {
+      background: var(--color-action-600);
+    }
+    
+    .section-title.temoignage {
+      color: var(--color-temoignage-600);
+    }
+    
+    .section-title.temoignage::after {
+      background: var(--color-temoignage-600);
+    }
+    
+    /* ==========================================================================
+       INTRODUCTIONS DE SECTION AMÉLIORÉES
+       ========================================================================== */
+    .section-intro {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto var(--space-xl);
+      font-size: 1.1rem; /* Texte légèrement plus grand */
+      line-height: var(--line-height-extra-relaxed); /* Plus d'espace entre les lignes */
+      position: relative;
+      padding-bottom: var(--space-m);
+    }
+    
+    .section-intro.forces {
+      color: var(--color-forces-600);
+    }
+    
+    .section-intro.defis {
+      color: var(--color-defis-600);
+    }
+    
+    .section-intro.transformations {
+      color: var(--color-transformation-600);
+    }
+    
+    /* ==========================================================================
+       FORCES ET QUALITÉS
+       ========================================================================== */
+    .forces-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+      margin-top: var(--space-m);
+    }
+    
+    @media (min-width: 640px) {
+      .forces-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .forces-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    .force-card {
+      background: var(--color-background-card);
+      border-radius: var(--border-radius-m);
+      padding: var(--space-m);
+      box-shadow: var(--shadow-s);
+      border-top: 4px solid var(--color-forces-500);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .force-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-l);
+    }
+    
+    .force-icon {
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-s);
+      font-size: 1.5rem;
+      background-color: var(--color-forces-50);
+      border-radius: 50%;
+    }
+    
+    .force-title {
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-l);
+      margin-bottom: var(--space-xs);
+      color: var(--color-forces-600);
+    }
+    
+    .force-quote {
+      font-style: italic;
+      color: var(--color-forces-600);
+      background-color: var(--color-forces-50);
+      padding: var(--space-s);
+      border-radius: var(--border-radius-s);
+      margin-top: auto;
+      border-left: 3px solid var(--color-forces-500);
+    }
+    
+    /* ==========================================================================
+       DÉFIS RELATIONNELS
+       ========================================================================== */
+    .defi-card {
+      margin-bottom: var(--space-l);
+      padding: var(--space-m);
+      background-color: var(--color-background-card);
+      border-radius: var(--border-radius-m);
+      box-shadow: var(--shadow-s);
+      border-left: 4px solid var(--color-defis-600);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .defi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-l);
+    }
+    
+    @media (min-width: 768px) {
+      .defi-card {
+        padding: var(--space-l);
+        border-radius: var(--border-radius-l);
+      }
+    }
+    
+    .defi-badge {
+      display: inline-block;
+      padding: 0.3rem 0.7rem;
+      background-color: var(--color-defis-600);
+      color: white;
+      border-radius: var(--border-radius-xs);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-xs);
+      box-shadow: var(--shadow-xs);
+    }
+    
+    .defi-title {
+      font-size: var(--font-size-l);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-s);
+      color: var(--color-defis-600);
+    }
+    
+    .defi-analysis {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-s);
+      margin-top: var(--space-m);
+    }
+    
+    @media (min-width: 768px) {
+      .defi-analysis {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-m);
+      }
+    }
+    
+    .defi-analysis-card {
+      background-color: var(--color-defis-50);
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      transition: transform var(--transition-medium);
+    }
+    
+    .defi-analysis-card:hover {
+      transform: translateY(-2px);
+    }
+    
+    @media (min-width: 768px) {
+      .defi-analysis-card {
+        padding: var(--space-m);
+        border-radius: var(--border-radius-m);
+      }
+    }
+    
+    .defi-analysis-title {
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-xs);
+      color: var(--color-defis-600);
+      display: flex;
+      align-items: center;
+    }
+    
+    .defi-analysis-icon {
+      margin-right: var(--space-xs);
+    }
+    
+    /* Zoom spécial - Encadrés bleus */
+    .zoom-special {
+      margin-top: var(--space-s);
+      background: var(--color-defis-50);
+      padding: var(--space-s);
+      border-left: 3px solid var(--color-defis-600);
+      border-radius: var(--border-radius-s);
+      box-shadow: var(--shadow-xs);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .zoom-special:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-s);
+    }
+    
+    .zoom-special strong {
+      color: var(--color-defis-600);
+      display: block;
+      margin-bottom: var(--space-xs);
+    }
+    
+    .zoom-special p {
+      margin-top: var(--space-xs);
+      font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+    
+    /* Connecteur entre défis */
+    .connecteur {
+      margin-top: var(--space-s);
+      font-size: 0.95rem;
+      padding: var(--space-xs);
+      border-top: 1px dashed var(--color-defis-300);
+      color: var(--color-defis-600);
+      font-style: italic;
+    }
+    
+    /* ==========================================================================
+       TRANSFORMATIONS
+       ========================================================================== */
+    .transformation-card {
+      margin-bottom: var(--space-l);
+      padding: var(--space-m);
+      background-color: var(--color-background-card);
+      border-radius: var(--border-radius-m);
+      box-shadow: var(--shadow-s);
+      border-left: 4px solid var(--color-transformation-600);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .transformation-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-l);
+    }
+    
+    @media (min-width: 768px) {
+      .transformation-card {
+        padding: var(--space-l);
+        border-radius: var(--border-radius-l);
+      }
+    }
+    
+    .transformation-badge {
+      display: inline-block;
+      padding: 0.3rem 0.7rem;
+      background-color: var(--color-transformation-600);
+      color: white;
+      border-radius: var(--border-radius-xs);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-xs);
+      box-shadow: var(--shadow-xs);
+    }
+    
+    .transformation-title {
+      font-size: var(--font-size-l);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-s);
+      color: var(--color-transformation-600);
+    }
+    
+    .transformation-analysis {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-s);
+      margin-top: var(--space-m);
+    }
+    
+    @media (min-width: 768px) {
+      .transformation-analysis {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-m);
+      }
+    }
+    
+    .transformation-analysis-card {
+      background-color: var(--color-transformation-50);
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      transition: transform var(--transition-medium);
+    }
+    
+    .transformation-analysis-card:hover {
+      transform: translateY(-2px);
+    }
+    
+    @media (min-width: 768px) {
+      .transformation-analysis-card {
+        padding: var(--space-m);
+        border-radius: var(--border-radius-m);
+      }
+    }
+    
+    .transformation-analysis-title {
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-xs);
+      color: var(--color-transformation-600);
+      display: flex;
+      align-items: center;
+    }
+    
+    .transformation-mini-action {
+      background-color: white;
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      margin-top: var(--space-m);
+      border-left: 3px solid var(--color-transformation-600);
+      box-shadow: var(--shadow-xs);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .transformation-mini-action:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-s);
+    }
+    
+    @media (min-width: 768px) {
+      .transformation-mini-action {
+        padding: var(--space-m);
+        border-radius: var(--border-radius-m);
+      }
+    }
+    
+    /* AMÉLIORÉ : Avant/Après */
+    .avant-apres {
+      margin-top: var(--space-m);
+      font-weight: var(--font-weight-medium);
+      position: relative;
+      border-radius: var(--border-radius-m);
+      overflow: hidden;
+      box-shadow: var(--shadow-s);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .avant-apres:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-m);
+    }
+    
+    .avant-apres-content {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    
+    @media (min-width: 768px) {
+      .avant-apres-content {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .avant-block {
+      background-color: var(--color-defis-50);
+      padding: var(--space-m);
+      position: relative;
+    }
+    
+    .avant-block::before {
+      content: "AVANT";
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: var(--color-defis-600);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: var(--font-weight-bold);
+      padding: 0.15rem 0.5rem;
+      border-bottom-right-radius: var(--border-radius-xs);
+    }
+    
+    .apres-block {
+      background-color: var(--color-transformation-50);
+      padding: var(--space-m);
+      position: relative;
+    }
+    
+    .apres-block::before {
+      content: "APRÈS";
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--color-transformation-600);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: var(--font-weight-bold);
+      padding: 0.15rem 0.5rem;
+      border-bottom-left-radius: var(--border-radius-xs);
+    }
+    
+    .avant-content, .apres-content {
+      position: relative;
+      z-index: 1;
+      padding-top: var(--space-s);
+    }
+    
+    @media (min-width: 768px) {
+      .avant-apres-content::after {
+        content: "→";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2rem;
+        height: 2rem;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary-600);
+        box-shadow: var(--shadow-s);
+        z-index: 2;
+      }
+    }
+    
+    /* ==========================================================================
+     
+    
+    /* ==========================================================================
+/* ==========================================================================
+  /* ==========================================================================
+   TÉMOIGNAGE MODERNE
+   ========================================================================== */
+.testimonial-modern {
+  position: relative;
+  max-width: 900px;
+  margin: var(--space-m) auto var(--space-xl);
+  background-color: var(--color-background-card);
+  border-radius: var(--border-radius-m);
+  box-shadow: var(--shadow-m);
+  overflow: hidden;
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.testimonial-modern:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+}
+
+@media (min-width: 768px) {
+  .testimonial-modern {
+    border-radius: var(--border-radius-l);
+  }
+}
+
+/* En-tête élégant */
+.testimonial-header-modern {
+  display: flex;
+  align-items: center;
+  padding: var(--space-m);
+  background: linear-gradient(135deg, var(--color-temoignage-50), var(--color-temoignage-300));
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-header-modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='rgba(9, 146, 104, 0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.6;
+  z-index: 0;
+}
+
+@media (min-width: 768px) {
+  .testimonial-header-modern {
+    padding: var(--space-l);
+  }
+}
+
+.profile-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.avatar-circle {
+  width: 64px;
+  height: 64px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--color-temoignage-600);
+  box-shadow: 0 4px 15px rgba(9, 146, 104, 0.2);
+  position: relative;
+  z-index: 2;
+  margin-right: var(--space-m);
+}
+
+.avatar-icon {
+  font-size: 32px;
+}
+
+.avatar-shadow {
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  bottom: -5px;
+  left: 0;
+  border-radius: 50%;
+  background: rgba(9, 146, 104, 0.15);
+  filter: blur(4px);
+  z-index: 1;
+}
+
+.profile-details {
+  position: relative;
+  z-index: 2;
+}
+
+.profile-name {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  color: var(--color-temoignage-600);
+  font-size: var(--font-size-l);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+}
+
+.profile-age {
+  font-weight: var(--font-weight-medium);
+  opacity: 0.85;
+}
+
+.rating-stars {
+  margin-top: 6px;
+}
+
+.stars-container {
+  color: var(--color-action-500);
+  letter-spacing: 3px;
+  font-size: 1.1rem;
+  display: inline-block;
+  position: relative;
+}
+
+.stars-container::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -3px;
+  left: 0;
+  background: linear-gradient(to right, var(--color-action-500), transparent);
+  border-radius: 1px;
+}
+
+/* Conteneur du témoignage */
+.testimonial-container {
+  padding: var(--space-l);
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .testimonial-container {
+    padding: var(--space-l);
+  }
+}
+
+/* Styles pour Avant/Après */
+.testimony-before, .testimony-after {
+  position: relative;
+  margin-bottom: 45px;
+}
+
+.quote-container {
+  position: relative;
+  padding: var(--space-l);
+  border-radius: var(--border-radius-m);
+  box-shadow: var(--shadow-s);
+}
+
+.testimony-before .quote-container {
+  background: linear-gradient(to bottom right, #edf2ff, #dbe4ff);
+  border-left: 4px solid var(--color-defis-600);
+}
+
+.testimony-after .quote-container {
+  background: linear-gradient(to bottom right, #e6fcf5, #f0fdf9);
+  border-left: 4px solid #00a876;
+}
+
+.quote-badge {
+  position: absolute;
+  top: -15px;
+  left: 20px;
+  padding: 6px 16px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: var(--border-radius-pill);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.testimony-before .quote-badge {
+  background: var(--color-defis-600);
+  color: white;
+}
+
+.testimony-after .quote-badge {
+  background: #00a876;
+  color: white;
+}
+
+.quote-content {
+  position: relative;
+  z-index: 2;
+}
+
+.quote-text {
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-m);
+}
+
+.highlight-intro {
+  color: var(--color-defis-600);
+  font-weight: var(--font-weight-semibold);
+}
+
+.highlight-transformation {
+  color: #00a876;
+  font-weight: var(--font-weight-semibold);
+}
+
+.highlight-result {
+  color: #00a876;
+  font-weight: var(--font-weight-semibold);
+}
+
+.quote-decoration {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.quote-icon {
+  width: 40px;
+  height: 40px;
+  fill: currentColor;
+}
+
+.testimony-before .quote-decoration {
+  color: var(--color-defis-600);
+}
+
+.testimony-after .quote-decoration {
+  color: #00a876;
+}
+
+/* Commentaire du thérapeute */
+.therapist-insight {
+  position: relative;
+  padding: 25px 40px;
+  margin: 40px 0;
+  display: flex;
+  align-items: center;
+}
+
+.insight-line {
+  height: 1px;
+  flex-grow: 1;
+  background: linear-gradient(to right, transparent, var(--color-primary-300), transparent);
+}
+
+.insight-content {
+  padding: 0 var(--space-m);
+  text-align: center;
+  font-style: italic;
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-medium);
+  font-size: 1rem;
+  line-height: var(--line-height-relaxed);
+  position: relative;
+}
+
+.insight-content::before, .insight-content::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary-300);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.insight-content::before {
+  left: 0;
+}
+
+.insight-content::after {
+  right: 0;
+}
+
+.insight-content p {
+  margin: 0;
+  color: var(--color-primary-700);
+}
+
+/* Conclusion du thérapeute */
+.therapist-conclusion {
+  margin-top: 40px;
+  padding: 25px 30px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  position: relative;
+  border-left: 4px solid var(--color-primary-600);
+  box-shadow: var(--shadow-m);
+}
+
+.conclusion-badge {
+  position: absolute;
+  top: -16px;
+  left: 20px;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(98, 0, 234, 0.3);
+  z-index: 2;
+}
+
+.conclusion-icon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.conclusion-text {
+  margin: 0;
+  padding-top: 8px;
+  color: var(--color-primary-700);
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Responsive pour témoignage */
+@media (max-width: 768px) {
+  .testimonial-header-modern {
+    padding: var(--space-s);
+  }
+  
+  .avatar-circle {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    margin-right: var(--space-s);
+  }
+  
+  .profile-name {
+    font-size: var(--font-size-m);
+  }
+  
+  .testimonial-container {
+    padding: var(--space-m);
+  }
+  
+  .quote-container {
+    padding: var(--space-m);
+  }
+  
+  .quote-text {
+    font-size: var(--font-size-s);
+  }
+  
+  .therapist-insight {
+    padding: var(--space-s);
+    flex-direction: column;
+  }
+  
+  .insight-line {
+    width: 80%;
+    margin: var(--space-xs) 0;
+  }
+  
+  .insight-content {
+    order: -1;
+    padding: 0 var(--space-xs) var(--space-xs);
+  }
+  
+  .quote-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+  
+  .conclusion-badge {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .conclusion-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+==========================================================================
+       étape finale - AMÉLIORÉ
+       ========================================================================== */
+    .discovery-section {
+      position: relative;
+      margin: var(--space-xl) 0;
+      border-radius: var(--border-radius-l);
+      overflow: hidden;
+      box-shadow: var(--shadow-l);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .discovery-section:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .discovery-header {
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
+      padding: var(--space-m);
+      position: relative;
+      text-align: center;
+    }
+    
+    .discovery-header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(255,255,255,0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      z-index: 0;
+    }
+    
+    .discovery-title {
+      font-size: clamp(var(--font-size-xl), 5vw, var(--font-size-2xl));
+      color: white;
+      margin-bottom: var(--space-s);
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .discovery-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: var(--font-size-m);
+      font-weight: var(--font-weight-medium);
+      position: relative;
+      z-index: 1;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    
+    /* Contenu en fond violet clair */
+    .discovery-content {
+      background-color: #ede5ff;
+      padding: var(--space-m);
+      position: relative;
+    }
+    
+    @media (min-width: 768px) {
+      .discovery-content {
+        padding: var(--space-l);
+      }
+      
+      .discovery-header {
+        padding: var(--space-l);
+      }
+    }
+    
+    .discovery-intro {
+      margin-bottom: var(--space-l);
+      padding: var(--space-s);
+      text-align: center;
+      color: var(--color-primary-700);
+      line-height: var(--line-height-relaxed);
+    }
+    
+    .highlight-text {
+      color: var(--color-primary-600);
+      font-weight: var(--font-weight-bold);
+    }
+    
+    .feature-list {
+      margin-bottom: var(--space-l);
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: var(--space-m);
+      position: relative;
+      background-color: var(--color-background-card);
+      border-radius: var(--border-radius-s);
+      padding: var(--space-s);
+      box-shadow: var(--shadow-s);
+      border: 1px solid var(--color-border-light);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    
+    .feature-item:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-l);
+    }
+    
+    .feature-number {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: var(--color-primary-600);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: var(--font-weight-bold);
+      font-size: 1.25rem;
+      margin-right: var(--space-s);
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(98, 0, 234, 0.2);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .feature-content {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .feature-title {
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-m);
+      margin-bottom: var(--space-xs);
+      color: var(--color-primary-600);
+    }
+    
+    /* ==========================================================================
+       CALL TO ACTION - AMÉLIORÉ
+       ========================================================================== */
+    .cta-section {
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
+      border-radius: var(--border-radius-l);
+      padding: var(--space-m);
+      position: relative;
+      text-align: center;
+      color: white;
+      box-shadow: var(--shadow-l);
+      overflow: hidden;
+      margin-top: var(--space-l);
+    }
+    
+    .cta-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='rgba(255,255,255,0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.2;
+      z-index: 0;
+    }
+    
+    @media (min-width: 768px) {
+      .cta-section {
+        padding: var(--space-l);
+      }
+    }
+    
+    .cta-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .cta-title {
+      font-size: clamp(var(--font-size-xl), 4vw, var(--font-size-2xl));
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-m);
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .cta-text {
+      max-width: 600px;
+      margin: var(--space-m) auto;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: var(--font-size-m);
+      line-height: var(--line-height-relaxed);
+    }
+    
+    .cta-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      color: var(--color-primary-600);
+      font-size: var(--font-size-m);
+      font-weight: var(--font-weight-bold);
+      padding: 0.9rem 1.8rem;
+      border-radius: var(--border-radius-pill);
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all var(--transition-medium);
+      margin: var(--space-s) 0;
+    }
+    
+    @media (min-width: 768px) {
+      .cta-button {
+        font-size: var(--font-size-l);
+        padding: 1.1rem 2.2rem;
+      }
+    }
+    
+    .cta-button:hover, .cta-button:focus {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+      color: var(--color-primary-600);
+      text-decoration: none;
+    }
+    
+    .cta-button:active {
+      transform: translateY(-1px);
+    }
+    
+    .cta-button::before {
+      content: "";
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: var(--border-radius-pill);
+      opacity: 0.4;
+      z-index: -1;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+      50% {
+        transform: scale(1.03);
+        opacity: 0.2;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+    }
+    
+    .cta-disclaimer {
+      font-size: var(--font-size-s);
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: var(--space-s);
+    }
+    
+    /* ==========================================================================
+       CONCLUSION - AMÉLIORÉ
+       ========================================================================== */
+    .conclusion-section {
+      text-align: center;
+      max-width: 650px;
+      margin: var(--space-xl) auto;
+      padding: var(--space-l);
+      background-color: #ffffff; /* Fond blanc comme demandé */
+      border-radius: var(--border-radius-l);
+      box-shadow: var(--shadow-l);
+      position: relative;
+      overflow: hidden;
+      color: var(--color-text-primary);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+      border: 1px solid rgba(98, 0, 234, 0.1);
+    }
+    
+    .conclusion-section:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .conclusion-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z' fill='rgba(98, 0, 234, 0.03)' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 1;
+      z-index: 0;
+    }
+    
+    .conclusion-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .conclusion-title {
+      color: var(--color-primary-700);
+      margin-bottom: var(--space-m);
+      font-size: clamp(var(--font-size-xl), 4vw, var(--font-size-2xl));
+      position: relative;
+      display: inline-block;
+    }
+    
+    .conclusion-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, var(--color-primary-600), var(--color-secondary-600));
+      border-radius: 1.5px;
+    }
+    
+    .personalized-name {
+      color: var(--color-primary-700);
+      font-weight: var(--font-weight-bold);
+    }
+    
+    /* AMÉLIORÉ : Bouton dégradé de violet à rose */
+    .conclusion-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
+      color: white;
+      font-size: var(--font-size-m);
+      font-weight: var(--font-weight-bold);
+      padding: 0.9rem 1.8rem;
+      border-radius: var(--border-radius-pill);
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(98, 0, 234, 0.25);
+      cursor: pointer;
+      transition: all var(--transition-medium);
+      margin-top: var(--space-l);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .conclusion-button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+      opacity: 0;
+      z-index: -1;
+      transition: opacity var(--transition-medium);
+    }
+    
+    .conclusion-button:hover::before {
+      opacity: 1;
+    }
+    
+    @media (min-width: 768px) {
+      .conclusion-button {
+        font-size: var(--font-size-l);
+        padding: 1.1rem 2.2rem;
+      }
+    }
+    
+    .conclusion-button:hover, .conclusion-button:focus {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(98, 0, 234, 0.3);
+      color: white;
+      text-decoration: none;
+    }
+    
+    .conclusion-button::after {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+      border-radius: var(--border-radius-pill);
+      z-index: -2;
+      opacity: 0.5;
+      filter: blur(5px);
+      animation: glowPulse 2s infinite alternate;
+    }
+    
+    @keyframes glowPulse {
+      0% {
+        opacity: 0.5;
+        filter: blur(5px);
+      }
+      100% {
+        opacity: 0.8;
+        filter: blur(8px);
+      }
+    }
+    
+    /* ==========================================================================
+       FOOTER
+       ========================================================================== */
+    .footer {
+      margin-top: var(--space-l);
+      padding-top: var(--space-s);
+      border-top: 1px solid var(--color-neutral-200);
+      text-align: center;
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-s);
+    }
+    
+    /* ==========================================================================
+       
+RESPONSIVE DESIGN AJUSTEMENTS
+       ========================================================================== */
+    @media (max-width: 640px) {
+      /* Réduit encore les espaces sur très petits écrans */
+      :root {
+        --space-s: 0.75rem;  /* 12px */
+        --space-m: 1rem;     /* 16px */
+        --space-l: 1.5rem;   /* 24px */
+      }
+      
+      /* Ajuste les flexbox pour petit écran */
+      .action-step,
+      .feature-item {
+        flex-direction: column;
+      }
+      
+      .action-step-number,
+      .feature-number {
+        margin-bottom: var(--space-xs);
+        margin-right: 0;
+      }
+      
+      /* Améliorer lisibilité mobile */
+      p {
+        font-size: 0.95rem;
+      }
+    }
+    
+    /* ==========================================================================
+       ACCESSIBILITÉ
+       ========================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="main-container">
+    <!-- 1. HEADER AVEC LOGO ET TITRE -->
+    <header class="header">
+      <div class="logo-circle">
+        <span class="emoji-heart" aria-hidden="true">💖</span>
+      </div>
+      <h1 class="gradient-heading">Compte-rendu personnalisé</h1>
+      <p style="color: var(--color-primary-600); font-size: var(--font-size-l); text-align: center; font-weight: var(--font-weight-medium);">
+        Préparé exclusivement pour Yasmine
+      </p>
+    </header>
+
+    <!-- 2. INTRODUCTION PERSONNALISÉE -->
+    <section class="section">
+      <div class="introduction-card reveal">
+        <p class="gradient-text" style="font-size: var(--font-size-l); font-weight: var(--font-weight-bold); margin-bottom: var(--space-m);">
+          Chère Yasmine,
+        </p>
+
+        <p>
+          Yasmine, il y a quelque chose de rare dans ce que tu as partagé. Cette sincérité, cette capacité à nommer les choses sans détour — "je sais <em>exactement</em> ce que je veux", "je suis très sensible à plusieurs détails", "mon esprit me joue des tours" — c'est une forme de <strong>lucidité qui mérite d'être reconnue</strong>. Merci d'avoir eu le courage de te confier avec cette honnêteté.
+        </p>
+
+        <p>
+          Avant d'aller plus loin, je tiens à te dire quelque chose d'important. Ce que tu vas lire, c'est <strong>le miroir de ce que j'ai perçu</strong> à travers les éléments que tu as choisi de partager avec moi. Même si je n'ai qu'un aperçu de ton histoire, j'ai fait de mon mieux pour comprendre ce qui t'anime, ce qui te blesse, et ce qui te retient.
+        </p>
+
+        <p>
+          <em>Certaines choses vont résonner profondément en toi. D'autres te surprendront peut-être, ou ne correspondront pas exactement à ta réalité, et c'est tout à fait normal.</em> Tu es la seule à <em>vraiment</em> te connaître. Ce document n'est pas une vérité absolue sur qui tu es — c'est une <span style="color: #7C3AED; font-weight: 600;">invitation à te regarder sous un angle nouveau, avec bienveillance</span>.
+        </p>
+
+        <p>
+          Prends ce qui résonne <em>vraiment</em> pour toi, et laisse le reste. Si ne serait-ce qu'une partie de ce compte-rendu t'aide à mieux te comprendre, alors il aura rempli son rôle.
+        </p>
+
+        <p>
+          Tu as traversé plusieurs rencontres qui n'ont pas abouti, et la dernière a été particulièrement marquante : cette impression d'alignement qui s'est révélée être une <strong>illusion</strong>. Des enfants cachés, des addictions tues. Ce n'est pas rien de découvrir que quelqu'un sur qui tu avais misé émotionnellement a construit une façade.
+        </p>
+
+        <p>
+          Et au fil du temps, tu as identifié un fil rouge dans tes histoires : cette attirance pour <strong>l'inaccessible</strong>, cette position récurrente de "second plan", ce sentiment que quelque chose d'essentiel t'échappe <em>toujours</em>. Tu as aussi fait un lien profond avec ton histoire familiale — ce père absent émotionnellement, cette empreinte qui semble avoir façonné tes attentes et tes choix relationnels.
+        </p>
+
+        <p>
+          Aujourd'hui, tu cherches un partenaire qui te comprendra <em>vraiment</em>. Quelqu'un de spirituel et pratiquant, avec des valeurs et des principes affirmés. Tu veux de la <strong>fidélité</strong>, de la <strong>sincérité</strong>, de la <strong>transparence</strong>. Tu veux être priorité, pas option.
+        </p>
+
+        <p>
+          Tu veux pouvoir communiquer en profondeur, partager une connexion authentique, construire quelque chose d'aligné spirituellement et émotionnellement. En parallèle, tu travailles sur toi-même : développer ta confiance, gérer tes émotions, t'affirmer davantage, améliorer ton estime de toi. Tu es consciente de deux freins majeurs : la crainte de perdre ton indépendance et la difficulté à t'engager sérieusement.
+        </p>
+
+        <div class="highlight-box">
+          <p>
+            <strong>À la fin de ce compte-rendu, tu pourras accéder à l'étape finale afin de valider ton inscription à My Muqabala pour accéder aux profils de qualité et découvrir comment notre programme d'accompagnement maximisera tes chances de trouver une relation épanouissante insha'Allah.</strong> Je t'invite à lire avec ouverture, en gardant à l'esprit cette citation qui représente le cœur de ma méthodologie: « On n'attire pas la personne que l'on veut, on attire la personne que l'on est. »
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TES FORCES DISTINCTIVES -->
+    <section class="section reveal">
+      <h2 class="section-title forces">Tes forces distinctives</h2>
+
+      <p class="section-intro forces">
+        Avant de plonger dans les difficultés, il est essentiel de reconnaître ce qui fait déjà ta force.
+        Ces atouts sont la fondation de la relation que tu souhaites bâtir.
+      </p>
+
+      <div class="forces-grid stagger-children">
+        <!-- Force 1 -->
+        <div class="force-card reveal">
+          <div class="force-icon">
+            <span style="color: var(--color-forces-600);">🔍</span>
+          </div>
+          <h3 class="force-title">Une lucidité rare sur tes propres mécanismes</h3>
+          <p>
+            Ce que tu as fait dans ton partage est impressionnant. Tu as nommé ton propre pattern — <em>"c'est toujours des personnes inaccessibles, ça me fait comme un challenge"</em> — sans te voiler la face. Tu as identifié le lien avec ton histoire familiale — <em>"j'ai l'impression d'être attirée par des gens absents finalement"</em> — sans chercher à te justifier.
+          </p>
+
+          <p>
+            Cette <strong>capacité d'introspection</strong> est une ressource majeure. Beaucoup de personnes passent des années dans les mêmes schémas sans <em>jamais</em> mettre de mots dessus. Toi, tu vois. Tu comprends. C'est déjà la moitié du chemin.
+          </p>
+          <p class="force-quote">
+            "Voir ses propres mécanismes, c'est déjà commencer à en reprendre le contrôle."
+          </p>
+        </div>
+
+        <!-- Force 2 -->
+        <div class="force-card reveal">
+          <div class="force-icon">
+            <span style="color: var(--color-forces-600);">🛡️</span>
+          </div>
+          <h3 class="force-title">Des critères clairs et assumés</h3>
+          <p>
+            Tu sais ce que tu veux. Fidélité, sincérité, indépendance financière, respect des familles, valeurs communes, communication, stabilité émotionnelle. Ce n'est pas une liste générique — c'est le reflet de ce que tu as appris de tes expériences passées.
+          </p>
+
+          <p>
+            Tu ne cherches pas "quelqu'un", tu cherches <em>quelqu'un de précis</em>. Cette <strong>clarté</strong>, loin d'être un défaut, est une <strong>protection intelligente</strong>. Elle t'évite de perdre du temps avec des personnes qui ne sont pas sur la même longueur d'onde. Et quand tu dis "je suis sensible à plusieurs détails", ce n'est pas de l'exigence excessive — c'est de l'alignement avec ce qui compte <em>vraiment</em> pour toi.
+          </p>
+          <p class="force-quote">
+            "Savoir ce que tu veux, ce n'est pas être difficile. C'est te respecter."
+          </p>
+        </div>
+
+        <!-- Force 3 -->
+        <div class="force-card reveal">
+          <div class="force-icon">
+            <span style="color: var(--color-forces-600);">💫</span>
+          </div>
+          <h3 class="force-title">Une capacité à investir pleinement</h3>
+          <p>
+            Tu as coché "je m'investis pleinement dès le début". Cette capacité à donner, à t'engager émotionnellement, à être présente quand tu choisis quelqu'un — c'est une richesse. Dans un monde où beaucoup de gens gardent une distance émotionnelle par peur, toi tu exprimes tes ressentis de manière <strong>ouverte et sincère</strong>.
+          </p>
+
+          <p>
+            Cette <strong>spontanéité émotionnelle</strong>, quand elle est bien orientée, crée des connexions <em>profondes</em>. Ce n'est pas une faiblesse. C'est une force vitale qui mérite d'être honorée.
+          </p>
+          <p class="force-quote">
+            "Ta capacité à t'investir n'est pas le problème. C'est vers qui tu l'orientes qui peut être reconsidéré."
+          </p>
+        </div>
+
+        <!-- Force 4 -->
+        <div class="force-card reveal">
+          <div class="force-icon">
+            <span style="color: var(--color-forces-600);">🙏</span>
+          </div>
+          <h3 class="force-title">Une spiritualité au cœur de ta quête</h3>
+          <p>
+            Ta pratique est au cœur de ta vie quotidienne. Tu cherches un partenaire pratiquant régulier et engagé, quelqu'un avec qui partager des <strong>valeurs spirituelles</strong>. Ce n'est pas un critère secondaire pour toi — c'est le socle.
+          </p>
+
+          <p>
+            Cette recherche d'<strong>alignement spirituel</strong> dit quelque chose d'important : tu ne veux pas simplement une relation, tu veux un <em>compagnonnage de foi</em>. Cette dimension spirituelle peut devenir un ancrage puissant, surtout dans les moments de doute ou de confusion relationnelle.
+          </p>
+          <p class="force-quote">
+            "Chercher quelqu'un qui partage ta foi, c'est chercher un partenaire pour l'essentiel, pas seulement pour le visible."
+          </p>
+        </div>
+      </div>
+
+      <p style="margin-top: var(--space-m);">
+        Ces forces constituent une base solide sur laquelle tu vas pouvoir t'appuyer.
+        Passons maintenant à tes défis, afin de mieux comprendre ce qui peut freiner ton épanouissement.
+      </p>
+    </section>
+
+    <!-- 4. TES DÉFIS RELATIONNELS ACTUELS -->
+    <section class="section">
+      <h2 class="section-title defis">Tes défis relationnels actuels</h2>
+
+      <p class="section-intro defis">
+        Chaque défi est lié à une partie de ton histoire. Accueille-les sans jugement : ce sont des zones
+        d'amélioration qui, une fois comprises, peuvent ouvrir la voie à des changements en profondeur.
+      </p>
+
+      <!-- Défi 1 -->
+      <div class="defi-card reveal">
+        <div class="defi-badge">DÉFI 1</div>
+        <h3 class="defi-title">Le piège de l'inaccessible et le challenge émotionnel</h3>
+
+        <p>
+          Il y a quelque chose de frappant dans ce que tu as nommé. <em>"C'est toujours des personnes inaccessibles, ça me fait comme un challenge. Avec le temps je me rends compte que l'inaccessible m'attire au point de voir la personne de manière exceptionnelle, comme si je ratais quelque chose."</em>
+        </p>
+
+        <p>
+          Ce que tu décris ici, c'est un mécanisme très précis : <span style="color: #7C3AED; font-weight: 600;">l'inaccessibilité crée une attraction disproportionnée</span>. La personne devient exceptionnelle dans ton esprit non pas parce qu'elle l'est <em>objectivement</em>, mais parce qu'elle est loin.
+        </p>
+
+        <p>
+          Et cette distance crée un espace mental où tu peux projeter tout ce que tu espères, sans que la réalité ne vienne déranger l'image.
+        </p>
+
+        <p>
+          Ce mécanisme a probablement une <strong>fonction protectrice</strong>. Quand quelqu'un est inaccessible, il ne peut pas <em>vraiment</em> t'atteindre. Il ne peut pas te décevoir profondément parce qu'il n'est <em>jamais</em> totalement présent. C'est paradoxal, mais c'est une forme de contrôle : tu choisis des personnes qui ne peuvent pas te choisir pleinement en retour.
+        </p>
+
+        <p>
+          Le lien avec ton père est direct et douloureux — cet homme absent émotionnellement qui t'a appris, malgré lui, qu'aimer signifie souvent poursuivre quelqu'un qui n'est pas totalement là. Ce pattern a un coût : tu te retrouves au "second plan", encore et encore. Pas parce que tu ne vaux pas mieux, mais parce que tu choisis des personnes pour qui tu ne peux pas être priorité.
+        </p>
+
+        <p>
+          Le piège, c'est que l'inaccessibilité crée une <strong>intensité émotionnelle</strong> que tu prends pour de la passion. Mais cette intensité vient de la frustration, pas de la connexion réelle. Une question se pose peut-être : qu'est-ce qui se passerait si quelqu'un était <em>vraiment</em> disponible, <em>vraiment</em> présent, <em>vraiment</em> prêt à te choisir en priorité ? Est-ce que cette disponibilité pourrait être perçue autrement que comme un manque de challenge ?
+        </p>
+
+        <div class="zoom-special">
+          <strong>Zoom spécial : L'idéalisation de l'absence</strong>
+          <p>
+            "Quand quelqu'un est inaccessible, on ne tombe pas amoureux de lui. On tombe amoureux de l'idée de lui." L'absence crée un vide que l'imagination remplit. Moins quelqu'un est présent, plus tu peux le rêver parfait. C'est pour cela que la déception est si brutale quand la réalité se révèle — comme avec cette dernière personne qui a caché des enfants et des addictions. La personne que tu avais imaginée n'a <em>jamais</em> existé. C'était une projection construite dans l'espace de son absence.
+          </p>
+        </div>
+
+        <p class="connecteur">
+          Ce pattern d'inaccessibilité s'entrelace avec un autre fil, tout aussi puissant.
+        </p>
+      </div>
+
+      <!-- Défi 2 -->
+      <div class="defi-card reveal">
+        <div class="defi-badge">DÉFI 2</div>
+        <h3 class="defi-title">L'hypervigilance et la sensibilité aux détails</h3>
+
+        <p>
+          Tu l'as dit clairement : tu es "très sensible à plusieurs détails", notamment "la manière de dialoguer, le comportement, le respect". Cette sensibilité est une <strong>arme à double tranchant</strong>. D'un côté, elle te protège — elle t'alerte quand quelque chose ne va pas, quand les valeurs ne sont pas partagées, quand les paroles ne correspondent pas aux actes.
+        </p>
+
+        <p>
+          C'est cette sensibilité qui t'a permis de repérer que quelque chose clochait avec la dernière personne, même si la révélation complète (enfants, addictions) est venue plus tard. D'un autre côté, cette <strong>hypervigilance</strong> peut transformer chaque interaction en test. Chaque mot, chaque geste est scanné pour détecter les signaux d'alerte.
+        </p>
+
+        <p>
+          Cette vigilance vient probablement d'un endroit très compréhensible : après avoir été déçue, après avoir senti que tu n'étais pas priorité, ton système interne s'est ajusté. Il s'est dit : <em>"Plus jamais. Je vais surveiller, anticiper, détecter les signes avant de me faire avoir."</em> C'est une protection légitime.
+        </p>
+
+        <p>
+          Mais il se pourrait que cette protection devienne une hypervigilance qui ne laisse plus de place à l'imperfection humaine normale. Quelqu'un peut dire une phrase maladroite sans être irrespectueux. Quelqu'un peut avoir une journée difficile sans être émotionnellement instable. La question devient : <span style="color: #7C3AED; font-weight: 600;">où est la frontière entre ta sensibilité protectrice et une méfiance qui empêche toute vraie connexion ?</span>
+        </p>
+
+        <p>
+          Cette hypervigilance peut expliquer pourquoi les rencontres n'aboutissent pas. Ce n'est pas qu'il n'y a personne de bien — c'est peut-être que personne ne peut passer tous les tests en même temps. Qu'est-ce qui changerait si tu te permettais de distinguer les <strong>signaux d'alerte réels</strong> (mensonges, manque de respect) des <strong>imperfections humaines normales</strong> (maladresses, différences de communication) ?
+        </p>
+
+        <div class="zoom-special">
+          <strong>Zoom spécial : Le coût de la surveillance permanente</strong>
+          <p>
+            "Surveiller constamment, c'est se protéger. Mais c'est aussi s'épuiser et tenir l'autre à distance." L'hypervigilance crée un état de tension permanente. Tu es <em>toujours</em> en mode analyse, <em>jamais</em> en mode abandon. Et paradoxalement, cet état te fatigue émotionnellement tout en t'empêchant de savoir si quelqu'un te convient <em>vraiment</em> — parce que tu n'as <em>jamais</em> baissé ta garde assez longtemps pour ressentir qui il est au-delà de ce que tu observes.
+          </p>
+        </div>
+
+        <p class="connecteur">
+          Cette vigilance protectrice s'accompagne d'une autre tension, tout aussi présente.
+        </p>
+      </div>
+
+      <!-- Défi 3 -->
+      <div class="defi-card reveal">
+        <div class="defi-badge">DÉFI 3</div>
+        <h3 class="defi-title">La crainte de perdre ton indépendance et la difficulté à t'engager</h3>
+
+        <p>
+          Tu l'as identifié toi-même comme un frein : la crainte de perdre ton indépendance et la difficulté à t'engager sérieusement. Ces deux éléments sont <em>profondément</em> liés. L'indépendance que tu as construite — émotionnelle, financière, personnelle — c'est une conquête. Tu as appris à te suffire à toi-même, à ne pas dépendre de quelqu'un d'absent (comme ton père l'était émotionnellement).
+        </p>
+
+        <p>
+          Cette <strong>autonomie</strong> est précieuse. Mais il se pourrait qu'elle soit devenue une forteresse. S'engager, c'est accepter une certaine <strong>interdépendance</strong>. C'est laisser l'autre avoir un impact sur toi, influencer tes choix, occuper une place dans ton quotidien. Et ça, ça peut ressembler à une perte de contrôle.
+        </p>
+
+        <p>
+          Cette crainte a une logique profonde. Si ton père était absent émotionnellement, tu as peut-être appris très tôt que compter sur quelqu'un, c'est risquer d'être déçue. L'indépendance devient alors une garantie de sécurité : <em>"Si je ne compte que sur moi, personne ne peut me faire défaut."</em>
+        </p>
+
+        <p>
+          Mais cette logique a un prix : elle rend l'engagement périlleux. Parce que s'engager <em>vraiment</em>, c'est accepter de devenir vulnérable. C'est dire : <em>"Je te laisse entrer, et oui, tu pourrais me blesser."</em> Cette vulnérabilité fait peur — c'est compréhensible. Mais sans elle, la connexion reste superficielle.
+        </p>
+
+        <p>
+          <span style="color: #7C3AED; font-weight: 600;">Cette difficulté à t'engager pourrait expliquer pourquoi tu es attirée par l'inaccessible.</span> Si quelqu'un est inaccessible, tu n'as <em>jamais</em> vraiment à prendre la décision de t'engager pleinement — parce que ce n'est <em>jamais</em> réellement possible. C'est une forme de protection déguisée en attirance.
+        </p>
+
+        <p>
+          Qu'est-ce qui se passerait si tu rencontrais quelqu'un de disponible, de présent, de prêt à s'engager ? Est-ce que cette disponibilité pourrait déclencher ta peur de perdre ton indépendance ?
+        </p>
+
+        <p class="connecteur">
+          Ces trois fils — l'inaccessible, l'hypervigilance, la peur de l'engagement — ne sont pas séparés. Ils se tissent ensemble pour créer un pattern cohérent qui te protège mais qui, en même temps, t'empêche d'accéder à ce que tu cherches <em>vraiment</em>.
+        </p>
+      </div>
+
+      <!-- Résumé simple avec bordure latérale -->
+      <div class="section-summary">
+        <span class="section-summary-title">En résumé</span>
+        <div class="section-summary-content">
+          Ces mécanismes ont eu leur utilité. Ils t'ont protégée de déceptions supplémentaires, ils t'ont permis de garder ton autonomie, ils t'ont évité de t'engager avec les mauvaises personnes. Mais aujourd'hui, il se pourrait qu'ils soient devenus des obstacles à ce que tu cherches <em>vraiment</em> : une connexion authentique, profonde, alignée spirituellement et émotionnellement. La question qui se pose maintenant : comment honorer ces protections tout en leur permettant de se transformer ?
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. TES CHEMINS DE TRANSFORMATION -->
+    <section class="section">
+      <h2 class="section-title transformations">Tes chemins de transformation</h2>
+
+      <p class="section-intro transformations">
+        À chaque défi correspond un potentiel de croissance. Voici comment tu peux transformer ces difficultés en
+        ressources durables pour tes futures relations.
+      </p>
+
+      <!-- Transformation 1 (liée au défi 1) -->
+      <div class="transformation-card reveal">
+        <div class="transformation-badge">TRANSFORMATION 1</div>
+        <h3 class="transformation-title">De l'inaccessible à la présence : réapprendre ce qui fait vraiment battre le cœur</h3>
+
+        <p>
+          Cette attirance pour l'inaccessible, ce challenge émotionnel — ils peuvent se transformer. Pas en les combattant frontalement, mais en créant une <strong>nouvelle référence interne</strong>. Il se pourrait que ton cerveau ait appris à associer l'intensité émotionnelle avec la frustration, la distance, le manque.
+        </p>
+
+        <p>
+          Ce qui pourrait t'aider, ce serait de commencer à distinguer l'<strong>intensité de la frustration</strong> et l'<strong>intensité de la connexion réelle</strong>. Quand tu ressens une forte attraction, une question pourrait devenir un réflexe : <em>"Est-ce que je suis attirée par cette personne ou par le fait qu'elle soit loin/difficile à atteindre ?"</em>
+        </p>
+
+        <p>
+          Cette simple question crée un espace de réflexion avant que le pattern ne s'installe. En parallèle, il serait peut-être utile de te permettre d'explorer ce qui se passe quand quelqu'un est disponible. Pas de te forcer à être attirée, mais d'observer ce qui se produit en toi. Est-ce que la disponibilité crée de l'ennui ? Du rejet ? De la peur ? Ces réactions sont des indices précieux.
+        </p>
+
+        <div class="transformation-analysis">
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Bénéfices
+            </h4>
+            <p>
+              Si tu parviens à déconstruire ce lien entre inaccessibilité et attraction, tu pourrais découvrir qu'il existe une autre forme d'intensité — celle qui naît de la <strong>réciprocité</strong>, de la <strong>présence</strong>, de la <strong>constance</strong>. Cette intensité-là est moins spectaculaire au début, mais elle est durable. Elle ne repose pas sur la frustration mais sur la construction commune.
+            </p>
+          </div>
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Comment y parvenir ?
+            </h4>
+            <p>
+              Une piste concrète pourrait être de revisiter mentalement les moments où tu as senti cette attraction pour l'inaccessible. Essaie de décomposer ce qui t'attirait <em>vraiment</em>. Était-ce la personne elle-même, ou l'image que tu en avais ? Était-ce ses qualités réelles, ou le fait qu'elle représentait un défi ? Cette analyse post-expérience peut t'aider à affiner ton radar émotionnel.
+            </p>
+          </div>
+        </div>
+
+        <div class="transformation-mini-action">
+          <h4 style="font-weight: var(--font-weight-semibold); font-size: var(--font-size-s); color: var(--color-transformation-600); margin-bottom: var(--space-xs);">
+            Mini-action :
+          </h4>
+          <p>
+            Lors de ta prochaine rencontre ou interaction, pose-toi cette question simple : <em>"Si cette personne était totalement disponible et présente demain, est-ce que je serais encore attirée ?"</em> Si la réponse est non, c'est un signal que l'attirance repose sur l'inaccessibilité. Si la réponse est oui, c'est un signal que quelque chose de plus sain se joue.
+          </p>
+        </div>
+
+        <!-- Avant / Après -->
+        <div class="avant-apres">
+          <div class="avant-apres-content">
+            <div class="avant-block">
+              <div class="avant-content">
+                Tu rencontres quelqu'un qui est distant, occupé, pas vraiment disponible. Immédiatement, tu ressens une attraction forte. Tu idéalises cette personne, tu imagines une connexion exceptionnelle. Tu investis émotionnellement, mais tu te retrouves toujours au second plan, en attente, dans l'incertitude. L'intensité que tu ressens vient de la frustration, mais tu la prends pour de la passion.
+              </div>
+            </div>
+            <div class="apres-block">
+              <div class="apres-content">
+                Tu rencontres quelqu'un qui est distant, occupé, pas vraiment disponible. Une alerte interne se déclenche : <em>"Est-ce que je suis attirée par lui ou par le fait qu'il soit inaccessible ?"</em> Tu prends du recul. Tu observes si cette personne montre des signes de disponibilité réelle, de réciprocité, de présence. Si ce n'est pas le cas, tu choisis de ne pas investir émotionnellement. Tu préserves ton énergie pour quelqu'un qui sera <em>vraiment</em> présent.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transformation 2 (liée au défi 2) -->
+      <div class="transformation-card reveal">
+        <div class="transformation-badge">TRANSFORMATION 2</div>
+        <h3 class="transformation-title">De l'hypervigilance à la vigilance ajustée : discerner sans surveiller</h3>
+
+        <p>
+          Cette sensibilité aux détails, cette capacité à repérer les incohérences — elles sont précieuses. Mais il se pourrait qu'elles puissent être affinées. L'objectif n'est pas d'éteindre cette vigilance, mais de la rendre plus sélective.
+        </p>
+
+        <p>
+          Il existe une différence entre un <strong>signal d'alerte réel</strong> (mensonge, manque de respect, incohérence majeure entre paroles et actes) et une <strong>imperfection humaine normale</strong> (maladresse verbale, différence de style de communication, journée difficile).
+        </p>
+
+        <p>
+          Ce qui pourrait t'aider, ce serait de créer mentalement deux catégories : les <em>signaux rouges</em> (non négociables, qui touchent aux valeurs fondamentales) et les <em>signaux oranges</em> (points d'attention, mais pas disqualifiants immédiatement). Les signaux rouges méritent que tu te protèges rapidement. Les signaux oranges méritent une exploration : <em>"Est-ce un pattern récurrent ou un incident isolé ?"</em>
+        </p>
+
+        <div class="transformation-analysis">
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Bénéfices
+            </h4>
+            <p>
+              Si tu parviens à ajuster cette vigilance, tu pourrais ressentir moins de <strong>fatigue émotionnelle</strong>. L'hypervigilance épuise parce qu'elle mobilise ton attention en permanence. Une vigilance ajustée te permet de rester alerte sur ce qui compte <em>vraiment</em> tout en te donnant de l'espace pour vivre la relation sans surveiller constamment. Cela pourrait aussi permettre à l'autre de se sentir moins testé, moins scruté — et donc plus à l'aise pour être lui-même.
+            </p>
+          </div>
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Comment y parvenir ?
+            </h4>
+            <p>
+              Une piste concrète : après une interaction qui te dérange, prends un moment pour te poser ces questions : <em>"Est-ce que cette personne a enfreint une de mes valeurs fondamentales (respect, sincérité, engagement) ? Ou est-ce qu'elle a simplement un style de communication différent du mien ? Est-ce que c'est un pattern qui se répète ou un incident isolé ?"</em> Ces questions créent un filtre entre la réaction immédiate (mode alerte) et la décision réfléchie.
+            </p>
+          </div>
+        </div>
+
+        <div class="transformation-mini-action">
+          <h4 style="font-weight: var(--font-weight-semibold); font-size: var(--font-size-s); color: var(--color-transformation-600); margin-bottom: var(--space-xs);">
+            Mini-action :
+          </h4>
+          <p>
+            Lors de ta prochaine interaction, identifie un détail qui te dérange. Avant de le classer comme "signal d'alerte", pose-toi : <em>"Sur une échelle de 1 à 10, à quel point cela touche mes valeurs fondamentales ?"</em> Si c'est 7 ou plus : signal rouge. Si c'est 5 ou moins : signal orange à observer.
+          </p>
+        </div>
+
+        <!-- Avant / Après -->
+        <div class="avant-apres">
+          <div class="avant-apres-content">
+            <div class="avant-block">
+              <div class="avant-content">
+                Tu rencontres quelqu'un qui, lors d'une conversation, dit quelque chose de maladroit ou qui ne correspond pas exactement à ta manière de communiquer. Immédiatement, ton système d'alerte s'active. Tu analyses, tu scrutes, tu cherches d'autres signes. Cette vigilance crée une tension qui empêche la fluidité de la rencontre. Tu conclus rapidement que "ça ne passe pas" parce que plusieurs petits détails s'accumulent.
+              </div>
+            </div>
+            <div class="apres-block">
+              <div class="apres-content">
+                Tu rencontres quelqu'un qui, lors d'une conversation, dit quelque chose de maladroit. Tu remarques, mais tu ne réagis pas immédiatement. Tu te poses : <em>"Est-ce que cela touche au respect, à la sincérité, à mes valeurs fondamentales ?"</em> Si non, tu choisis de laisser passer et d'observer si c'est un pattern ou un incident isolé. Tu restes vigilante, mais tu ne transformes pas chaque imperfection en signal d'alerte. Tu te donnes l'espace pour voir qui cette personne est <em>vraiment</em>, au-delà de ses maladresses.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transformation 3 (liée au défi 3) -->
+      <div class="transformation-card reveal">
+        <div class="transformation-badge">TRANSFORMATION 3</div>
+        <h3 class="transformation-title">De l'indépendance protectrice à l'interdépendance choisie</h3>
+
+        <p>
+          Cette indépendance que tu as construite est une conquête légitime. Elle t'a protégée. Elle t'a permis de ne pas dépendre de personnes absentes ou peu fiables. Mais il se pourrait qu'elle puisse évoluer vers quelque chose de plus ouvert : l'<strong>interdépendance choisie</strong>.
+        </p>
+
+        <p>
+          L'interdépendance, ce n'est pas la dépendance. Ce n'est pas perdre ton autonomie ou te dissoudre dans l'autre. C'est accepter qu'une relation saine implique une <strong>influence mutuelle</strong>, un <strong>espace partagé</strong>, une certaine <strong>vulnérabilité réciproque</strong>.
+        </p>
+
+        <p>
+          Ce qui pourrait t'aider, ce serait de redéfinir ce que "s'engager" signifie pour toi. S'engager, ce n'est pas renoncer à qui tu es. C'est choisir de construire quelque chose avec quelqu'un tout en restant toi-même. C'est accepter que cette personne ait une place dans ta vie, qu'elle influence certaines de tes décisions, qu'elle devienne une référence émotionnelle — sans pour autant que cela annule ton identité propre.
+        </p>
+
+        <div class="transformation-analysis">
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Bénéfices
+            </h4>
+            <p>
+              Si tu parviens à te permettre cette interdépendance, tu pourrais découvrir qu'il existe une forme de liberté dans l'engagement — pas la liberté de l'isolement, mais la liberté de pouvoir compter sur quelqu'un et d'être comptée en retour. Cette forme de <strong>sécurité relationnelle</strong> est différente de la sécurité que tu as construite dans l'indépendance. Elle est moins contrôlable, mais elle est plus nourrissante.
+            </p>
+          </div>
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Comment y parvenir ?
+            </h4>
+            <p>
+              Une piste concrète pourrait être de t'entraîner progressivement à la <strong>vulnérabilité</strong>. Pas avec n'importe qui, mais avec des personnes de confiance (amies proches, famille). Commence par partager des petites choses qui te rendent vulnérable : un doute, une peur, un besoin. Observe ce qui se passe. Est-ce que cette vulnérabilité crée de la proximité ou du rejet ? Avec le temps, ton cerveau peut apprendre que la vulnérabilité n'est pas synonyme de danger — elle peut être synonyme de connexion.
+            </p>
+          </div>
+        </div>
+
+        <div class="transformation-mini-action">
+          <h4 style="font-weight: var(--font-weight-semibold); font-size: var(--font-size-s); color: var(--color-transformation-600); margin-bottom: var(--space-xs);">
+            Mini-action :
+          </h4>
+          <p>
+            Identifie une petite chose que tu pourrais partager avec une personne de confiance cette semaine — quelque chose qui te rend légèrement vulnérable. Observe ta résistance interne, puis choisis de le faire quand même. Note ce qui se passe en toi et dans la relation après ce partage.
+          </p>
+        </div>
+
+        <!-- Avant / Après -->
+        <div class="avant-apres">
+          <div class="avant-apres-content">
+            <div class="avant-block">
+              <div class="avant-content">
+                Tu rencontres quelqu'un qui montre des signes d'engagement sérieux, de disponibilité, de désir de construire quelque chose. Mais au lieu de te sentir rassurée, tu ressens une forme de pression, voire de suffocation. Cette disponibilité réveille ta peur de perdre ton indépendance. Tu commences à prendre du recul, à créer de la distance, à saboter subtilement la relation pour protéger ton autonomie. Tu te retrouves seule, préservant ton indépendance mais renonçant à la connexion que tu cherchais.
+              </div>
+            </div>
+            <div class="apres-block">
+              <div class="apres-content">
+                Tu rencontres quelqu'un qui montre des signes d'engagement sérieux. Tu ressens une légère appréhension — c'est normal. Mais au lieu de fuir, tu nommes ce qui se passe en toi : <em>"J'ai peur de perdre mon autonomie."</em> Tu te rappelles que s'engager ne signifie pas disparaître. Tu te permets d'avancer progressivement, d'explorer ce que cette interdépendance pourrait apporter. Tu restes attentive à tes limites, mais tu ne les imposes pas préventivement. Tu découvres qu'il est possible de s'engager tout en restant toi-même.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transformation 4 (bonus : travail spirituel) -->
+      <div class="transformation-card reveal">
+        <div class="transformation-badge">TRANSFORMATION 4</div>
+        <h3 class="transformation-title">Ancrer ta quête relationnelle dans le tawakkul</h3>
+
+        <p>
+          Ta spiritualité est au cœur de ta vie. Ce qui pourrait enrichir ton chemin relationnel, ce serait d'ancrer cette quête dans le <strong>tawakkul</strong> — cette confiance en Allah qui accepte que certaines choses échappent à ton contrôle.
+        </p>
+
+        <p>
+          Tu as fait tout ce travail d'introspection, tu as identifié tes patterns, tu cherches à t'améliorer. C'est admirable. Mais il se pourrait qu'une partie de la charge que tu portes vienne du fait que tu essaies de tout maîtriser : anticiper les déceptions, scanner les signaux, contrôler l'issue.
+        </p>
+
+        <p>
+          Le tawakkul, ce n'est pas de la passivité. C'est faire tout ce qui est en ton pouvoir (te connaître, poser tes limites, choisir consciemment) puis <strong>lâcher prise sur le résultat</strong>. C'est accepter que le timing ne soit pas <em>toujours</em> le tien, que certaines portes se ferment pour en ouvrir d'autres, que la personne que tu cherches pourrait arriver d'une manière que tu n'avais pas anticipée.
+        </p>
+
+        <div class="transformation-analysis">
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Bénéfices
+            </h4>
+            <p>
+              Si tu parviens à intégrer ce tawakkul dans ta quête relationnelle, tu pourrais ressentir moins de pression, moins d'urgence, moins de besoin de contrôle. Cela pourrait aussi te permettre d'être plus présente dans les rencontres — moins dans l'analyse constante, plus dans l'écoute de ce qui se passe <em>réellement</em>. Le tawakkul crée un espace de légèreté même dans la recherche sérieuse.
+            </p>
+          </div>
+          <div class="transformation-analysis-card">
+            <h4 class="transformation-analysis-title">
+              <span class="defi-analysis-icon">💫</span> Comment y parvenir ?
+            </h4>
+            <p>
+              Une piste concrète pourrait être d'intégrer une pratique régulière de <strong>du'a spécifique</strong> pour ta quête. Pas seulement demander à Allah de t'envoyer quelqu'un, mais Lui confier tes peurs, tes doutes, tes patterns, et Lui demander de t'aider à les transformer. Après chaque rencontre ou interaction, prends un moment pour une prière de remise entre Ses mains : <em>"Ya Allah, si cette personne est bonne pour moi, facilite. Si elle ne l'est pas, éloigne-moi avec douceur."</em>
+            </p>
+          </div>
+        </div>
+
+        <div class="transformation-mini-action">
+          <h4 style="font-weight: var(--font-weight-semibold); font-size: var(--font-size-s); color: var(--color-transformation-600); margin-bottom: var(--space-xs);">
+            Mini-action :
+          </h4>
+          <p>
+            Cette semaine, après une situation relationnelle (rencontre, échange, réflexion), prends 5 minutes pour une prière de remise entre les mains d'Allah. Confie-Lui ce qui t'inquiète, ce que tu ne comprends pas, ce que tu cherches. Observe si ce moment crée un apaisement en toi.
+          </p>
+        </div>
+
+        <!-- Avant / Après -->
+        <div class="avant-apres">
+          <div class="avant-apres-content">
+            <div class="avant-block">
+              <div class="avant-content">
+                Après chaque rencontre, tu analyses, tu décortiques, tu cherches à comprendre ce qui s'est passé et à anticiper ce qui pourrait se passer. Cette analyse constante crée une charge mentale et émotionnelle. Tu te sens responsable de trouver la bonne personne, au bon moment, de la bonne manière. Cette pression t'épuise.
+              </div>
+            </div>
+            <div class="apres-block">
+              <div class="apres-content">
+                Après chaque rencontre, tu prends un moment pour te reconnecter à ta foi. Tu fais ton analyse avec lucidité, mais tu confies ensuite le résultat à Allah. Tu acceptes que certaines choses échappent à ta compréhension et à ton contrôle. Cette remise entre Ses mains allège ta charge. Tu restes active dans ta quête, mais tu ne portes plus tout le poids seule. Tu fais ta part, et tu Lui fais confiance pour le reste.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. CONCLUSION ET CTA FINAL -->
+    <section class="conclusion-section reveal">
+      <div class="conclusion-content">
+        <h2 class="conclusion-title">
+          Conclusion
+        </h2>
+
+        <p>
+          Yasmine, ce chemin que tu parcours — cette quête d'une connexion authentique, alignée spirituellement, émotionnellement, humainement — il est courageux. Tu ne cherches pas quelqu'un par désespoir ou par solitude. Tu cherches quelqu'un parce que tu as compris que l'amour sain, la vraie connexion, ça se construit sur des bases solides : des valeurs partagées, du respect mutuel, de la présence réelle.
+        </p>
+
+        <p>
+          Les patterns que tu as identifiés — l'attirance pour l'inaccessible, l'hypervigilance, la peur de perdre ton indépendance — ils ont eu leur raison d'être. Ils t'ont protégée à un moment où tu en avais besoin. Mais aujourd'hui, <span style="color: #7C3AED; font-weight: 600;">il se pourrait qu'ils puissent se transformer</span>. Non pas disparaître, mais évoluer vers quelque chose de plus ouvert, de plus souple, de plus aligné avec ce que tu cherches <em>vraiment</em>.
+        </p>
+
+        <p>
+          Tu as déjà fait la moitié du chemin en nommant ces mécanismes. L'autre moitié, c'est de te permettre d'expérimenter autrement. Pas tout d'un coup. Pas de manière héroïque. Mais progressivement, en observant ce qui se passe quand tu choisis différemment. Quand tu choisis la <strong>présence</strong> plutôt que l'inaccessible. Quand tu choisis la <strong>vigilance ajustée</strong> plutôt que la surveillance permanente. Quand tu choisis l'<strong>interdépendance choisie</strong> plutôt que l'indépendance protectrice absolue.
+        </p>
+
+        <p>
+          Tu as cette lucidité rare, cette capacité d'introspection, cette spiritualité ancrée. Ce sont des ressources précieuses. Elles ne disparaîtront pas. Elles peuvent simplement te servir autrement — non plus pour te protéger de tout le monde, mais pour choisir consciemment la bonne personne et t'ouvrir à elle.
+        </p>
+
+        <p>
+          Qu'Allah te facilite ce chemin. Qu'Il mette sur ta route quelqu'un qui honore ta valeur, qui respecte ton indépendance tout en te permettant de te reposer sur lui, qui soit présent quand tu en as besoin, et qui partage avec toi cette quête spirituelle qui t'anime. Qu'Il apaise tes peurs et transforme tes protections en ouvertures. In sha Allah.
+        </p>
+
+        <a
+          href="https://wa.me/33612961690?text=%E2%9C%A8%20J%E2%80%99ai%20bien%20termin%C3%A9%20de%20lire%20mon%20compte-rendu%20%E2%9C%A8"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="conclusion-button"
+        >
+          Accéder à l'étape finale
+        </a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>
+        © 2025 My Muqabala. Tous droits réservés.
+      </p>
+    </footer>
+  </div>
+
+  <!-- Script pour les animations -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Observation des éléments pour animation à l'affichage
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -30px 0px'
+      });
+
+      // Sélectionne tous les éléments avec la classe 'reveal'
+      document.querySelectorAll('.reveal').forEach(el => {
+        observer.observe(el);
+      });
+
+      // Pour les navigateurs qui ne supportent pas IntersectionObserver
+      if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.reveal').forEach(el => {
+          el.classList.add('is-visible');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+

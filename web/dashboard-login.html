@@ -92,7 +92,7 @@
         }
     </style>
 </head>
-<body data-schema="v2">
+<body>
     <div class="login-container">
         <div class="login-card">
             <h1 class="login-logo">My Muqabala</h1>
@@ -100,15 +100,15 @@
 
             <form id="login-form" autocomplete="off">
                 <div class="login-field">
-                    <label class="login-label" for="client-tel">Votre numéro de téléphone</label>
-                    <input class="login-input" id="client-tel" name="client-tel-field" type="tel" placeholder="+33 6 12 34 56 78" required autocomplete="tel" style="letter-spacing:0.03em;text-align:left">
+                    <label class="login-label" for="client-tel">Votre numero de telephone</label>
+                    <input class="login-input" id="client-tel" type="tel" placeholder="+33 6 12 34 56 78" required style="letter-spacing:0.03em;text-align:left">
                 </div>
                 <div class="login-field">
-                    <label class="login-label" for="access-code">Votre code d'accès</label>
-                    <input class="login-input" id="access-code" name="client-access-code" type="text" inputmode="numeric" maxlength="6" placeholder="------" required autocomplete="one-time-code">
+                    <label class="login-label" for="access-code">Votre code d'acces</label>
+                    <input class="login-input" id="access-code" type="text" inputmode="numeric" maxlength="6" placeholder="------" required>
                 </div>
                 <button class="login-btn" type="submit" id="login-btn">
-                    <span class="btn-text">Accéder à mon espace</span>
+                    <span class="btn-text">Acceder a mon espace</span>
                     <span class="spinner"></span>
                 </button>
                 <p class="login-error" id="login-error"></p>
@@ -116,7 +116,7 @@
 
             <div class="login-footer">
                 <strong>My Muqabala</strong>
-                <p style="margin-top:0.25rem">Accompagnement thérapeutique musulman</p>
+                <p style="margin-top:0.25rem">Accompagnement therapeutique musulman</p>
             </div>
         </div>
     </div>
@@ -131,13 +131,6 @@
         const btn = document.getElementById('login-btn');
         const errorEl = document.getElementById('login-error');
 
-        // Show session expired message if redirected by timeout
-        if (new URLSearchParams(window.location.search).get('expired') === '1') {
-            errorEl.textContent = 'Votre session a expiré par inactivité. Veuillez vous reconnecter.';
-            errorEl.style.color = '#f59e0b';
-            window.history.replaceState({}, '', window.location.pathname);
-        }
-
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             errorEl.textContent = '';
@@ -148,7 +141,7 @@
             const code = codeInput.value.trim();
 
             if (!tel || tel.length < 8 || !code || code.length < 4) {
-                errorEl.textContent = 'Veuillez remplir votre téléphone et votre code d\'accès.';
+                errorEl.textContent = 'Veuillez remplir votre telephone et votre code d\'acces.';
                 if (!tel || tel.length < 8) telInput.classList.add('error');
                 if (!code || code.length < 4) codeInput.classList.add('error');
                 return;
@@ -164,7 +157,7 @@
                 });
 
                 if (error || !data) {
-                    errorEl.textContent = 'Téléphone ou code incorrect.';
+                    errorEl.textContent = 'Telephone ou code incorrect.';
                     telInput.classList.add('error');
                     codeInput.classList.add('error');
                     btn.classList.remove('loading');
@@ -181,7 +174,7 @@
                 window.location.href = 'dashboard-test.html?tel=' + encodeURIComponent(tel) + '&code=' + encodeURIComponent(code);
 
             } catch (err) {
-                errorEl.textContent = 'Erreur de connexion. Réessayez.';
+                errorEl.textContent = 'Erreur de connexion. Reessayez.';
                 btn.classList.remove('loading');
                 btn.disabled = false;
             }

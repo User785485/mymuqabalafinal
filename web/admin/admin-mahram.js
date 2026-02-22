@@ -23,7 +23,11 @@ const MahramManager = {
         }
 
         try {
-            var filter = { type: 'messaging', id: { $autocomplete: 'coaching-' } };
+            // Query all messaging channels where the admin/coach is a member.
+            // Note: $autocomplete is not supported on the "id" field in Stream Chat,
+            // so we filter by membership instead — this returns all coaching channels
+            // the admin was added to via initiate-coaching-chat.
+            var filter = { type: 'messaging', members: { $in: [client.userID] } };
             var sort = { last_message_at: -1 };
             this.channels = await client.queryChannels(filter, sort, { limit: 30, watch: true });
         } catch (err) {

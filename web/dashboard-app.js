@@ -258,7 +258,46 @@ function applyServerProgress(serverStore) {
 
 /* ─── Form Completion Auto-Detection ─── */
 const FORM_CHECKBOX_MAP = {
-    'f1_express_v2': 'exp1'
+    // Express
+    'f1_express_v2': 'exp1',
+    'f2_express': 'exp2',
+    'f3_express': 'exp3',
+    'f4_express': 'exp4',
+    // Scenarios
+    's1_etincelle': 's1',
+    's2_rythme': 's2',
+    's3_deux_mondes': 's3',
+    's4_test_invisible': 's4',
+    's5_danse_pouvoir': 's5',
+    's6_echo_passe': 's6',
+    's7_triangle_sacre': 's7',
+    's8_miroir_derangeant': 's8',
+    's9_promesse_floue': 's9',
+    's10_futur_se_dessine': 's10',
+    // Germination
+    'f1_1_espace_sacre': 'f1_1',
+    'f1_2_exploration': 'f1_2',
+    'f1_3_fil_conducteur': 'f1_3',
+    'f1_4_parcours': 'f1_4',
+    'f1_5_transformation': 'f1_5',
+    'f1_6_boussole_interieure': 'f1_6',
+    // Racines
+    'f2_1_fondations': 'f2_1',
+    'f2_2_heritage': 'f2_2',
+    'f2_3_echos': 'f2_3',
+    'f2_4_attachement': 'f2_4',
+    'f2_5_corps_raconte': 'f2_5',
+    // Patterns
+    'f3_1_debut_relations': 'f3_1',
+    'f3_2_saisons': 'f3_2',
+    'f3_3_racines_entrelacees': 'f3_3',
+    'f3_4_forces_creativite': 'f3_4',
+    // Valeurs
+    'f4_1_spiritualite': 'f4_1',
+    'f4_2_jardin_secret': 'f4_2',
+    'f4_3_boussole_coeur': 'f4_3',
+    // Bilan Final
+    'f_final_bilan': 'f_final'
 };
 
 async function checkFormCompletions() {
@@ -288,109 +327,8 @@ async function checkFormCompletions() {
     scheduleProgressSave();
 }
 
-/* ─── Theme Toggle (Dark Mode) ─── */
-const ThemeManager = {
-    STORAGE_KEY: 'mymuqabala_theme',
-
-    init() {
-        const saved = localStorage.getItem(this.STORAGE_KEY);
-        if (saved) {
-            document.documentElement.setAttribute('data-theme', saved);
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        }
-        this._updateIcon();
-
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (!localStorage.getItem(this.STORAGE_KEY)) {
-                document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-                this._updateIcon();
-            }
-        });
-    },
-
-    toggle() {
-        const current = document.documentElement.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem(this.STORAGE_KEY, next);
-        this._updateIcon();
-    },
-
-    _updateIcon() {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        document.querySelectorAll('.theme-toggle').forEach(btn => {
-            btn.textContent = isDark ? '\u2600\uFE0F' : '\uD83C\uDF19';
-            btn.setAttribute('aria-label', isDark ? 'Mode clair' : 'Mode sombre');
-        });
-    }
-};
-
-/* ─── Session Timeout (30 minutes inactivity) ─── */
-const SessionTimeout = {
-    TIMEOUT_MS: 30 * 60 * 1000,
-    WARNING_MS: 28 * 60 * 1000,
-    CHECK_INTERVAL_MS: 60 * 1000,
-    _lastActivity: Date.now(),
-    _timer: null,
-    _warningShown: false,
-
-    init() {
-        if (!sessionStorage.getItem('mm_telephone')) return;
-        this._lastActivity = Date.now();
-
-        const self = this;
-        const resetActivity = function() {
-            self._lastActivity = Date.now();
-            if (self._warningShown) self._dismissWarning();
-        };
-
-        ['mousemove', 'click', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-            document.addEventListener(evt, resetActivity, { passive: true });
-        });
-
-        this._timer = setInterval(function() { self._check(); }, this.CHECK_INTERVAL_MS);
-    },
-
-    _check() {
-        var elapsed = Date.now() - this._lastActivity;
-        if (elapsed >= this.TIMEOUT_MS) {
-            this._logout();
-        } else if (elapsed >= this.WARNING_MS && !this._warningShown) {
-            this._showWarning();
-        }
-    },
-
-    _showWarning() {
-        this._warningShown = true;
-        var remaining = Math.ceil((this.TIMEOUT_MS - (Date.now() - this._lastActivity)) / 60000);
-        var banner = document.createElement('div');
-        banner.id = 'session-timeout-warning';
-        banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:10000;background:#fef3cd;border-bottom:2px solid #c9a962;padding:0.75rem 1rem;text-align:center;font-size:0.9rem;color:#856404;display:flex;align-items:center;justify-content:center;gap:0.5rem;';
-        banner.innerHTML = 'Votre session expire dans ' + remaining + ' minute(s) par inactivit\u00e9. '
-            + '<button onclick="SessionTimeout._dismissWarning()" style="background:#7c3aed;color:#fff;border:none;padding:0.3rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.8rem">Je suis l\u00e0</button>';
-        document.body.prepend(banner);
-    },
-
-    _dismissWarning() {
-        this._warningShown = false;
-        var banner = document.getElementById('session-timeout-warning');
-        if (banner) banner.remove();
-    },
-
-    _logout() {
-        clearInterval(this._timer);
-        sessionStorage.removeItem('mm_telephone');
-        sessionStorage.removeItem('mm_access_code');
-        sessionStorage.removeItem('mm_uuid');
-        window.location.href = 'dashboard-login.html?expired=1';
-    }
-};
-
 /* ─── Init ─── */
 document.addEventListener('DOMContentLoaded', () => {
-    ThemeManager.init();
-    SessionTimeout.init();
     initCheckboxes();
     initTooltips();
     initTabs();

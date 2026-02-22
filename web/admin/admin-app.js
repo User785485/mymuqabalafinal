@@ -659,9 +659,11 @@ const AdminApp = {
         if (mahramEl) mahramEl.style.display = name === 'mahram' ? 'block' : 'none';
         var documentsEl = document.getElementById('section-documents');
         if (documentsEl) documentsEl.style.display = name === 'documents' ? 'block' : 'none';
+        var melEl = document.getElementById('section-mise-en-ligne');
+        if (melEl) melEl.style.display = name === 'mise-en-ligne' ? 'block' : 'none';
 
         document.querySelectorAll('.admin-nav-item').forEach(n => n.classList.remove('active'));
-        var navMap = { 'clients': 'nav-clients', 'new-client': 'nav-nouveau', 'events': 'nav-events', 'invitations': 'nav-invitations', 'matching': 'nav-matching', 'exports': 'nav-exports', 'mahram': 'nav-mahram', 'documents': 'nav-documents' };
+        var navMap = { 'clients': 'nav-clients', 'new-client': 'nav-nouveau', 'events': 'nav-events', 'invitations': 'nav-invitations', 'matching': 'nav-matching', 'exports': 'nav-exports', 'mahram': 'nav-mahram', 'documents': 'nav-documents', 'mise-en-ligne': 'nav-mise-en-ligne' };
         var navId = navMap[name] || '';
         if (navId) document.getElementById(navId)?.classList.add('active');
 
@@ -674,6 +676,7 @@ const AdminApp = {
             if (typeof AdminChatManager !== 'undefined') AdminChatManager.initialize();
         }
         if (name === 'documents' && typeof DocDistribution !== 'undefined') { DocDistribution.init(); DocDistribution.populateClientSelect(); }
+        if (name === 'mise-en-ligne' && typeof MiseEnLigneManager !== 'undefined') MiseEnLigneManager.init();
     },
 
     showNewClientForm() {
@@ -1154,6 +1157,52 @@ const AdminApp = {
         if (archiveStatuts.includes(statut)) return 'archive';
         if (pauseStatuts.includes(statut)) return 'pause';
         return 'actif';
+    },
+
+    /* ─── EXPORT CREDENTIALS CSV ─── */
+    async exportCredentials() {
+        const sinceInput = document.getElementById('export-credentials-since');
+        const since = sinceInput ? sinceInput.value : '';
+
+        this.toast('G\u00e9n\u00e9ration du CSV...', 'info');
+
+        let query = sb.from('profiles')
+            .select('telephone, email, prenom, access_code, created_at, is_high_ticket')
+            .order('created_at', { ascending: false });
+
+        if (since) {
+            query = query.gte('created_at', since + 'T00:00:00');
+        }
+
+        const { data, error } = await query;
+        if (error) { this.toast('Erreur: ' + error.message, 'error'); return; }
+        if (!data || data.length === 0) { this.toast('Aucun profil trouv\u00e9', 'info'); return; }
+
+        // Build CSV
+        const sep = ';';
+        let csv = ['Telephone', 'Email', 'Prenom', 'Code_acces', 'Date_inscription', 'High_Ticket'].join(sep) + '\n';
+        for (const row of data) {
+            csv += [
+                row.telephone || '',
+                row.email || '',
+                row.prenom || '',
+                row.access_code || '',
+                row.created_at ? row.created_at.substring(0, 10) : '',
+                row.is_high_ticket ? 'Oui' : 'Non',
+            ].join(sep) + '\n';
+        }
+
+        // Download blob
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const ts = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+        a.download = 'identifiants-' + ts + '.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+
+        this.toast(data.length + ' profils export\u00e9s', 'success');
     },
 
     /* ─── OPEN CHAT FOR SELECTED CLIENT ─── */

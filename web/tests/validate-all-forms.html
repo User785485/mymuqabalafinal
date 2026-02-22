@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Schema Validation | My Muqabala</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: #FDFBF7; color: #4A3B6E; padding: 24px; }
+        h1 { font-size: 1.4rem; margin-bottom: 8px; }
+        .subtitle { color: #6B5A9C; font-size: 0.85rem; margin-bottom: 24px; }
+        .summary { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+        .summary-card { padding: 16px 24px; border-radius: 12px; min-width: 120px; text-align: center; }
+        .summary-card .count { font-size: 2rem; font-weight: 700; }
+        .summary-card .label { font-size: 0.75rem; opacity: 0.7; }
+        .card-ok { background: rgba(125, 154, 140, 0.1); color: #4A8B6B; }
+        .card-warn { background: rgba(212, 163, 115, 0.1); color: #B8862E; }
+        .card-fail { background: rgba(192, 57, 43, 0.1); color: #C0392B; }
+        .card-total { background: rgba(107, 90, 156, 0.1); color: #6B5A9C; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { text-align: left; padding: 10px 12px; background: rgba(107, 90, 156, 0.06); border-bottom: 2px solid rgba(107, 90, 156, 0.1); }
+        td { padding: 10px 12px; border-bottom: 1px solid rgba(107, 90, 156, 0.08); }
+        tr:hover td { background: rgba(212, 86, 156, 0.03); }
+        .status-ok { color: #4A8B6B; font-weight: 600; }
+        .status-warn { color: #B8862E; font-weight: 600; }
+        .status-fail { color: #C0392B; font-weight: 600; }
+        .details { font-size: 0.75rem; color: #6B5A9C; max-width: 400px; }
+        .details li { margin-left: 16px; margin-top: 2px; }
+        #loading { text-align: center; padding: 40px; color: #B8AECC; }
+        .progress-bar { height: 3px; background: rgba(107, 90, 156, 0.1); border-radius: 2px; margin-bottom: 20px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #D4569C, #D4A373); border-radius: 2px; transition: width 0.3s; width: 0%; }
+    </style>
+</head>
+<body>
+    <h1>Form Schema Validation</h1>
+    <p class="subtitle">Validates all 33 form definitions against the engine schema</p>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <div class="summary" id="summary" style="display:none"></div>
+    <div id="loading">Loading forms...</div>
+    <table id="results" style="display:none">
+        <thead>
+            <tr>
+                <th>Form</th>
+                <th>ID</th>
+                <th>Steps</th>
+                <th>Variables</th>
+                <th>Errors</th>
+                <th>Warnings</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody id="results-body"></tbody>
+    </table>
+
+    <script src="../chat-schema-validator.js"></script>
+    <script>
+        // All form files to validate
+        const FORM_FILES = [
+            'f1-express',
+            'f2-express', 'f3-express', 'f4-express',
+            's1-etincelle', 's2-rythme', 's3-deux-mondes', 's4-test-invisible',
+            's5-danse-pouvoir', 's6-echo-passe', 's7-triangle-sacre', 's8-miroir-derangeant',
+            's9-promesse-floue', 's10-futur-se-dessine',
+            'f1-1-espace-sacre', 'f1-2-exploration', 'f1-3-fil-conducteur',
+            'f1-4-parcours', 'f1-5-transformation', 'f1-6-boussole-interieure',
+            'f2-1-fondations', 'f2-2-heritage', 'f2-3-echos',
+            'f2-4-attachement', 'f2-5-corps-raconte',
+            'f3-1-debut-relations', 'f3-2-saisons', 'f3-3-racines-entrelacees', 'f3-4-forces-creativite',
+            'f4-1-spiritualite', 'f4-2-jardin-secret', 'f4-3-boussole-coeur',
+            'f-final-bilan'
+        ];
+
+        window.FORM_REGISTRY = {};
+
+        async function loadForm(id) {
+            return new Promise((resolve) => {
+                const script = document.createElement('script');
+                script.src = '../forms/' + id + '.js';
+                script.onload = () => resolve(true);
+                script.onerror = () => resolve(false);
+                document.head.appendChild(script);
+            });
+        }
+
+        async function runValidation() {
+            const tbody = document.getElementById('results-body');
+            const progress = document.getElementById('progress');
+            let okCount = 0, warnCount = 0, failCount = 0, missingCount = 0;
+
+            for (let i = 0; i < FORM_FILES.length; i++) {
+                const formId = FORM_FILES[i];
+                progress.style.width = Math.round(((i + 1) / FORM_FILES.length) * 100) + '%';
+
+                const loaded = await loadForm(formId);
+                const form = window.FORM_REGISTRY[formId];
+
+                const row = document.createElement('tr');
+
+                if (!loaded || !form) {
+                    missingCount++;
+                    row.innerHTML =
+                        '<td>' + formId + '</td>' +
+                        '<td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>' +
+                        '<td class="status-warn">MISSING</td>' +
+                        '<td class="details">File not found or not yet created</td>';
+                    tbody.appendChild(row);
+                    continue;
+                }
+
+                const result = ChatSchemaValidator.validate(form);
+                const errCount = result.errors.length;
+                const wCount = result.warnings.length;
+                const stepCount = form.steps ? form.steps.length : 0;
+                const varCount = form.variables ? form.variables.length : 0;
+
+                let status, statusClass;
+                if (errCount > 0) { status = 'FAIL'; statusClass = 'status-fail'; failCount++; }
+                else if (wCount > 0) { status = 'WARN'; statusClass = 'status-warn'; warnCount++; }
+                else { status = 'OK'; statusClass = 'status-ok'; okCount++; }
+
+                let details = '';
+                if (errCount > 0) {
+                    details += '<ul>' + result.errors.map(e => '<li style="color:#C0392B">' + e + '</li>').join('') + '</ul>';
+                }
+                if (wCount > 0) {
+                    details += '<ul>' + result.warnings.map(w => '<li>' + w + '</li>').join('') + '</ul>';
+                }
+
+                row.innerHTML =
+                    '<td><strong>' + (form.title || formId) + '</strong></td>' +
+                    '<td>' + form.id + '</td>' +
+                    '<td>' + stepCount + '</td>' +
+                    '<td>' + varCount + '</td>' +
+                    '<td>' + errCount + '</td>' +
+                    '<td>' + wCount + '</td>' +
+                    '<td class="' + statusClass + '">' + status + '</td>' +
+                    '<td class="details">' + details + '</td>';
+                tbody.appendChild(row);
+            }
+
+            // Show summary
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('results').style.display = 'table';
+            document.getElementById('summary').style.display = 'flex';
+            document.getElementById('summary').innerHTML =
+                '<div class="summary-card card-total"><div class="count">' + FORM_FILES.length + '</div><div class="label">Total</div></div>' +
+                '<div class="summary-card card-ok"><div class="count">' + okCount + '</div><div class="label">OK</div></div>' +
+                '<div class="summary-card card-warn"><div class="count">' + (warnCount + missingCount) + '</div><div class="label">Warnings</div></div>' +
+                '<div class="summary-card card-fail"><div class="count">' + failCount + '</div><div class="label">Errors</div></div>';
+        }
+
+        runValidation();
+    </script>
+</body>
+</html>

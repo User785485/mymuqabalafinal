@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://eawmathizvtxdtdgrwsg.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://eawmathizvtxdtdgrwsg.supabase.co data: blob:; media-src blob:; connect-src 'self' https://eawmathizvtxdtdgrwsg.supabase.co; worker-src blob:">
+    <title>Questionnaire | My Muqabala</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@400;500;600&family=Amiri:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="chat-luxury-theme.css">
+    <link rel="stylesheet" href="chat-styles.css">
+    <meta name="theme-color" content="#FDFBF7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body class="chat-loading">
+
+    <!-- Progress bar -->
+    <div class="chat-progress">
+        <div class="chat-progress-fill" id="chat-progress-fill"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="chat-header">
+        <!-- Back button -->
+        <button class="chat-header-back" id="chat-back-step-btn" title="Question pr&eacute;c&eacute;dente" style="display:none">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="chat-header-avatar" id="chat-header-avatar">M</div>
+        <div class="chat-header-info">
+            <div class="chat-header-name" id="chat-header-name">Mohamed</div>
+            <div class="chat-header-title" id="chat-header-title">Questionnaire</div>
+        </div>
+        <span class="chat-progress-text" id="chat-progress-text"></span>
+        <button class="chat-header-close" id="chat-close-btn" title="Quitter">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    </header>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="chat-messages">
+        <div class="chat-messages-inner" id="chat-messages-inner"></div>
+    </div>
+
+    <!-- Input area -->
+    <div class="chat-input-area" id="chat-input-area">
+        <div class="chat-input-inner" id="chat-input-inner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="supabase-config.js"></script>
+    <script src="chat-persistence.js"></script>
+    <script src="chat-schema-validator.js"></script>
+    <script src="chat-engine.js"></script>
+    <script>
+        // Close button — signal Flutter or navigate back
+        document.getElementById('chat-close-btn').addEventListener('click', function() {
+            var inApp = window.FlutterBridge || window.parent !== window;
+
+            if (ChatEngine.currentStep > 0 && ChatEngine.form) {
+                if (!confirm('Ta progression est sauvegard\u00e9e. Quitter le questionnaire ?')) return;
+            }
+
+            if (inApp) {
+                ChatEngine._signalFlutter('close');
+            } else {
+                var tel = sessionStorage.getItem('mm_telephone') || '';
+                var code = sessionStorage.getItem('mm_access_code') || '';
+                var url = 'dashboard-formulaires.html';
+                if (tel && code) url += '?tel=' + encodeURIComponent(tel) + '&code=' + encodeURIComponent(code);
+                window.location.href = url;
+            }
+        });
+    </script>
+</body>
+</html>

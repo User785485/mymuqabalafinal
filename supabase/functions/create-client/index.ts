@@ -61,6 +61,17 @@ function generateSecurePassword(): string {
 }
 
 /**
+ * Generate a random 6-character uppercase alphanumeric code.
+ * Used for client_code (login identifier) and access_code (password).
+ */
+function generateCode6(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no I, O, 0, 1
+  const arr = new Uint8Array(6);
+  crypto.getRandomValues(arr);
+  return Array.from(arr, (b) => chars[b % chars.length]).join("");
+}
+
+/**
  * Convert a phone number to a fake email address for Supabase Auth.
  * Strips all non-digit characters except leading +.
  * Example: +33 6 10 00 00 00 → 33610000000@mymuqabala.app
@@ -186,6 +197,9 @@ Deno.serve(async (req: Request) => {
     // ── Create profiles entry ──
     // NOTE: Password is NOT stored in the database for security.
     // It is only returned in the response for the admin to share.
+    const clientCode = generateCode6();
+    const accessCode = generateCode6();
+
     const { error: profileInsertError } = await supabaseAdmin
       .from("profiles")
       .insert({
@@ -199,6 +213,8 @@ Deno.serve(async (req: Request) => {
         ville: "Non renseignée", // placeholder
         role: "participant",
         statut_parcours: "inscription",
+        client_code: clientCode,
+        access_code: accessCode,
       });
 
     if (profileInsertError) {
@@ -213,6 +229,8 @@ Deno.serve(async (req: Request) => {
         success: true,
         user_id: newUserId,
         password: generatedPassword,
+        client_code: clientCode,
+        access_code: accessCode,
       },
       201,
       CORS_HEADERS

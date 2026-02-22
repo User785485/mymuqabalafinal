@@ -6,23 +6,24 @@
 
 const F1_EXPRESS = {
     id: 'f1_express_v2',
+    version: 1,
     title: "L'Empreinte — Les Racines de Ton C\u0153ur",
     icon: '\uD83C\uDF31',
     checkboxId: 'exp1',
     theme: {
-        background: '#FAF9F6',
-        botBubbleBg: '#F8F7F4',
-        botBubbleText: '#2F4F3F',
-        botBubbleBorder: '#A8D5BA',
-        userBubbleBg: '#6B8E7F',
-        userBubbleText: '#FAF9F6',
-        buttonBg: '#6B8E7F',
-        buttonText: '#FAF9F6',
-        inputBg: '#FAF9F6',
-        inputText: '#2F4F3F',
-        inputBorder: '#A8D5BA',
-        progressFill: '#A8D5BA',
-        progressBg: '#F5F5F5'
+        background: '#FDFBF7',
+        botBubbleBg: 'rgba(253, 251, 247, 0.9)',
+        botBubbleText: '#4A3B6E',
+        botBubbleBorder: 'rgba(212, 86, 156, 0.15)',
+        userBubbleBg: '#6B5A9C',
+        userBubbleText: '#FDFBF7',
+        buttonBg: '#D4569C',
+        buttonText: '#FDFBF7',
+        inputBg: '#FDFBF7',
+        inputText: '#4A3B6E',
+        inputBorder: 'rgba(107, 90, 156, 0.25)',
+        progressFill: 'linear-gradient(90deg, #D4569C, #D4A373)',
+        progressBg: 'rgba(107, 90, 156, 0.1)'
     },
     bot: {
         name: 'Mohamed',
@@ -51,7 +52,7 @@ const F1_EXPRESS = {
            SECTION 0 : ACCUEIL
         ════════════════════════════════════ */
 
-        { type: 'image', url: 'https://s3.typebot.io/public/workspaces/cm3ydmyqn005xmp0hqrxnxwif/typebots/cm6b7a3u6001smp0h8zzv9g5r/blocks/s7v7wuypxf4bi6h78ilqvh3j?v=1738439683882' },
+        { type: 'image', url: 'forms/assets/f1-express/f1-express-hero.svg', alt: "L'Empreinte — Les Racines de Ton C\u0153ur" },
 
         { type: 'message', content: [{ bold: true, text: 'Bismillah.' }] },
 

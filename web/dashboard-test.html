@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil | Mon Espace My Muqabala</title>
     <link rel="stylesheet" href="dashboard-styles.css">
-    <link rel="stylesheet" href="chat-bubble.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 </head>
 <body>
@@ -41,11 +40,7 @@
                 <button class="hamburger" onclick="toggleSidebar()">☰</button>
                 <div><div class="header-greeting">Bienvenue, <em></em></div><div class="header-date"></div></div>
             </div>
-            <div class="header-right">
-                <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Mode sombre"></button>
-                <a class="notif-bell" href="dashboard-notifications.html"><span class="notif-badge" id="notif-count"></span>🔔</a>
-                <a class="header-btn" title="Aide" href="#">❓</a>
-            </div>
+            <div class="header-right"><a class="header-btn" title="Aide" href="#">❓</a></div>
         </header>
         <div class="content">
             <div class="welcome-banner fade-up">
@@ -61,96 +56,13 @@
                     </div>
                 </div>
             </div>
-            <!-- ═══ Phase Progression Indicator ═══ -->
-            <div class="phase-progress fade-up" id="phase-widget" data-phase="1">
-                <div class="phase-progress-step active">
-                    <div class="phase-progress-dot">1</div>
-                    <div class="phase-progress-label">Exploration</div>
-                </div>
-                <div class="phase-progress-step pending">
-                    <div class="phase-progress-dot">2</div>
-                    <div class="phase-progress-label">Préparation</div>
-                </div>
-                <div class="phase-progress-step pending">
-                    <div class="phase-progress-dot">3</div>
-                    <div class="phase-progress-label">Rencontres</div>
-                </div>
-                <div class="phase-progress-step pending">
-                    <div class="phase-progress-dot">4</div>
-                    <div class="phase-progress-label">Engagement</div>
-                </div>
-            </div>
-
-            <!-- ═══ 2-Column Widget Grid ═══ -->
-            <div class="grid-2" style="margin-bottom: 1.5rem;">
-                <!-- Left column -->
-                <div style="display:flex;flex-direction:column;gap:1.25rem;">
-                    <!-- Event Countdown Widget -->
-                    <div class="countdown-widget fade-up" id="countdown-widget">
-                        <div class="countdown-icon">📅</div>
-                        <div class="countdown-info">
-                            <div class="countdown-label">Prochain événement</div>
-                            <div class="countdown-title" id="countdown-title">Aucun événement prévu</div>
-                            <div class="countdown-timer" id="countdown-timer">
-                                <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-unit-label">Jours</div></div>
-                                <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-unit-label">Heures</div></div>
-                                <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-unit-label">Min</div></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Active Match Card -->
-                    <div class="match-card fade-up" id="match-widget" style="display:none;">
-                        <div class="match-avatar blurred" id="match-avatar"><span class="match-avatar-initial" id="match-initial">?</span></div>
-                        <div class="match-info">
-                            <div class="match-name" id="match-name" style="filter:blur(4px);">---</div>
-                            <div class="match-meta" id="match-meta"></div>
-                            <div class="match-score-bar"><div class="match-score-fill" id="match-score-fill" style="width:0%"></div></div>
-                            <div class="match-score-text" id="match-score-text">Compatibilité : --%</div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Right column -->
-                <div style="display:flex;flex-direction:column;gap:1.25rem;">
-                    <!-- Coach Message Widget -->
-                    <div class="coach-widget fade-up" id="coach-widget">
-                        <div class="coach-avatar">🤝</div>
-                        <div class="coach-content">
-                            <div class="coach-label">Ton accompagnant</div>
-                            <div class="coach-message" id="coach-message">Ton accompagnant te contactera bientôt.</div>
-                            <div class="coach-date" id="coach-date"></div>
-                        </div>
-                    </div>
-                    <!-- Pending Actions Tracker -->
-                    <div class="actions-tracker fade-up" id="actions-widget">
-                        <div class="actions-tracker-title">📌 Actions en attente <span class="actions-tracker-count" id="actions-count">3</span></div>
-                        <div id="actions-list">
-                            <a class="action-item" href="dashboard-formulaires.html" style="text-decoration:none;">
-                                <div class="action-icon urgent">📝</div>
-                                <div class="action-text">Compléter ton profil</div>
-                                <span class="action-cta">Commencer →</span>
-                            </a>
-                            <a class="action-item" href="dashboard-ressources.html" style="text-decoration:none;">
-                                <div class="action-icon info">🎓</div>
-                                <div class="action-text">Découvrir les ressources</div>
-                                <span class="action-cta">Explorer →</span>
-                            </a>
-                            <a class="action-item" href="dashboard-formulaires.html" style="text-decoration:none;">
-                                <div class="action-icon normal">🔍</div>
-                                <div class="action-text">Remplir le formulaire express</div>
-                                <span class="action-cta">Remplir →</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="grid-4" style="margin-bottom: 2rem;">
                 <a class="card fade-up fade-up-1" href="dashboard-ressources.html" style="text-decoration:none;color:inherit">
                     <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
                         <div class="page-title-icon purple">🎓</div>
                         <div><div style="font-weight:600;color:var(--ink)">Ressources</div><div style="font-size:0.78rem;color:var(--ink-muted)">48 semaines de contenu</div></div>
                     </div>
-                    <p style="font-size:0.85rem;color:var(--ink-muted)">Vidéos, audios et guides écrits pour t'accompagner à chaque étape.</p>
+                    <p style="font-size:0.85rem;color:var(--ink-muted)">Videos, audios et guides écrits pour t'accompagner à chaque étape.</p>
                 </a>
                 <a class="card fade-up fade-up-2" href="dashboard-formulaires.html" style="text-decoration:none;color:inherit">
                     <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
@@ -162,7 +74,7 @@
                 <a class="card fade-up fade-up-3" href="dashboard-cartographie.html" style="text-decoration:none;color:inherit">
                     <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
                         <div class="page-title-icon rose">🧭</div>
-                        <div><div style="font-weight:600;color:var(--ink)">Cartographie</div><div style="font-size:0.78rem"><span class="status-badge prete" style="padding:0.15rem 0.6rem;font-size:0.68rem"><span class="status-dot"></span> Prête</span></div></div>
+                        <div><div style="font-weight:600;color:var(--ink)">Cartographie</div><div style="font-size:0.78rem"><span class="status-badge prete" style="padding:0.15rem 0.6rem;font-size:0.68rem"><span class="status-dot"></span> Prete</span></div></div>
                     </div>
                     <p style="font-size:0.85rem;color:var(--ink-muted)">21 documents personnalisés façonnés par ce que tu as exploré en toi.</p>
                 </a>
@@ -187,7 +99,5 @@
 <script src="supabase-config.js"></script>
 <script src="dashboard-data.js"></script>
 <script src="dashboard-app.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/stream-chat@8.40.0/dist/browser.full-bundle.min.js"></script>
-<script src="chat-bubble.js"></script>
 </body>
 </html>

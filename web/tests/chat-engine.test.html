@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Engine — Unit Tests</title>
+    <style>
+        body { font-family: monospace; background: #1a1a2e; color: #eee; padding: 20px; }
+        h1 { color: #A8D5BA; font-size: 1.2rem; }
+        .suite { margin: 16px 0; padding: 12px; background: #16213e; border-radius: 8px; }
+        .suite-name { font-weight: bold; color: #7ec8e3; margin-bottom: 8px; }
+        .pass { color: #4caf50; }
+        .fail { color: #f44336; }
+        .test { margin: 4px 0 4px 16px; font-size: 0.9rem; }
+        .summary { margin-top: 20px; padding: 12px; border-radius: 8px; font-weight: bold; }
+        .summary.all-pass { background: #1b5e20; }
+        .summary.has-fail { background: #b71c1c; }
+    </style>
+</head>
+<body>
+    <h1>Chat Engine — Unit Tests</h1>
+    <div id="results"></div>
+    <div id="summary"></div>
+
+    <!-- Load engine (we only need the pure functions) -->
+    <script>
+        // Minimal mock for tests
+        window.FORM_REGISTRY = {};
+    </script>
+    <script src="../forms/f1-express.js"></script>
+    <script src="../chat-engine.js"></script>
+    <script src="../chat-schema-validator.js"></script>
+    <script>
+        // Prevent auto-init (already ran via DOMContentLoaded)
+        // Tests run after page load
+
+        const results = document.getElementById('results');
+        const summaryEl = document.getElementById('summary');
+        let passed = 0;
+        let failed = 0;
+        let currentSuite = null;
+
+        function suite(name) {
+            const div = document.createElement('div');
+            div.className = 'suite';
+            const title = document.createElement('div');
+            title.className = 'suite-name';
+            title.textContent = name;
+            div.appendChild(title);
+            results.appendChild(div);
+            currentSuite = div;
+        }
+
+        function test(name, fn) {
+            const div = document.createElement('div');
+            div.className = 'test';
+            try {
+                fn();
+                div.classList.add('pass');
+                div.textContent = '\u2705 ' + name;
+                passed++;
+            } catch (e) {
+                div.classList.add('fail');
+                div.textContent = '\u274C ' + name + ' — ' + e.message;
+                failed++;
+            }
+            currentSuite.appendChild(div);
+        }
+
+        function assert(condition, msg) {
+            if (!condition) throw new Error(msg || 'Assertion failed');
+        }
+
+        function assertEqual(actual, expected, msg) {
+            if (actual !== expected) {
+                throw new Error((msg || '') + ' Expected: ' + JSON.stringify(expected) + ', Got: ' + JSON.stringify(actual));
+            }
+        }
+
+        function assertDeepEqual(actual, expected, msg) {
+            if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                throw new Error((msg || '') + ' Expected: ' + JSON.stringify(expected) + ', Got: ' + JSON.stringify(actual));
+            }
+        }
+
+        // ══════════════════════════════════
+        // TEST SUITES
+        // ══════════════════════════════════
+
+        suite('_escapeHtml');
+        test('escapes angle brackets', () => {
+            assertEqual(ChatEngine._escapeHtml('<script>alert("xss")</script>'), '&lt;script&gt;alert("xss")&lt;/script&gt;');
+        });
+        test('escapes ampersand', () => {
+            assertEqual(ChatEngine._escapeHtml('a & b'), 'a &amp; b');
+        });
+        test('preserves normal text', () => {
+            assertEqual(ChatEngine._escapeHtml('Hello World'), 'Hello World');
+        });
+        test('handles empty string', () => {
+            assertEqual(ChatEngine._escapeHtml(''), '');
+        });
+
+        suite('_interpolate');
+        test('replaces known variables', () => {
+            ChatEngine.variables = { prenom: 'Sarah' };
+            assertEqual(ChatEngine._interpolate('Bonjour {{prenom}} !'), 'Bonjour Sarah !');
+        });
+        test('keeps unknown variables as-is', () => {
+            ChatEngine.variables = {};
+            assertEqual(ChatEngine._interpolate('Hello {{unknown}}'), 'Hello {{unknown}}');
+        });
+        test('replaces multiple variables', () => {
+            ChatEngine.variables = { a: '1', b: '2' };
+            assertEqual(ChatEngine._interpolate('{{a}} and {{b}}'), '1 and 2');
+        });
+        test('handles no variables', () => {
+            ChatEngine.variables = {};
+            assertEqual(ChatEngine._interpolate('No variables here'), 'No variables here');
+        });
+
+        suite('_calcDelay');
+        test('returns delay proportional to word count', () => {
+            ChatEngine.form = { timing: { speed: 100, maxDelay: 5000 } };
+            const delay = ChatEngine._calcDelay('one two three');
+            assertEqual(delay, 300);
+        });
+        test('caps at maxDelay', () => {
+            ChatEngine.form = { timing: { speed: 100, maxDelay: 200 } };
+            const delay = ChatEngine._calcDelay('one two three four five');
+            assertEqual(delay, 200);
+        });
+        test('strips HTML tags before counting', () => {
+            ChatEngine.form = { timing: { speed: 100, maxDelay: 5000 } };
+            const delay = ChatEngine._calcDelay('<strong>one</strong> two');
+            assertEqual(delay, 200);
+        });
+        test('uses default timing when form has none', () => {
+            ChatEngine.form = {};
+            const delay = ChatEngine._calcDelay('word');
+            assert(delay > 0, 'Delay should be positive');
+        });
+
+        suite('_pickBestSave');
+        test('returns null when no saves exist', () => {
+            assertEqual(ChatEngine._pickBestSave(null, null, null), null);
+        });
+        test('returns the only available save', () => {
+            const local = { currentStep: 5, updatedAt: 1000 };
+            assertDeepEqual(ChatEngine._pickBestSave(local, null, null), local);
+        });
+        test('picks save with latest timestamp', () => {
+            const local = { currentStep: 3, updatedAt: 1000 };
+            const server = { currentStep: 2, updatedAt: 2000 };
+            assertDeepEqual(ChatEngine._pickBestSave(local, server, null), server);
+        });
+        test('picks save with latest timestamp (3 candidates)', () => {
+            const local = { currentStep: 3, updatedAt: 1000 };
+            const server = { currentStep: 2, updatedAt: 500 };
+            const idb = { currentStep: 4, updatedAt: 3000 };
+            assertDeepEqual(ChatEngine._pickBestSave(local, server, idb), idb);
+        });
+
+        suite('_evaluateCondition');
+        test('equals — true', () => {
+            ChatEngine.variables = { x: 'yes' };
+            assert(ChatEngine._evaluateCondition({ variable: 'x', equals: 'yes' }));
+        });
+        test('equals — false', () => {
+            ChatEngine.variables = { x: 'no' };
+            assert(!ChatEngine._evaluateCondition({ variable: 'x', equals: 'yes' }));
+        });
+        test('notEquals', () => {
+            ChatEngine.variables = { x: 'no' };
+            assert(ChatEngine._evaluateCondition({ variable: 'x', notEquals: 'yes' }));
+        });
+        test('exists — true', () => {
+            ChatEngine.variables = { x: 'value' };
+            assert(ChatEngine._evaluateCondition({ variable: 'x', exists: true }));
+        });
+        test('exists — false (missing)', () => {
+            ChatEngine.variables = {};
+            assert(!ChatEngine._evaluateCondition({ variable: 'x', exists: true }));
+        });
+        test('exists — false (empty)', () => {
+            ChatEngine.variables = { x: '' };
+            assert(!ChatEngine._evaluateCondition({ variable: 'x', exists: true }));
+        });
+        test('not exists', () => {
+            ChatEngine.variables = {};
+            assert(ChatEngine._evaluateCondition({ variable: 'x', exists: false }));
+        });
+        test('in — true', () => {
+            ChatEngine.variables = { x: 'b' };
+            assert(ChatEngine._evaluateCondition({ variable: 'x', in: ['a', 'b', 'c'] }));
+        });
+        test('in — false', () => {
+            ChatEngine.variables = { x: 'd' };
+            assert(!ChatEngine._evaluateCondition({ variable: 'x', in: ['a', 'b', 'c'] }));
+        });
+        test('notIn', () => {
+            ChatEngine.variables = { x: 'd' };
+            assert(ChatEngine._evaluateCondition({ variable: 'x', notIn: ['a', 'b', 'c'] }));
+        });
+        test('gt', () => {
+            ChatEngine.variables = { x: 8 };
+            assert(ChatEngine._evaluateCondition({ variable: 'x', gt: 5 }));
+            assert(!ChatEngine._evaluateCondition({ variable: 'x', gt: 10 }));
+        });
+        test('lt', () => {
+            ChatEngine.variables = { x: 3 };
+            assert(ChatEngine._evaluateCondition({ variable: 'x', lt: 5 }));
+            assert(!ChatEngine._evaluateCondition({ variable: 'x', lt: 1 }));
+        });
+        test('compound AND', () => {
+            ChatEngine.variables = { a: 'x', b: 'y' };
+            assert(ChatEngine._evaluateCondition({
+                and: [
+                    { variable: 'a', equals: 'x' },
+                    { variable: 'b', equals: 'y' }
+                ]
+            }));
+        });
+        test('compound AND — partial fail', () => {
+            ChatEngine.variables = { a: 'x', b: 'z' };
+            assert(!ChatEngine._evaluateCondition({
+                and: [
+                    { variable: 'a', equals: 'x' },
+                    { variable: 'b', equals: 'y' }
+                ]
+            }));
+        });
+        test('compound OR', () => {
+            ChatEngine.variables = { a: 'z' };
+            assert(ChatEngine._evaluateCondition({
+                or: [
+                    { variable: 'a', equals: 'x' },
+                    { variable: 'a', equals: 'z' }
+                ]
+            }));
+        });
+        test('null condition returns true', () => {
+            assert(ChatEngine._evaluateCondition(null));
+        });
+
+        suite('_darkenColor');
+        test('darkens a hex color', () => {
+            const result = ChatEngine._darkenColor('#FFFFFF', 10);
+            assert(result.startsWith('#'), 'Should return hex');
+            assert(result !== '#ffffff', 'Should be darker');
+        });
+        test('does not go below 0', () => {
+            const result = ChatEngine._darkenColor('#000000', 50);
+            assertEqual(result, '#000000');
+        });
+
+        suite('_renderContent');
+        test('renders plain string', () => {
+            ChatEngine.variables = {};
+            const result = ChatEngine._renderContent('Hello');
+            assertEqual(result, 'Hello');
+        });
+        test('renders array with bold', () => {
+            ChatEngine.variables = {};
+            const result = ChatEngine._renderContent([{ bold: true, text: 'Bold' }]);
+            assertEqual(result, '<strong>Bold</strong>');
+        });
+        test('renders array with interpolation', () => {
+            ChatEngine.variables = { name: 'Ali' };
+            const result = ChatEngine._renderContent('Hello {{name}}');
+            assertEqual(result, 'Hello Ali');
+        });
+        test('escapes HTML in content', () => {
+            ChatEngine.variables = {};
+            const result = ChatEngine._renderContent('<b>xss</b>');
+            assert(!result.includes('<b>'), 'Should escape HTML tags');
+        });
+
+        suite('Schema Validator — F1 Express');
+        test('F1 Express passes validation', () => {
+            const form = window.FORM_REGISTRY['f1-express'];
+            const result = ChatSchemaValidator.validate(form);
+            assertEqual(result.errors.length, 0, 'Should have no errors: ' + result.errors.join(', '));
+        });
+
+        suite('Schema Validator — Invalid form');
+        test('detects missing id', () => {
+            const result = ChatSchemaValidator.validate({ steps: [] });
+            assert(result.errors.some(e => e.includes('id')));
+        });
+        test('detects missing steps', () => {
+            const result = ChatSchemaValidator.validate({ id: 'x' });
+            assert(result.errors.some(e => e.includes('steps')));
+        });
+        test('detects missing variable in choice', () => {
+            const result = ChatSchemaValidator.validate({
+                id: 'x', title: 'T', bot: { name: 'B' },
+                steps: [{ type: 'choice', options: [{ id: 'a', label: 'A' }] }, { type: 'completion' }]
+            });
+            assert(result.errors.some(e => e.includes('variable')));
+        });
+        test('detects unknown step type', () => {
+            const result = ChatSchemaValidator.validate({
+                id: 'x', title: 'T', bot: { name: 'B' },
+                steps: [{ type: 'unknown_type' }, { type: 'completion' }]
+            });
+            assert(result.errors.some(e => e.includes('unknown type')));
+        });
+
+        // ─── Summary ───
+        const total = passed + failed;
+        summaryEl.className = 'summary ' + (failed === 0 ? 'all-pass' : 'has-fail');
+        summaryEl.textContent = `${passed}/${total} tests passed` + (failed > 0 ? ` — ${failed} FAILED` : ' \u2705');
+    </script>
+</body>
+</html>

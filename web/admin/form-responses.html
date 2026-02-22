@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reponses Formulaires | My Muqabala Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin-styles.css">
+    <style>
+        /* ═══ FORM RESPONSES — page-specific styles ═══ */
+        .fr-filters {
+            display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end;
+            background: var(--card-bg); border-radius: var(--radius);
+            border: 1px solid var(--card-border); padding: 1.25rem; margin-bottom: 1.5rem;
+        }
+        .fr-filter-field { display: flex; flex-direction: column; gap: 0.3rem; }
+        .fr-filter-field label {
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--ink-muted);
+        }
+        .fr-filter-field select,
+        .fr-filter-field input {
+            padding: 0.5rem 0.75rem; border: 1px solid var(--card-border);
+            border-radius: var(--radius-xs); font-family: var(--font-body);
+            font-size: 0.85rem; color: var(--ink); background: var(--paper); outline: none;
+        }
+        .fr-filter-field select:focus,
+        .fr-filter-field input:focus {
+            border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.08);
+        }
+        .fr-actions { display: flex; gap: 0.5rem; margin-left: auto; align-items: flex-end; }
+
+        /* Table */
+        .fr-table-wrap {
+            background: var(--card-bg); border-radius: var(--radius);
+            border: 1px solid var(--card-border); overflow: hidden;
+        }
+        .fr-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .fr-table thead { background: var(--paper); }
+        .fr-table th {
+            text-align: left; padding: 0.75rem 1rem; font-size: 0.72rem;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+            color: var(--ink-muted); border-bottom: 1px solid var(--card-border);
+        }
+        .fr-table td {
+            padding: 0.7rem 1rem; border-bottom: 1px solid var(--card-border);
+            color: var(--ink-soft); vertical-align: middle;
+        }
+        .fr-table tbody tr { cursor: pointer; transition: background 0.15s; }
+        .fr-table tbody tr:hover { background: var(--purple-light); }
+        .fr-table tbody tr.fr-expanded { background: rgba(124,58,237,0.05); }
+
+        /* Expanded detail row */
+        .fr-detail-row td { padding: 0; background: rgba(124,58,237,0.02); }
+        .fr-detail-inner {
+            padding: 1.25rem 1.5rem; border-left: 3px solid var(--purple);
+            margin: 0 0.5rem;
+        }
+        .fr-detail-inner h4 {
+            font-family: var(--font-display); font-size: 1.1rem;
+            font-weight: 500; color: var(--ink); margin-bottom: 1rem;
+        }
+        .fr-answer-list { display: flex; flex-direction: column; gap: 0.6rem; }
+        .fr-answer-item {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--radius-xs); padding: 0.75rem 1rem;
+        }
+        .fr-answer-question {
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.04em; color: var(--purple); margin-bottom: 0.3rem;
+        }
+        .fr-answer-value { font-size: 0.88rem; color: var(--ink); line-height: 1.5; }
+        .fr-answer-value audio { display: block; margin-top: 0.4rem; width: 100%; max-width: 400px; }
+
+        /* Pagination */
+        .fr-pagination {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.75rem 1rem; border-top: 1px solid var(--card-border);
+            font-size: 0.82rem; color: var(--ink-muted);
+        }
+        .fr-pagination-btns { display: flex; gap: 0.4rem; }
+
+        /* Modal overlay (used for full detail view) */
+        .fr-modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+            z-index: 500; display: none; align-items: center; justify-content: center;
+        }
+        .fr-modal-overlay.open { display: flex; }
+        .fr-modal {
+            background: var(--card-bg); border-radius: var(--radius);
+            width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto;
+            padding: 2rem; box-shadow: var(--shadow-md); position: relative;
+        }
+        .fr-modal-close {
+            position: absolute; top: 1rem; right: 1rem; background: none;
+            border: none; font-size: 1.4rem; cursor: pointer; color: var(--ink-muted);
+            line-height: 1;
+        }
+        .fr-modal-close:hover { color: var(--ink); }
+        .fr-modal h3 {
+            font-family: var(--font-display); font-size: 1.3rem;
+            font-weight: 500; color: var(--ink); margin-bottom: 0.5rem;
+        }
+        .fr-modal-meta {
+            font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 1.25rem;
+            display: flex; gap: 1rem; flex-wrap: wrap;
+        }
+
+        /* Status badges in table */
+        .fr-status {
+            font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.6rem;
+            border-radius: 100px; display: inline-block;
+        }
+        .fr-status.completed { background: var(--sage-light); color: var(--sage-deep); }
+        .fr-status.in_progress { background: var(--gold-light); color: var(--amber); }
+
+        /* Empty state */
+        .fr-empty {
+            text-align: center; padding: 3rem 2rem; color: var(--ink-faint); font-size: 0.9rem;
+        }
+
+        /* Loading spinner */
+        .fr-loading {
+            text-align: center; padding: 3rem; color: var(--ink-muted); font-size: 0.88rem;
+        }
+
+        @media (max-width: 768px) {
+            .fr-filters { flex-direction: column; }
+            .fr-actions { margin-left: 0; width: 100%; justify-content: stretch; }
+            .fr-actions .admin-btn { flex: 1; justify-content: center; }
+            .fr-table { font-size: 0.78rem; }
+            .fr-table th, .fr-table td { padding: 0.5rem 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <h2>My Muqabala</h2>
+                <span>Administration</span>
+            </div>
+            <nav class="admin-sidebar-nav">
+                <a class="admin-nav-item" href="panel.html" style="text-decoration:none">
+                    <span class="admin-nav-icon">&#128101;</span><span>Clients</span>
+                </a>
+                <a class="admin-nav-item active" href="form-responses.html" style="text-decoration:none">
+                    <span class="admin-nav-icon">&#128221;</span><span>Formulaires</span>
+                </a>
+            </nav>
+            <div class="admin-sidebar-footer">
+                <button class="admin-nav-item" onclick="FormResponsesApp.logout()">
+                    <span class="admin-nav-icon">&#8617;&#65039;</span><span>Deconnexion</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="admin-main">
+            <!-- HEADER -->
+            <header class="admin-header">
+                <button class="admin-hamburger" onclick="document.getElementById('admin-sidebar').classList.toggle('open')">&#9776;</button>
+                <div class="admin-search-wrapper">
+                    <input type="text" class="admin-search" id="search-input" placeholder="Rechercher par prenom, telephone..." oninput="FormResponsesApp.onSearch(this.value)">
+                </div>
+                <div class="admin-header-info" id="admin-user-info"></div>
+            </header>
+
+            <!-- CONTENT -->
+            <div class="admin-content">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+                    <h2 style="font-family:'Cormorant',serif;font-size:1.6rem">
+                        Reponses aux formulaires <span class="admin-badge" id="fr-total-count">0</span>
+                    </h2>
+                </div>
+
+                <!-- FILTERS -->
+                <div class="fr-filters">
+                    <div class="fr-filter-field">
+                        <label>Formulaire</label>
+                        <select id="filter-form-id" onchange="FormResponsesApp.applyFilters()">
+                            <option value="">Tous</option>
+                        </select>
+                    </div>
+                    <div class="fr-filter-field">
+                        <label>Statut</label>
+                        <select id="filter-status" onchange="FormResponsesApp.applyFilters()">
+                            <option value="">Tous</option>
+                            <option value="in_progress">En cours</option>
+                            <option value="completed">Termine</option>
+                        </select>
+                    </div>
+                    <div class="fr-filter-field">
+                        <label>Du</label>
+                        <input type="date" id="filter-date-from" onchange="FormResponsesApp.applyFilters()">
+                    </div>
+                    <div class="fr-filter-field">
+                        <label>Au</label>
+                        <input type="date" id="filter-date-to" onchange="FormResponsesApp.applyFilters()">
+                    </div>
+                    <div class="fr-actions">
+                        <button class="admin-btn admin-btn-sm" onclick="FormResponsesApp.exportJSON()" title="Exporter JSON">&#128279; JSON</button>
+                        <button class="admin-btn admin-btn-sm" onclick="FormResponsesApp.exportCSV()" title="Exporter CSV">&#128203; CSV</button>
+                        <button class="admin-btn admin-btn-sm" onclick="FormResponsesApp.loadData()" title="Rafraichir">&#8635; Rafraichir</button>
+                    </div>
+                </div>
+
+                <!-- TABLE -->
+                <div class="fr-table-wrap">
+                    <table class="fr-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Telephone</th>
+                                <th>Formulaire</th>
+                                <th>Statut</th>
+                                <th>Reponses</th>
+                                <th>Derniere MAJ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fr-table-body">
+                            <tr><td colspan="6" class="fr-loading">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="fr-pagination">
+                        <span id="fr-pagination-info">--</span>
+                        <div class="fr-pagination-btns">
+                            <button class="admin-btn admin-btn-sm" id="fr-btn-prev" onclick="FormResponsesApp.prevPage()" disabled>&#8592; Prec.</button>
+                            <button class="admin-btn admin-btn-sm" id="fr-btn-next" onclick="FormResponsesApp.nextPage()" disabled>Suiv. &#8594;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- DETAIL MODAL -->
+    <div class="fr-modal-overlay" id="fr-modal-overlay" onclick="FormResponsesApp.closeModal(event)">
+        <div class="fr-modal" onclick="event.stopPropagation()">
+            <button class="fr-modal-close" onclick="FormResponsesApp.closeModal()">&times;</button>
+            <h3 id="fr-modal-title">Detail de la reponse</h3>
+            <div class="fr-modal-meta" id="fr-modal-meta"></div>
+            <div class="fr-answer-list" id="fr-modal-answers"></div>
+        </div>
+    </div>
+
+    <div class="admin-toast" id="admin-toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../supabase-config.js"></script>
+    <script src="admin-form-responses.js"></script>
+</body>
+</html>

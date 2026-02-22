@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Engine — Integration Tests</title>
+    <style>
+        body { font-family: monospace; background: #1a1a2e; color: #eee; padding: 20px; }
+        h1 { color: #A8D5BA; font-size: 1.2rem; }
+        .suite { margin: 16px 0; padding: 12px; background: #16213e; border-radius: 8px; }
+        .suite-name { font-weight: bold; color: #7ec8e3; margin-bottom: 8px; }
+        .pass { color: #4caf50; }
+        .fail { color: #f44336; }
+        .skip { color: #ff9800; }
+        .test { margin: 4px 0 4px 16px; font-size: 0.9rem; }
+        .summary { margin-top: 20px; padding: 12px; border-radius: 8px; font-weight: bold; }
+        .summary.all-pass { background: #1b5e20; }
+        .summary.has-fail { background: #b71c1c; }
+        .summary.has-skip { background: #e65100; }
+    </style>
+</head>
+<body>
+    <h1>Chat Engine — Integration Tests</h1>
+    <div id="results"></div>
+    <div id="summary"></div>
+
+    <!-- Mock DOM elements matching questionnaire.html -->
+    <div style="display:none">
+        <div class="chat-progress"><div class="chat-progress-fill" id="chat-progress-fill"></div></div>
+        <header class="chat-header">
+            <button id="chat-back-step-btn" style="display:none"></button>
+            <div id="chat-header-avatar">M</div>
+            <div id="chat-header-name">Test</div>
+            <div id="chat-header-title">Test</div>
+            <span id="chat-progress-text"></span>
+        </header>
+        <div class="chat-messages" id="chat-messages">
+            <div class="chat-messages-inner" id="chat-messages-inner"></div>
+        </div>
+        <div class="chat-input-area" id="chat-input-area">
+            <div class="chat-input-inner" id="chat-input-inner"></div>
+        </div>
+    </div>
+
+    <script>
+        // ── Minimal mocks ──
+        window.FORM_REGISTRY = {};
+
+        // Mock Supabase
+        window.sb = {
+            rpc: function() { return Promise.resolve({ data: { success: true, data: null }, error: null }); },
+            storage: {
+                from: function() {
+                    return {
+                        upload: function() { return Promise.resolve({ data: { path: 'test/path' }, error: null }); },
+                        getPublicUrl: function() { return { data: { publicUrl: 'https://example.com/file.jpg' } }; }
+                    };
+                }
+            }
+        };
+        window.SUPABASE_URL = 'https://test.supabase.co';
+        window.SUPABASE_ANON_KEY = 'test-key';
+
+        // Mock confetti
+        window.confetti = function() {};
+
+        // Mock localStorage
+        var mockStorage = {};
+        var _origSetItem = localStorage.setItem;
+        var _origGetItem = localStorage.getItem;
+        var _origRemoveItem = localStorage.removeItem;
+    </script>
+
+    <!-- Load sources -->
+    <script src="../../forms/f1-express.js"></script>
+    <script src="../../chat-schema-validator.js"></script>
+    <script src="../../chat-persistence.js"></script>
+    <script src="../../chat-engine.js"></script>
+
+    <script>
+        const results = document.getElementById('results');
+        const summaryEl = document.getElementById('summary');
+        let passed = 0;
+        let failed = 0;
+        let skipped = 0;
+        let currentSuite = null;
+
+        function suite(name) {
+            const div = document.createElement('div');
+            div.className = 'suite';
+            const title = document.createElement('div');
+            title.className = 'suite-name';
+            title.textContent = name;
+            div.appendChild(title);
+            results.appendChild(div);
+            currentSuite = div;
+        }
+
+        async function test(name, fn) {
+            const div = document.createElement('div');
+            div.className = 'test';
+            try {
+                await fn();
+                div.classList.add('pass');
+                div.textContent = '\u2705 ' + name;
+                passed++;
+            } catch (e) {
+                if (e.message === 'SKIP') {
+                    div.classList.add('skip');
+                    div.textContent = '\u23ED ' + name + ' (skipped)';
+                    skipped++;
+                } else {
+                    div.classList.add('fail');
+                    div.textContent = '\u274C ' + name + ' \u2014 ' + e.message;
+                    failed++;
+                }
+            }
+            currentSuite.appendChild(div);
+        }
+
+        function assert(condition, msg) {
+            if (!condition) throw new Error(msg || 'Assertion failed');
+        }
+
+        function assertEqual(actual, expected, msg) {
+            if (actual !== expected) {
+                throw new Error((msg || '') + ' Expected: ' + JSON.stringify(expected) + ', Got: ' + JSON.stringify(actual));
+            }
+        }
+
+        function skip() { throw new Error('SKIP'); }
+
+        /* ─── Helper: reset ChatEngine state ─── */
+        function resetEngine() {
+            ChatEngine.form = null;
+            ChatEngine.currentStep = 0;
+            ChatEngine.answers = {};
+            ChatEngine.variables = {};
+            ChatEngine.isProcessing = false;
+            ChatEngine.isResuming = false;
+            ChatEngine.totalInteractive = 0;
+            ChatEngine.completedInteractive = 0;
+            ChatEngine._tel = null;
+            ChatEngine._code = null;
+            ChatEngine.stepHistory = [];
+            ChatEngine._isRecording = false;
+            ChatEngine._currentParts = [];
+
+            // Clear DOM
+            var inner = document.getElementById('chat-messages-inner');
+            if (inner) inner.textContent = '';
+            var inputInner = document.getElementById('chat-input-inner');
+            if (inputInner) inputInner.textContent = '';
+
+            // Clear localStorage for test form
+            try { localStorage.removeItem('mm_chat_test-form'); } catch(e) {}
+        }
+
+        /* ─── Test form definition ─── */
+        var TEST_FORM = {
+            id: 'test-form',
+            title: 'Test Form',
+            version: 1,
+            bot: { name: 'TestBot', avatar: 'T' },
+            theme: {
+                background: '#FAF9F6',
+                botBubbleBg: '#F0EDE8',
+                userBubbleBg: '#A8D5BA',
+                buttonBg: '#7d9a8c'
+            },
+            timing: { speed: 1, maxDelay: 10 },
+            steps: [
+                { type: 'message', content: 'Bonjour {{prenom}} !' },
+                { type: 'text_input', variable: 'prenom', placeholder: 'Ton prenom' },
+                { type: 'choice', variable: 'couleur', options: [
+                    { id: 'rouge', label: 'Rouge' },
+                    { id: 'bleu', label: 'Bleu' }
+                ]},
+                { type: 'message', content: 'Tu as choisi {{couleur}}.' },
+                { type: 'rating', variable: 'note', max: 5, leftLabel: 'Bof', rightLabel: 'Top' },
+                { type: 'completion', title: 'Merci !', message: 'A bientot {{prenom}} !' }
+            ]
+        };
+
+        /* ─── Test form with skip logic ─── */
+        var CONDITIONAL_FORM = {
+            id: 'test-cond',
+            title: 'Conditional Form',
+            version: 1,
+            bot: { name: 'CondBot', avatar: 'C' },
+            timing: { speed: 1, maxDelay: 10 },
+            steps: [
+                { type: 'choice', variable: 'path', options: [
+                    { id: 'a', label: 'Path A' },
+                    { id: 'b', label: 'Path B' }
+                ]},
+                { type: 'message', content: 'You chose A!', condition: { variable: 'path', equals: 'a' } },
+                { type: 'message', content: 'You chose B!', condition: { variable: 'path', equals: 'b' } },
+                { type: 'completion', title: 'Done' }
+            ]
+        };
+
+        // Register test forms
+        window.FORM_REGISTRY['test-form'] = TEST_FORM;
+        window.FORM_REGISTRY['test-cond'] = CONDITIONAL_FORM;
+
+        /* ══════════════════════════════════
+           INTEGRATION TEST SUITES
+        ══════════════════════════════════ */
+
+        (async function runTests() {
+
+            // ─── Suite: Engine Initialization ───
+            suite('Engine Initialization');
+
+            await test('caches DOM references on init', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messages = document.getElementById('chat-messages');
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.inputArea = document.getElementById('chat-input-area');
+                ChatEngine.els.inputInner = document.getElementById('chat-input-inner');
+                ChatEngine.els.progressFill = document.getElementById('chat-progress-fill');
+                ChatEngine.els.progressText = document.getElementById('chat-progress-text');
+                ChatEngine.els.headerName = document.getElementById('chat-header-name');
+                ChatEngine.els.headerTitle = document.getElementById('chat-header-title');
+                ChatEngine.els.headerAvatar = document.getElementById('chat-header-avatar');
+                ChatEngine.els.backBtn = document.getElementById('chat-back-step-btn');
+
+                assert(ChatEngine.els.messages !== null, 'messages element should be cached');
+                assert(ChatEngine.els.inputInner !== null, 'inputInner element should be cached');
+            });
+
+            await test('applies theme from form definition', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine._applyTheme();
+
+                var bg = document.documentElement.style.getPropertyValue('--chat-bg');
+                assertEqual(bg, '#FAF9F6', 'Background CSS var should be set');
+            });
+
+            await test('counts interactive steps correctly', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                var count = ChatEngine._countInteractiveSteps();
+                // text_input + choice + rating = 3
+                assertEqual(count, 3, 'Should have 3 interactive steps');
+            });
+
+            await test('prefetches images from form steps', async () => {
+                resetEngine();
+                ChatEngine.form = {
+                    id: 'img-test',
+                    steps: [
+                        { type: 'image', url: 'https://example.com/test.png' },
+                        { type: 'message', content: 'Hello' }
+                    ]
+                };
+                var beforeLinks = document.querySelectorAll('link[rel="prefetch"]').length;
+                ChatEngine._prefetchImages();
+                var afterLinks = document.querySelectorAll('link[rel="prefetch"]').length;
+                assert(afterLinks > beforeLinks, 'Should add prefetch link');
+            });
+
+
+            // ─── Suite: Step Processing ───
+            suite('Step Processing');
+
+            await test('processes message step and adds bot bubble', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.messages = document.getElementById('chat-messages');
+                ChatEngine.variables = { prenom: 'Ali' };
+                ChatEngine.currentStep = 0;
+
+                await ChatEngine._handleMessage(TEST_FORM.steps[0]);
+
+                var bubbles = document.getElementById('chat-messages-inner').querySelectorAll('.chat-bubble');
+                assert(bubbles.length > 0, 'Should have at least one bubble');
+                assert(bubbles[0].textContent.includes('Ali'), 'Should interpolate prenom variable');
+            });
+
+            await test('skip logic skips steps when condition is false', async () => {
+                resetEngine();
+                ChatEngine.form = CONDITIONAL_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.messages = document.getElementById('chat-messages');
+                ChatEngine.variables = { path: 'a' };
+
+                // Step 1 (condition: path === 'a') should pass
+                var shouldShow = ChatEngine._evaluateCondition(CONDITIONAL_FORM.steps[1].condition);
+                assert(shouldShow === true, 'Path A message should show');
+
+                // Step 2 (condition: path === 'b') should be skipped
+                var shouldSkip = ChatEngine._evaluateCondition(CONDITIONAL_FORM.steps[2].condition);
+                assert(shouldSkip === false, 'Path B message should be skipped');
+            });
+
+
+            // ─── Suite: Answer Recording ───
+            suite('Answer Recording');
+
+            await test('records answer to both answers and variables', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+
+                ChatEngine._recordAnswer('prenom', 'Sara');
+                assertEqual(ChatEngine.answers.prenom, 'Sara');
+                assertEqual(ChatEngine.variables.prenom, 'Sara');
+            });
+
+            await test('does not record when variable is null', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+
+                var countBefore = Object.keys(ChatEngine.answers).length;
+                ChatEngine._recordAnswer(null, 'value');
+                assertEqual(Object.keys(ChatEngine.answers).length, countBefore, 'Should not add to answers');
+            });
+
+
+            // ─── Suite: Persistence (localStorage) ───
+            suite('Persistence — localStorage');
+
+            await test('saves and loads from localStorage', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.currentStep = 2;
+                ChatEngine.answers = { prenom: 'Ali' };
+
+                ChatEngine._saveLocal();
+                var loaded = ChatEngine._loadLocal();
+
+                assert(loaded !== null, 'Should load saved data');
+                assertEqual(loaded.currentStep, 2);
+                assertEqual(loaded.answers.prenom, 'Ali');
+                assertEqual(loaded.formId, 'test-form');
+            });
+
+            await test('clears localStorage', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine._saveLocal();
+                ChatEngine._clearLocal();
+                var loaded = ChatEngine._loadLocal();
+                assertEqual(loaded, null, 'Should be null after clear');
+            });
+
+            await test('picks best save by updatedAt', async () => {
+                var local = { currentStep: 2, updatedAt: 1000 };
+                var server = { currentStep: 1, updatedAt: 3000 };
+                var idb = { currentStep: 3, updatedAt: 2000 };
+
+                var best = ChatEngine._pickBestSave(local, server, idb);
+                assertEqual(best.updatedAt, 3000, 'Should pick server save (highest updatedAt)');
+                assertEqual(best.currentStep, 1, 'Server has step 1');
+            });
+
+
+            // ─── Suite: Resume ───
+            suite('Resume from Saved Progress');
+
+            await test('resume restores answers and variables', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.messages = document.getElementById('chat-messages');
+                ChatEngine.els.inputArea = document.getElementById('chat-input-area');
+                ChatEngine.els.inputInner = document.getElementById('chat-input-inner');
+                ChatEngine.els.progressFill = document.getElementById('chat-progress-fill');
+                ChatEngine.els.progressText = document.getElementById('chat-progress-text');
+                ChatEngine.els.backBtn = document.getElementById('chat-back-step-btn');
+                ChatEngine.totalInteractive = 3;
+
+                var saveData = {
+                    currentStep: 3,
+                    answers: { prenom: 'Leila', couleur: 'rouge' },
+                    status: 'in_progress'
+                };
+
+                // Prevent processStep from running (completion step)
+                ChatEngine.isProcessing = true;
+                ChatEngine._resumeFrom(saveData);
+                ChatEngine.isProcessing = true; // re-block after resume unblocks
+
+                assertEqual(ChatEngine.answers.prenom, 'Leila', 'Should restore prenom');
+                assertEqual(ChatEngine.answers.couleur, 'rouge', 'Should restore couleur');
+                assertEqual(ChatEngine.variables.prenom, 'Leila', 'Variables should match');
+                assertEqual(ChatEngine.currentStep, 3, 'Should be at step 3');
+            });
+
+
+            // ─── Suite: Back Button ───
+            suite('Back Button');
+
+            await test('stepHistory records interactive steps', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.backBtn = document.getElementById('chat-back-step-btn');
+                ChatEngine.currentStep = 1;
+
+                ChatEngine._pushHistory(TEST_FORM.steps[1]); // text_input
+                assert(ChatEngine.stepHistory.length === 1, 'Should have 1 entry');
+                assertEqual(ChatEngine.stepHistory[0].variable, 'prenom');
+            });
+
+            await test('stepHistory ignores non-interactive steps', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.backBtn = document.getElementById('chat-back-step-btn');
+
+                ChatEngine._pushHistory(TEST_FORM.steps[0]); // message
+                assertEqual(ChatEngine.stepHistory.length, 0, 'Should not record message step');
+            });
+
+            await test('goBack restores previous state', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.messages = document.getElementById('chat-messages');
+                ChatEngine.els.inputArea = document.getElementById('chat-input-area');
+                ChatEngine.els.inputInner = document.getElementById('chat-input-inner');
+                ChatEngine.els.progressFill = document.getElementById('chat-progress-fill');
+                ChatEngine.els.progressText = document.getElementById('chat-progress-text');
+                ChatEngine.els.backBtn = document.getElementById('chat-back-step-btn');
+                ChatEngine.totalInteractive = 3;
+
+                // Simulate being at step 3 with prenom answered
+                ChatEngine.currentStep = 3;
+                ChatEngine.completedInteractive = 1;
+                ChatEngine.answers = { prenom: 'Ali' };
+                ChatEngine.variables = { prenom: 'Ali' };
+                ChatEngine.stepHistory = [{
+                    step: 1,
+                    variable: 'prenom',
+                    completedInteractive: 0,
+                    domCount: 0
+                }];
+
+                // Block processStep from running
+                ChatEngine.isProcessing = true;
+                ChatEngine._goBack();
+
+                assertEqual(ChatEngine.currentStep, 1, 'Should go back to step 1');
+                assertEqual(ChatEngine.completedInteractive, 0, 'Completed should be 0');
+                assert(ChatEngine.answers.prenom === undefined, 'Answer should be cleared');
+                assert(ChatEngine.variables.prenom === undefined, 'Variable should be cleared');
+                assertEqual(ChatEngine.stepHistory.length, 0, 'History should be empty');
+            });
+
+
+            // ─── Suite: Content Rendering ───
+            suite('Content Rendering');
+
+            await test('renderContent handles bold array', async () => {
+                ChatEngine.variables = {};
+                var result = ChatEngine._renderContent([{ bold: true, text: 'Important' }, { text: ' text' }]);
+                assert(result.includes('<strong>Important</strong>'), 'Should wrap in strong');
+                assert(result.includes(' text'), 'Should include plain text');
+            });
+
+            await test('renderContent handles italic array', async () => {
+                ChatEngine.variables = {};
+                var result = ChatEngine._renderContent([{ italic: true, text: 'emphasis' }]);
+                assert(result.includes('<em>emphasis</em>'), 'Should wrap in em');
+            });
+
+            await test('renderContent escapes XSS in interpolated values', async () => {
+                ChatEngine.variables = { name: '<script>alert("xss")</script>' };
+                var result = ChatEngine._renderContent('Hello {{name}}');
+                assert(!result.includes('<script>'), 'Should escape script tag');
+                assert(result.includes('&lt;script&gt;'), 'Should have escaped version');
+            });
+
+
+            // ─── Suite: Progress Calculation ───
+            suite('Progress Calculation');
+
+            await test('updates progress bar width', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.progressFill = document.getElementById('chat-progress-fill');
+                ChatEngine.els.progressText = document.getElementById('chat-progress-text');
+                ChatEngine.totalInteractive = 3;
+                ChatEngine.completedInteractive = 1;
+
+                ChatEngine._updateProgress();
+                var width = ChatEngine.els.progressFill.style.width;
+                assertEqual(width, '33%', 'Should be 33%');
+            });
+
+            await test('shows estimated time remaining', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.progressFill = document.getElementById('chat-progress-fill');
+                ChatEngine.els.progressText = document.getElementById('chat-progress-text');
+                ChatEngine.totalInteractive = 10;
+                ChatEngine.completedInteractive = 2;
+
+                ChatEngine._updateProgress();
+                var text = ChatEngine.els.progressText.textContent;
+                assert(text.includes('min'), 'Should show minutes estimate: ' + text);
+            });
+
+            await test('clears estimate at 100%', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.progressFill = document.getElementById('chat-progress-fill');
+                ChatEngine.els.progressText = document.getElementById('chat-progress-text');
+                ChatEngine.totalInteractive = 3;
+                ChatEngine.completedInteractive = 3;
+
+                ChatEngine._updateProgress();
+                assertEqual(ChatEngine.els.progressText.textContent, '', 'Should be empty at 100%');
+            });
+
+
+            // ─── Suite: DOM Rendering ───
+            suite('DOM Rendering');
+
+            await test('addBotBubble creates correct DOM structure', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.messages = document.getElementById('chat-messages');
+
+                ChatEngine._addBotBubble('Hello world');
+                var msgs = ChatEngine.els.messagesInner.querySelectorAll('.chat-msg.bot');
+                assert(msgs.length === 1, 'Should have 1 bot message');
+                assert(msgs[0].querySelector('.chat-msg-avatar'), 'Should have avatar');
+                assert(msgs[0].querySelector('.chat-bubble'), 'Should have bubble');
+            });
+
+            await test('addUserBubble uses textContent (XSS safe)', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.messages = document.getElementById('chat-messages');
+
+                ChatEngine._addUserBubble('<script>alert("xss")</script>');
+                var bubble = ChatEngine.els.messagesInner.querySelector('.chat-msg.user .chat-bubble');
+                assert(bubble, 'Should have user bubble');
+                // textContent should not render the script
+                assert(!bubble.innerHTML.includes('<script>'), 'Should NOT contain raw script tag');
+                assert(bubble.textContent.includes('<script>'), 'textContent should preserve raw text');
+            });
+
+            await test('addImageBubble shows skeleton then image', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+                ChatEngine.els.messages = document.getElementById('chat-messages');
+
+                var step = { type: 'image', url: 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', alt: 'Test' };
+                ChatEngine._addImageBubble(step);
+
+                var imgWrap = ChatEngine.els.messagesInner.querySelector('.chat-msg-image');
+                assert(imgWrap, 'Should have image wrapper');
+                var img = imgWrap.querySelector('img');
+                assert(img, 'Should have img element');
+                assertEqual(img.alt, 'Test', 'Should set alt text');
+            });
+
+            await test('addSection creates section DOM', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine.els.messagesInner = document.getElementById('chat-messages-inner');
+
+                ChatEngine._addSection('Part 1');
+                var section = ChatEngine.els.messagesInner.querySelector('.chat-section');
+                assert(section, 'Should have section element');
+                assert(section.textContent.includes('Part 1'), 'Should contain title');
+            });
+
+
+            // ─── Suite: Version Warning ───
+            suite('Version Compatibility');
+
+            await test('detects version mismatch', async () => {
+                resetEngine();
+                ChatEngine.form = { id: 'vtest', version: 2, steps: [], bot: { name: 'V' } };
+
+                var save = { currentStep: 3, version: 1, answers: { q1: 'a' } };
+                var mismatch = (save.version && ChatEngine.form.version && save.version !== ChatEngine.form.version);
+                assert(mismatch, 'Should detect version mismatch');
+            });
+
+            await test('no warning when versions match', async () => {
+                resetEngine();
+                ChatEngine.form = { id: 'vtest', version: 1, steps: [], bot: { name: 'V' } };
+
+                var save = { currentStep: 3, version: 1, answers: {} };
+                var mismatch = (save.version && ChatEngine.form.version && save.version !== ChatEngine.form.version);
+                assert(!mismatch, 'Should not detect mismatch');
+            });
+
+
+            // ─── Suite: Error Handling ───
+            suite('Error Handling');
+
+            await test('showToast creates and removes toast element', async () => {
+                resetEngine();
+                ChatEngine._showToast('Test error message');
+                var toast = document.querySelector('.chat-toast');
+                assert(toast, 'Should create toast element');
+                assert(toast.textContent.includes('Test error message'), 'Should show message');
+                // Remove it manually for cleanup
+                toast.remove();
+            });
+
+            await test('showError displays error in messages area', async () => {
+                resetEngine();
+                ChatEngine.form = TEST_FORM;
+                ChatEngine._showError('Form not found');
+                var inner = document.getElementById('chat-messages-inner');
+                assert(inner.textContent.includes('Form not found'), 'Should display error');
+            });
+
+
+            // ─── Suite: Schema Validation ───
+            suite('Schema Validation (Integration)');
+
+            await test('validates f1-express from FORM_REGISTRY', async () => {
+                var form = window.FORM_REGISTRY['f1-express'];
+                if (!form) skip();
+                var result = ChatSchemaValidator.validate(form);
+                assertEqual(result.errors.length, 0, 'f1-express should have no errors: ' + result.errors.join(', '));
+            });
+
+            await test('validates test-form', async () => {
+                var result = ChatSchemaValidator.validate(TEST_FORM);
+                assertEqual(result.errors.length, 0, 'test-form should have no errors: ' + result.errors.join(', '));
+            });
+
+            await test('validates conditional-form', async () => {
+                var result = ChatSchemaValidator.validate(CONDITIONAL_FORM);
+                assertEqual(result.errors.length, 0, 'conditional-form should have no errors: ' + result.errors.join(', '));
+            });
+
+
+            // ─── Suite: ChatPersistence ───
+            suite('ChatPersistence Layer');
+
+            await test('pickBestSave returns null for no saves', async () => {
+                assertEqual(ChatPersistence.pickBestSave(null, null, null), null);
+            });
+
+            await test('pickBestSave returns only save', async () => {
+                var save = { currentStep: 2, updatedAt: 1000 };
+                var result = ChatPersistence.pickBestSave(save, null, null);
+                assertEqual(result.currentStep, 2);
+            });
+
+            await test('pickBestSave picks latest timestamp', async () => {
+                var a = { currentStep: 1, updatedAt: 500 };
+                var b = { currentStep: 2, updatedAt: 2000 };
+                var c = { currentStep: 3, updatedAt: 1000 };
+                var result = ChatPersistence.pickBestSave(a, b, c);
+                assertEqual(result.updatedAt, 2000, 'Should pick b (highest updatedAt)');
+            });
+
+            await test('saveLocal and loadLocal round-trip', async () => {
+                ChatPersistence.saveLocal('integration-test', {
+                    currentStep: 5,
+                    answers: { q: 'a' },
+                    status: 'in_progress',
+                    version: 1
+                });
+                var loaded = ChatPersistence.loadLocal('integration-test');
+                assert(loaded !== null, 'Should load data');
+                assertEqual(loaded.currentStep, 5);
+                assertEqual(loaded.answers.q, 'a');
+                // Cleanup
+                ChatPersistence.clearLocal('integration-test');
+            });
+
+
+            // ─── Summary ───
+            var total = passed + failed + skipped;
+            if (failed > 0) {
+                summaryEl.className = 'summary has-fail';
+            } else if (skipped > 0) {
+                summaryEl.className = 'summary has-skip';
+            } else {
+                summaryEl.className = 'summary all-pass';
+            }
+            summaryEl.textContent = passed + '/' + total + ' passed' +
+                (failed > 0 ? ' \u2014 ' + failed + ' FAILED' : '') +
+                (skipped > 0 ? ' \u2014 ' + skipped + ' skipped' : '') +
+                (failed === 0 && skipped === 0 ? ' \u2705' : '');
+
+        })();
+    </script>
+</body>
+</html>
