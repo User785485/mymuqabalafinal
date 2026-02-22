@@ -37,10 +37,13 @@
                     <span class="admin-nav-icon">📊</span><span>Exports</span>
                 </button>
                 <button class="admin-nav-item" id="nav-mahram" onclick="AdminApp.showSection('mahram')">
-                    <span class="admin-nav-icon">🔐</span><span>Mahram</span>
+                    <span class="admin-nav-icon">💬</span><span>Customer Care</span>
                 </button>
                 <button class="admin-nav-item" id="nav-documents" onclick="AdminApp.showSection('documents')">
                     <span class="admin-nav-icon">📄</span><span>Documents</span>
+                </button>
+                <button class="admin-nav-item" id="nav-mise-en-ligne" onclick="AdminApp.showSection('mise-en-ligne')">
+                    <span class="admin-nav-icon">🚀</span><span>Mise en ligne</span>
                 </button>
             </nav>
             <div class="admin-sidebar-footer">
@@ -419,19 +422,36 @@
                         <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:2rem;text-align:center;cursor:pointer" onclick="MatchingManager.exportJSON()">
                             <div style="font-size:2.5rem;margin-bottom:0.75rem">🔗</div>
                             <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.25rem">Export JSON</div>
-                            <div style="font-size:0.8rem;color:var(--ink-muted)">Structure complète</div>
+                            <div style="font-size:0.8rem;color:var(--ink-muted)">Structure compl&#232;te</div>
                         </div>
                         <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:2rem;text-align:center;opacity:0.5">
                             <div style="font-size:2.5rem;margin-bottom:0.75rem">📄</div>
                             <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.25rem">Export PDF</div>
-                            <div style="font-size:0.8rem;color:var(--ink-muted)">Bientôt disponible</div>
+                            <div style="font-size:0.8rem;color:var(--ink-muted)">Bient&#244;t disponible</div>
                         </div>
+                    </div>
+
+                    <!-- Export identifiants CSV -->
+                    <div style="margin-top:2rem;background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:1.5rem">
+                        <h3 style="font-family:'Cormorant',serif;font-size:1.15rem;margin-bottom:1rem">Export identifiants clients</h3>
+                        <div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">
+                            <div style="display:flex;flex-direction:column;gap:0.25rem">
+                                <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--ink-muted)">Depuis le</label>
+                                <input type="date" id="export-credentials-since" style="padding:0.5rem 0.75rem;border:1px solid rgba(107,90,156,0.15);border-radius:8px;font-size:0.88rem;font-family:inherit">
+                            </div>
+                            <button class="admin-btn" onclick="AdminApp.exportCredentials()" style="padding:0.6rem 1.25rem;background:var(--purple,#7C3AED);color:#fff;border:none;border-radius:10px;font-weight:600;font-size:0.88rem;cursor:pointer">
+                                Exporter la liste des clients
+                            </button>
+                        </div>
+                        <p style="font-size:0.75rem;color:var(--ink-muted);margin-top:0.75rem">
+                            Note : les mots de passe ne sont PAS inclus (s&#233;curit&#233;). Disponibles uniquement via processeur-global.py local.
+                        </p>
                     </div>
                 </div>
 
-                <!-- MAHRAM NUMERIQUE SECTION -->
+                <!-- CUSTOMER CARE SECTION -->
                 <div id="section-mahram" style="display:none" class="admin-section-full">
-                    <h2 style="font-family:'Cormorant',serif;font-size:1.6rem;margin-bottom:1.5rem">Mahram Numérique <span class="admin-badge" id="channel-count">0</span></h2>
+                    <h2 style="font-family:'Cormorant',serif;font-size:1.6rem;margin-bottom:1.5rem">Customer Care <span class="admin-badge" id="channel-count">0</span></h2>
                     <div style="display:grid;grid-template-columns:300px 1fr;gap:1.5rem;min-height:500px">
                         <div>
                             <h3 style="font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-muted);margin-bottom:0.75rem">Conversations</h3>
@@ -465,6 +485,75 @@
                     </div>
                     <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:0.75rem">Historique des envois</h3>
                     <div id="doc-dist-history" style="display:flex;flex-direction:column;gap:0.5rem"></div>
+                </div>
+
+                <!-- MISE EN LIGNE SECTION -->
+                <div id="section-mise-en-ligne" style="display:none" class="admin-section-full">
+                    <h2 style="font-family:'Cormorant',serif;font-size:1.6rem;margin-bottom:1.5rem">Mise en ligne</h2>
+
+                    <!-- Upload zones (3 types) -->
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem">
+                        <div class="mel-upload-zone" data-type="compte-rendu" ondragover="MiseEnLigneManager.dragOver(event)" ondragleave="MiseEnLigneManager.dragLeave(event)" ondrop="MiseEnLigneManager.drop(event)">
+                            <input type="file" accept=".html,.txt" multiple style="display:none" onchange="MiseEnLigneManager.handleFiles(this.files,'compte-rendu')">
+                            <div class="mel-upload-icon">&#x1F4DD;</div>
+                            <div class="mel-upload-label">Compte-rendu</div>
+                            <div class="mel-upload-hint">+33XXXXXXXXX_Prenom.html</div>
+                        </div>
+                        <div class="mel-upload-zone" data-type="plan-action" ondragover="MiseEnLigneManager.dragOver(event)" ondragleave="MiseEnLigneManager.dragLeave(event)" ondrop="MiseEnLigneManager.drop(event)">
+                            <input type="file" accept=".html" multiple style="display:none" onchange="MiseEnLigneManager.handleFiles(this.files,'plan-action')">
+                            <div class="mel-upload-icon">&#x1F4CB;</div>
+                            <div class="mel-upload-label">Plan d'action</div>
+                            <div class="mel-upload-hint">+33XXXXXXXXX_Prenom.html</div>
+                        </div>
+                        <div class="mel-upload-zone" data-type="cartographie" ondragover="MiseEnLigneManager.dragOver(event)" ondragleave="MiseEnLigneManager.dragLeave(event)" ondrop="MiseEnLigneManager.drop(event)">
+                            <input type="file" accept=".html" multiple style="display:none" onchange="MiseEnLigneManager.handleFiles(this.files,'cartographie')">
+                            <div class="mel-upload-icon">&#x1F5FA;&#xFE0F;</div>
+                            <div class="mel-upload-label">Cartographie</div>
+                            <div class="mel-upload-hint">DOC_01_Prenom.html ... (21 fichiers)</div>
+                        </div>
+                    </div>
+
+                    <!-- Pending files queue -->
+                    <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:1.5rem;margin-bottom:1.5rem">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+                            <h3 style="font-family:'Cormorant',serif;font-size:1.15rem">File en attente <span class="admin-badge" id="mel-pending-count">0</span></h3>
+                            <button class="admin-btn admin-btn-primary" id="mel-process-btn" onclick="MiseEnLigneManager.processAll()" disabled>Publier</button>
+                        </div>
+                        <div id="mel-pending-list" style="display:flex;flex-direction:column;gap:0.5rem">
+                            <div class="admin-list-empty">Glisse des fichiers dans les zones ci-dessus.</div>
+                        </div>
+                    </div>
+
+                    <!-- Results table (hidden until processing) -->
+                    <div id="mel-results" style="display:none;background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:1.5rem;margin-bottom:1.5rem">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+                            <h3 style="font-family:'Cormorant',serif;font-size:1.15rem">R&#233;sultats</h3>
+                            <button class="admin-btn admin-btn-primary" onclick="MiseEnLigneManager.downloadCSV()">T&#233;l&#233;charger CSV</button>
+                        </div>
+                        <table style="width:100%;font-size:0.85rem;border-collapse:collapse">
+                            <thead>
+                                <tr style="border-bottom:2px solid var(--card-border);text-align:left">
+                                    <th style="padding:0.5rem">T&#233;l&#233;phone</th>
+                                    <th style="padding:0.5rem">Pr&#233;nom</th>
+                                    <th style="padding:0.5rem">Statut</th>
+                                    <th style="padding:0.5rem">Mot de passe</th>
+                                    <th style="padding:0.5rem">D&#233;tail</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Published content history -->
+                    <div style="background:var(--card-bg,#fff);border-radius:16px;border:1px solid rgba(107,90,156,0.08);padding:1.5rem">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+                            <h3 style="font-family:'Cormorant',serif;font-size:1.15rem">Contenu publi&#233;</h3>
+                            <button class="admin-btn admin-btn-sm" onclick="MiseEnLigneManager.loadHistory()">Rafraichir</button>
+                        </div>
+                        <div id="mel-history-list" style="display:flex;flex-direction:column;gap:0.5rem">
+                            <div class="admin-list-empty">Chargement...</div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- NEW CLIENT FORM (hidden by default) -->
@@ -566,5 +655,6 @@
     <script src="admin-mahram.js"></script>
     <script src="admin-chat.js"></script>
     <script src="admin-invitations.js"></script>
+    <script src="admin-mise-en-ligne.js"></script>
 </body>
 </html>

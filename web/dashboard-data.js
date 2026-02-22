@@ -8,7 +8,6 @@ const DashboardData = {
     _telephone: null,
     _accessCode: null,
     _uuid: null,
-    _schemaVersion: null,
 
     /* ─── Auth: check session or URL params ─── */
     async init() {
@@ -16,11 +15,6 @@ const DashboardData = {
         const params = new URLSearchParams(window.location.search);
         let tel = params.get('tel');
         let code = params.get('code');
-
-        // Clean URL to remove credentials from browser history/address bar
-        if (tel && code) {
-            window.history.replaceState({}, '', window.location.pathname);
-        }
 
         // 2. Fallback to sessionStorage
         if (!tel || !code) {
@@ -73,25 +67,6 @@ const DashboardData = {
         }
 
         this._data = dashData;
-
-        // Detect schema version: V2 profiles have statut_parcours, V1 clients have statut
-        this._schemaVersion = this._data?.client?.statut_parcours ? 'v2' : 'v1';
-
-        // If V2, map profile fields to V1-compatible fields for backward compat
-        if (this._schemaVersion === 'v2' && this._data.client) {
-            const c = this._data.client;
-            if (!c.client_id) {
-                c.client_id = (c.id || '').substring(0, 6);
-            }
-            if (!c.statut && c.statut_parcours) {
-                const archiveStatuts = ['termine', 'desactive'];
-                const pauseStatuts = ['inscription'];
-                if (archiveStatuts.includes(c.statut_parcours)) c.statut = 'archive';
-                else if (pauseStatuts.includes(c.statut_parcours)) c.statut = 'pause';
-                else c.statut = 'actif';
-            }
-        }
-
         return true;
     },
 
@@ -111,13 +86,6 @@ const DashboardData = {
     get content() { return this._data?.content || {}; },
     get prenom() { return this.client.prenom || ''; },
     get clientIdDisplay() { return this.client.client_id || ''; },
-    get nextEvent() { return this._data?.next_event || null; },
-    get activeMatch() { return this._data?.active_match || null; },
-    get coachMessage() { return this._data?.coach_message || null; },
-    get pendingActions() { return this._data?.pending_actions || []; },
-    get currentPhase() { return this._data?.current_phase || 1; },
-    get unreadNotifications() { return this._data?.unread_notifications || 0; },
-    get schemaVersion() { return this._schemaVersion || 'v1'; },
 
     /* ─── Populate common sidebar + header elements ─── */
     populateCommon() {
@@ -148,10 +116,37 @@ const DashboardData = {
         document.body.classList.add('loaded');
     },
 
-    /* ─── Update navigation links ─── */
-    /* Auth params are now stored in sessionStorage, no longer injected into URLs */
+    /* ─── Update navigation links with auth params ─── */
     _updateNavLinks() {
-        // No-op: credentials are managed via sessionStorage, not URL params
+        const suffix = '?tel=' + encodeURIComponent(this._telephone) + '&code=' + encodeURIComponent(this._accessCode);
+        document.querySelectorAll('a[href^="dashboard-"]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && !href.includes('?')) {
+                link.setAttribute('href', href + suffix);
+            }
+        });
+        // Also update sidebar logo link
+        document.querySelectorAll('.sidebar-logo a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && !href.includes('?')) {
+                link.setAttribute('href', href + suffix);
+            }
+        });
+        // Header home buttons
+        document.querySelectorAll('.header-btn[href^="dashboard-"]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && !href.includes('?')) {
+                link.setAttribute('href', href + suffix);
+            }
+        });
+        // Questionnaire links (chat in-app)
+        document.querySelectorAll('a[href^="questionnaire.html"]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href) {
+                const sep = href.includes('?') ? '&' : '?';
+                link.setAttribute('href', href + sep + 'tel=' + encodeURIComponent(this._telephone) + '&code=' + encodeURIComponent(this._accessCode));
+            }
+        });
     },
 
     /* ─── Section visibility: hide nav items + pages ─── */
@@ -184,97 +179,6 @@ const DashboardData = {
         const welcomeTitle = document.querySelector('.welcome-title');
         if (welcomeTitle) {
             welcomeTitle.textContent = 'As-salamu alaykum ' + this.prenom;
-        }
-    },
-
-    /* ─── Page-specific: Accueil Widgets (5 widgets) ─── */
-    populateAccueilWidgets() {
-        // 1. Phase Progression Indicator
-        const phase = this.currentPhase;
-        const phaseWidget = document.getElementById('phase-widget');
-        if (phaseWidget) {
-            phaseWidget.setAttribute('data-phase', phase);
-            const steps = phaseWidget.querySelectorAll('.phase-progress-step');
-            steps.forEach((step, i) => {
-                step.classList.remove('active', 'completed', 'pending');
-                if (i + 1 < phase) {
-                    step.classList.add('completed');
-                } else if (i + 1 === phase) {
-                    step.classList.add('active');
-                } else {
-                    step.classList.add('pending');
-                }
-            });
-        }
-
-        // 2. Event Countdown Widget
-        const event = this.nextEvent;
-        if (event) {
-            const titleEl = document.getElementById('countdown-title');
-            const timerEl = document.getElementById('countdown-timer');
-            if (titleEl) titleEl.textContent = event.title || 'Événement à venir';
-            if (timerEl && event.date) {
-                const diff = new Date(event.date) - new Date();
-                if (diff > 0) {
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const units = timerEl.querySelectorAll('.countdown-value');
-                    if (units[0]) units[0].textContent = String(days).padStart(2, '0');
-                    if (units[1]) units[1].textContent = String(hours).padStart(2, '0');
-                    if (units[2]) units[2].textContent = String(mins).padStart(2, '0');
-                }
-            }
-        }
-
-        // 3. Active Match Card
-        const match = this.activeMatch;
-        const matchWidget = document.getElementById('match-widget');
-        if (match && matchWidget) {
-            matchWidget.style.display = '';
-            const nameEl = document.getElementById('match-name');
-            const initialEl = document.getElementById('match-initial');
-            const metaEl = document.getElementById('match-meta');
-            const scoreFill = document.getElementById('match-score-fill');
-            const scoreText = document.getElementById('match-score-text');
-            if (nameEl) nameEl.textContent = match.name || '---';
-            if (initialEl) initialEl.textContent = (match.name || '?').charAt(0).toUpperCase();
-            if (metaEl && match.hobbies) metaEl.textContent = match.hobbies.join(' · ');
-            if (scoreFill && match.compatibility) scoreFill.style.width = match.compatibility + '%';
-            if (scoreText && match.compatibility) scoreText.textContent = 'Compatibilité : ' + match.compatibility + '%';
-        }
-
-        // 4. Coach Message Widget
-        const coach = this.coachMessage;
-        if (coach) {
-            const msgEl = document.getElementById('coach-message');
-            const dateEl = document.getElementById('coach-date');
-            if (msgEl) msgEl.textContent = coach.message || 'Ton accompagnant te contactera bientôt.';
-            if (dateEl && coach.date) dateEl.textContent = coach.date;
-        }
-
-        // 5. Pending Actions Tracker
-        const actions = this.pendingActions;
-        if (actions.length > 0) {
-            const listEl = document.getElementById('actions-list');
-            const countEl = document.getElementById('actions-count');
-            if (countEl) countEl.textContent = actions.length;
-            if (listEl) {
-                listEl.innerHTML = actions.map(a => {
-                    const iconClass = a.priority === 'urgent' ? 'urgent' : (a.priority === 'info' ? 'info' : 'normal');
-                    return '<a class="action-item" href="' + (a.link || '#') + '" style="text-decoration:none;">' +
-                        '<div class="action-icon ' + iconClass + '">' + (a.icon || '📌') + '</div>' +
-                        '<div class="action-text">' + (a.text || '') + '</div>' +
-                        '<span class="action-cta">' + (a.cta || 'Voir →') + '</span></a>';
-                }).join('');
-            }
-        }
-
-        // 6. Notification badge
-        const notifCount = this.unreadNotifications;
-        const notifBadge = document.getElementById('notif-count');
-        if (notifBadge) {
-            notifBadge.textContent = notifCount > 0 ? notifCount : '';
         }
     },
 
@@ -389,61 +293,92 @@ const DashboardData = {
         }
     },
 
-    /* ─── V2 Widgets: uses V2-specific fields if available ─── */
-    populateV2Widgets() {
-        if (this.schemaVersion !== 'v2') return;
+    /* ─── Page-specific: Cartographie (fetches from section_content) ─── */
+    async populateCartographie() {
+        if (!this._uuid) return;
 
-        const c = this.client;
+        // Fetch all cartographie docs for this user
+        const { data: docs, error } = await sb
+            .from('section_content')
+            .select('content_key, titre, contenu_html')
+            .eq('client_id', this._uuid)
+            .eq('section_key', 'cartographie')
+            .order('content_key');
 
-        // Display V2 badge if present
-        const v2Badge = document.getElementById('v2-schema-badge');
-        if (v2Badge) v2Badge.style.display = '';
+        if (error) {
+            console.error('Erreur chargement cartographie:', error);
+            return;
+        }
 
-        // Photo floue (V2 field)
-        if (c.photo_floue_url) {
-            const photoEl = document.querySelector('.client-photo-floue');
-            if (photoEl) {
-                photoEl.style.backgroundImage = 'url(' + c.photo_floue_url + ')';
-                photoEl.style.display = '';
+        // Build a map: DOC_01 → {titre, contenu_html}
+        const docMap = {};
+        if (docs) {
+            docs.forEach(d => { docMap[d.content_key] = d; });
+        }
+
+        // Update each doc-card
+        document.querySelectorAll('.doc-card').forEach((card, i) => {
+            let contentKey;
+            if (i < 20) {
+                contentKey = 'DOC_' + String(i + 1).padStart(2, '0');
+            } else {
+                contentKey = 'PROTOCOLE';
             }
-        }
 
-        // High-ticket indicator (V2 field)
-        if (c.is_high_ticket) {
-            const htEl = document.querySelector('.high-ticket-badge');
-            if (htEl) htEl.style.display = '';
-        }
+            const doc = docMap[contentKey];
+            if (doc && doc.contenu_html) {
+                // Make clickable → open modal
+                card.setAttribute('href', '#');
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    DashboardData.openDocViewer(doc.titre || contentKey, doc.contenu_html);
+                });
+            } else {
+                // No content available yet
+                card.removeAttribute('href');
+                card.style.opacity = '0.5';
+                card.style.pointerEvents = 'none';
+            }
+        });
+    },
 
-        // Events participated count (V2 field)
-        if (c.nb_events_participes != null) {
-            const evtEl = document.getElementById('events-count');
-            if (evtEl) evtEl.textContent = c.nb_events_participes;
-        }
+    /* ─── Page-specific: Compte-Rendu (fetches from section_content) ─── */
+    async populateCompteRendu() {
+        if (!this._uuid) return;
 
-        // Statut parcours (V2 field) displayed raw
-        if (c.statut_parcours) {
-            const spEl = document.getElementById('statut-parcours');
-            if (spEl) spEl.textContent = c.statut_parcours;
+        const { data: docs } = await sb
+            .from('section_content')
+            .select('content_key, titre, contenu_html')
+            .eq('client_id', this._uuid)
+            .eq('section_key', 'compte_rendu');
+
+        if (docs && docs.length > 0 && docs[0].contenu_html) {
+            this.openDocViewer(docs[0].titre || 'Compte-Rendu', docs[0].contenu_html);
         }
     },
 
-    /* ─── Page-specific: Cartographie ─── */
-    populateCartographie() {
-        // If cartographie_id exists, update doc links
-        const cartoId = this.client.cartographie_id;
-        if (cartoId) {
-            document.querySelectorAll('.doc-card').forEach((card, i) => {
-                const docNum = String(i + 1).padStart(2, '0');
-                if (i < 20) {
-                    card.setAttribute('href', '/cartographie/' + cartoId + '/DOC_' + docNum + '.html');
-                } else {
-                    // Bonus doc (Protocol)
-                    card.setAttribute('href', '/cartographie/' + cartoId + '/DOC_PROTOCOLE.html');
-                }
-            });
-        }
+    /* ─── Document Viewer Modal ─── */
+    openDocViewer(title, html) {
+        const modal = document.getElementById('doc-viewer-modal');
+        if (!modal) return;
+        document.getElementById('doc-viewer-title').textContent = title;
+        const frame = document.getElementById('doc-viewer-frame');
+        frame.srcdoc = html;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    },
+
+    closeDocViewer() {
+        const modal = document.getElementById('doc-viewer-modal');
+        if (!modal) return;
+        modal.style.display = 'none';
+        document.getElementById('doc-viewer-frame').srcdoc = '';
+        document.body.style.overflow = '';
     }
 };
+
+// Global function for onclick
+function closeDocViewer() { DashboardData.closeDocViewer(); }
 
 /* ─── Auto-init on page load ─── */
 document.addEventListener('DOMContentLoaded', async () => {
@@ -451,7 +386,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!ok) return;
 
     DashboardData.populateCommon();
-    DashboardData.populateV2Widgets();
 
     // Detect current page and populate specific content
     const page = window.location.pathname.split('/').pop().replace(/\?.*/, '');
@@ -464,7 +398,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     switch (page) {
         case 'dashboard-test.html':
             DashboardData.populateAccueil();
-            DashboardData.populateAccueilWidgets();
             break;
         case 'dashboard-rencontres.html':
             DashboardData.populateRencontresEnCours();
